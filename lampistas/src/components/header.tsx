@@ -11,7 +11,7 @@ export default function Header() {
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     return (
-        <header className="w-full h-13 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0">
+    <header className="w-full h-16 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0 z-50">
             <div className="flex items-center p-4">
                 <h1 className="text-2xl text-amber-800 font-bold">Lampistas</h1>
 
@@ -21,15 +21,15 @@ export default function Header() {
                         Acceso Clientes
                     </button>
 
-                    <Link to="/company/companyLogin" target='_blank'>
+                    <Link to="/company/companyLogin" >
                         <button 
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
                         >
                             Acceso Empresas
                         </button>
                     </Link>
-                    <Link to="/admin/registerAdmin" target='_blank' preventScrollReset={true}>
-                        <button
+                        <Link to="/admin/registerAdmin" >
+                            <button
                             id='administrator'
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white mr-2">
                             Administradores

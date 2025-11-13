@@ -1,7 +1,8 @@
+import Header from '../../components/header';
 export default function LoginCompany() {
     return (
-        <div className="min-h-screen  flex  flex-col items-center justify-center bg-amber-100">
-
+        <div className="w-full h-full   flex  flex-col items-center justify-center bg-white/80  p-16 rounded-xl border border-amber-100  hover:shadow-sm transition-shadow duration-300 ">
+            <Header />
                 <h2 className="text-2xl font-bold mb-6 text-center">Acceso Empresas</h2>
                 <form>
                     <div className="mb-4">

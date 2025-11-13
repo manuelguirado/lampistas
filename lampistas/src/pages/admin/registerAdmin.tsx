@@ -1,7 +1,9 @@
-//import {  useState } from "react";
-import Footer from "../../components/footer";
+import {  useState } from "react";
+import Header from "../../components/header";
+import {useNavigate} from 'react-router-dom';
 export default function RegisterAdmin() {
-/*
+  const navigate = useNavigate();
+
     const [formData, setFormData] = useState({ email: "", password: "" });
 
   
@@ -16,18 +18,25 @@ export default function RegisterAdmin() {
       body: JSON.stringify(formData),
     })
       .then((response) => response.json())
-      .then((data) => {
-        // Puedes manejar la respuesta aquí
-        setFormData({ email: "", password: "" });
-        console.log(data);
+      .then(() => {
+        // Puedes manejar la respuesta aquí si es necesario
+        const email = formData.email;
+        const password = formData.password;
+        setFormData({ email: email, password: password });
+
+        navigate("/admin/adminLogin");
+
       });
+      
+      
   }
-*/
+
   return (
-    <div className="min-h-screen min-w-screen flex flex-col bg-amber-100 justify-center items-center p-4">
+    <div className=" w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
+      <Header />
       <h2 className="text-2xl font-bold p-20">Registro de Administrador</h2>
       {/* Formulario de registro */}
-      <form className="flex flex-col">
+      <form className="flex flex-col" onSubmit={handleSubmit}>
         <input
         className="mb-4 p-2 border border-amber-300 rounded"
           type="email"
@@ -35,6 +44,11 @@ export default function RegisterAdmin() {
           placeholder="Email"
           required
           inputMode="email"
+         
+          onChange={(e) =>
+            setFormData({ ...formData, email: e.target.value })
+          }
+          
         />
         <input
           className="mb-4 p-2 border border-amber-300 rounded"
@@ -42,10 +56,13 @@ export default function RegisterAdmin() {
           name="password"
           placeholder="Password"
           required
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
         />
         <button className="bg-amber-500 text-white p-2 rounded" type="submit">Registrar</button>
       </form>
-      <Footer />
+
     </div>
   );
 }
