@@ -1,10 +1,15 @@
 import Header from "./components/header";
-import React, { useEffect, useState } from "react";
-import { UserX, Edit, UserCheck,Code } from 'lucide-react';
+import  { useEffect, useState } from "react";
+import { UserX, Edit, UserCheck,Code,Trash2 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+
 
 export default function ListCompany() {
-    function handleGenerateCode() {
-        fetch(`http://localhost:3000/admin/generateCode`, {
+    const navigate = useNavigate();
+   
+
+    function handleGenerateCode(companyId: string) {
+        fetch(`http://localhost:3000/admin/assignCode/${companyId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -13,12 +18,9 @@ export default function ListCompany() {
         })
             .then(response => response.json())
             .then(data => {
-              const jsonData = JSON.stringify(data);
-              const decodedData = JSON.parse(jsonData).code ;
-    
-                navigator.clipboard.writeText(decodedData);
-                console.log('Code copied to clipboard:', data.code);
-                alert('Code copied to clipboard: ' + data.code);    
+              
+                navigator.clipboard.writeText(data.code);
+                alert('Code copied to clipboard: ');
             })
             .catch(error => {
                 console.error('Error generating code:', error);
@@ -26,22 +28,26 @@ export default function ListCompany() {
     }
     function handleActivateCompany(companyId: string) {
         fetch(`http://localhost:3000/admin/activateCompany/${companyId}`, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
             },
+            body: JSON.stringify({ companyID: Number(companyId) })
         })
             .then(response => response.json())
-            .then(data => {
-                return data;
+            .then( () => {
+                alert('Company activated successfully');
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error activating company:', error);
             });
     }
-    function handleSuspendCompany(companyId: string) {
-        fetch(`http://localhost:3000/admin/suspendCompany/${companyId}`, {
+  
+  
+    function handleDeleteCompany(companyId: string) {   
+        fetch(`http://localhost:3000/admin/eliminateCompany/${companyId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,31 +55,16 @@ export default function ListCompany() {
             },
         })
             .then(response => response.json())
-            .then(data => {
-                return data;
+            .then(() => {
+                alert('Company deleted successfully');
+                window.location.reload();
             })
             .catch(error => {
-                console.error('Error suspending company:', error);
+                console.error('Error deleting company:', error);
             });
     }
-    function handleEditCompany(companyId: string) {
-        fetch(`http://localhost:3000/admin/editCompany/${companyId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                return data;
-            })
-            .catch(error => {
-                console.error('Error fetching company details:', error);
-            });
-    };
     const [companies, setCompanies] = useState<
-        Array<{ name: string; email: string; phone: string; directions: { address: string } }>
+        Array<{ companyID: string; name: string; email: string; phone: string; suspended: boolean; directions: { address: string } }>
     >([]);
 
     useEffect(() => {
@@ -101,9 +92,11 @@ export default function ListCompany() {
                 <table className="w-full h-full border-solid">
                     <thead>
                         <tr className="bg-amber-200">
+                            <th className="border px-4 py-2">ID</th>
                             <th className="border px-4 py-2">Company name</th>
                             <th className="border px-4 py-2">Email</th>
                             <th className="border px-4 py-2">Phone</th>
+                            <th className="border px-4 py-2">Status</th>
                             <th className="border px-4 py-2">Address</th>
                             <th className="border px-4 py-2">Actions</th>
                         </tr>
@@ -111,36 +104,62 @@ export default function ListCompany() {
                     <tbody>
                         {companies.map((company) => (
                             <tr key={company.name} className="hover:bg-amber-100">
+                                <td className="border px-4 py-2">{company.companyID}</td>
                                 <td className="border px-4 py-2">{company.name}</td>
                                 <td className="border px-4 py-2">{company.email}</td>
                                 <td className="border px-4 py-2">{company.phone}</td>
+                                <td className="border px-4 py-2">
+                                    <span className={`px-2 py-1 rounded text-sm font-semibold ${
+                                        company.suspended 
+                                            ? 'bg-red-200 text-red-800' 
+                                            : 'bg-green-200 text-green-800'
+                                    }`}>
+                                        {company.suspended ? 'Suspended' : 'Active'}
+                                    </span>
+                                </td>
                                 <td className="border px-4 py-2">{company.directions?.address || 'N/A'}</td>
                                 <td className="border px-4 py-2">
                                     <div className="flex gap-2 justify-center">
                                         <button 
                                             className="p-2 hover:bg-amber-200 rounded transition-colors"
                                             title="Edit company"
+                                            onClick={() => navigate('/admin/editCompany')}
                                         >
-                                            <Edit size={18} className="text-blue-600" onClick={() => handleEditCompany(company.name)}
-                                             />
+                                            <Edit size={18} className="text-blue-600" />
                                         </button>
-                                        <button 
-                                            className="p-2 hover:bg-amber-200 rounded transition-colors"
-                                            title="Suspend company"
+                                        
+                                        {!company.suspended && (
+                                            <button 
+                                                className="p-2 hover:bg-amber-200 rounded transition-colors"
+                                                title="Suspend company"
+                                                onClick={() => navigate('/admin/suspendCompany')}
+                                            >
+                                                <UserX size={18} className="text-red-600" />
+                                            </button>
+                                        )}
+                                        
+                                        {company.suspended && (
+                                            <button 
+                                                className="p-2 hover:bg-amber-200 rounded transition-colors"
+                                                title="Activate company"
+                                                onClick={() => handleActivateCompany(company.companyID)}
+                                            >
+                                                <UserCheck size={18} className="text-green-600" />
+                                            </button>
+                                        )}
+                                        <button
+                                        className="p-2 hover:bg-amber-200 rounded transition-colors"
+                                        title="Delete company"
+                                        onClick={() => handleDeleteCompany(company.companyID)}
                                         >
-                                            <UserX size={18} className="text-red-600" onClick={() => handleSuspendCompany(company.name)} />
-                                        </button>
-                                        <button 
-                                            className="p-2 hover:bg-amber-200 rounded transition-colors"
-                                            title="Activate company"
-                                        >
-                                            <UserCheck size={18} className="text-green-600" onClick={() => handleActivateCompany(company.name)} />
+                                            <Trash2 size={18} className="text-red-600" />
                                         </button>
                                         <button 
                                             className="p-2 hover:bg-amber-200 rounded transition-colors"
                                             title="Generate code"
+                                            onClick={() => handleGenerateCode(company.companyID)}
                                         >
-                                            <Code size={18} className="text-purple-600" onClick={() => handleGenerateCode()} />
+                                            <Code size={18} className="text-purple-600" />
                                         </button>
                                     </div>
                                 </td>
@@ -152,4 +171,3 @@ export default function ListCompany() {
         </div>
     );
 }
-    
