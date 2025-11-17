@@ -14,20 +14,23 @@ export default function AdminLogin() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(formData),
 
       })
         .then((response) => response.json())
-        .then(() => {
-          // Puedes manejar la respuesta aquí si es necesario
-          const email = formData.email;
-          const password = formData.password;
-          setFormData({ email: email, password: password });
-           console.log(localStorage.getItem('token'));
-          navigate("/admin/adminDashboard");
-  
+        .then((data) => {
+          // Guardar el token en localStorage
+          if (data.token) {
+            localStorage.setItem('adminToken', data.token);
+            console.log('Token guardado:', data.token);
+            navigate("/admin/adminDashboard");
+          } else {
+            console.error('No se recibió token en la respuesta');
+          }
+        })
+        .catch((error) => {
+          console.error('Error en login:', error);
         });
     }
 return (

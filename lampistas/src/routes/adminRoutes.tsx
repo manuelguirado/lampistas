@@ -3,6 +3,7 @@ import RegisterAdmin from '../pages/admin/registerAdmin';
 import AdminLogin from '../pages/admin/adminLogin';
 import DashboardAdmin from '../pages/admin/adminDashboard';
 import RegisterCompany from '../pages/admin/registerCompany';
+import ListCompany from '../pages/admin/listCompany';
 
 export default function AdminRoutes() {
 
@@ -13,6 +14,7 @@ export default function AdminRoutes() {
             <Route path="adminLogin" element={<AdminLogin />} />
             <Route path="adminDashboard/*" element={<DashboardAdmin />} />
             <Route path="registerCompany" element={<RegisterCompany />} />
+            <Route path="listCompany" element={<ListCompany />} />
         </Routes>
     );
 }

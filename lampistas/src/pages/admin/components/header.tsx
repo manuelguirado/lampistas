@@ -20,34 +20,15 @@ export default function Header() {
                             Register Company
                         </button>
                     </Link>
-                    <Link to="/admin/editCompanies" >
-                        <button
-                            className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
-                        >
-                            Edit Companies
-                        </button>
-                    </Link>
-                    <Link to="/admin/listCompanies" >
+                  
+                    <Link to="/admin/listCompany" >
                         <button
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
                         >
                             List Companies
                         </button>
                     </Link>
-                    <Link to="/admin/modifyCompany" >
-                        <button
-                            className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
-                        >
-                            Modify Company
-                        </button>
-                    </Link>
-                    <Link to="/admin/suspendCompany" >
-                        <button
-                            className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
-                        >
-                            Suspend Company
-                        </button>
-                    </Link>
+                  
                 </nav>
                 {/* Mobile Menu Button */}
                 <button
@@ -76,34 +57,16 @@ export default function Header() {
                                     Register Company
                                 </button>
                             </Link>
-                            <Link to="/admin/editCompanies" >
-                                <button
-                                    className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
-                                >
-                                    Edit Companies
-                                </button>
-                            </Link>
-                            <Link to="/admin/listCompanies" >
+                            
+                            <Link to="/admin/listCompany" >
                                 <button
                                     className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
                                 >
                                     List Companies
                                 </button>
                             </Link>
-                            <Link to="/admin/modifyCompany" >
-                                <button
-                                    className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
-                                >
-                                    Modify Company
-                                </button>
-                            </Link>
-                            <Link to="/admin/suspendCompany" >
-                                <button
-                                    className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
-                                >
-                                    Suspend Company
-                                </button>
-                            </Link>
+                          
+                         
                         </nav>
                     </motion.div>
                 )}
