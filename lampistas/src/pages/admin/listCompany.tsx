@@ -1,12 +1,13 @@
 import Header from "./components/header";
 import  { useEffect, useState } from "react";
-import { UserX, Edit, UserCheck,Code,Trash2 } from 'lucide-react';
+import { UserX, Edit, UserCheck,Code,Trash2,ChevronRight,ChevronLeft } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
 
 export default function ListCompany() {
     const navigate = useNavigate();
-   
+   const [currentPage, setCurrentPage] = useState(1);
+   const pageSize = 5;
 
     function handleGenerateCode(companyId: string) {
         fetch(`http://localhost:3000/admin/assignCode/${companyId}`, {
@@ -20,7 +21,7 @@ export default function ListCompany() {
             .then(data => {
               
                 navigator.clipboard.writeText(data.code);
-                alert('Code copied to clipboard: ');
+                alert('Code copied to clipboard: ' + data.code);
             })
             .catch(error => {
                 console.error('Error generating code:', error);
@@ -66,9 +67,13 @@ export default function ListCompany() {
     const [companies, setCompanies] = useState<
         Array<{ companyID: string; name: string; email: string; phone: string; suspended: boolean; directions: { address: string } }>
     >([]);
+    const [totalCompanies, setTotalCompanies] = useState(0);
+    const totalPages = Math.ceil(totalCompanies / pageSize);
 
     useEffect(() => {
-        fetch('http://localhost:3000/admin/listCompany', {
+        const limit = pageSize;
+        const offset = (currentPage - 1) * pageSize;
+        fetch(`http://localhost:3000/admin/listCompany?limit=${limit}&offset=${offset}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,11 +83,12 @@ export default function ListCompany() {
             .then(response => response.json())
             .then(data => {
                 setCompanies(data.companies || []);
+                setTotalCompanies(data.total || 0);
             })
             .catch(error => {
                 console.error('Error fetching companies:', error);
             });
-    }, []);
+    }, [currentPage, pageSize]);
 
     return (
         <div className="min-h-screen bg-amber-50">
@@ -166,6 +172,27 @@ export default function ListCompany() {
                             </tr>
                         ))}
                     </tbody>
+                    <tfoot className="border-t ">
+                        <tr>
+                            <td colSpan={7} className="flex justify-end space-x-4 p-4">
+                                <button
+                                    className="p-2 bg-amber-300 text-white rounded hover:bg-amber-400 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                                <span className="px-4 py-2">Page {currentPage} of {totalPages || 1}</span>
+                                <button
+                                    className="p-2 bg-amber-300 text-white rounded hover:bg-amber-400 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                                    disabled={currentPage >= totalPages}
+                                >
+                                    <ChevronRight size={16} />
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </main>
         </div>

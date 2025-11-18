@@ -1,12 +1,16 @@
 import LoginCompany from "../pages/empresas/loginCompany";
 import DashboardCompany from "../pages/empresas/dashboardCompany";
 import {Routes,Route} from 'react-router-dom';
+import ProtectedRoute from './protectedRoute';
 
 export default function CompanyRoutes(){
     return (
         <Routes>
+            {/* Ruta pública */}
             <Route path="companyLogin" element={<LoginCompany />} />
-            <Route path="dashboard" element={<DashboardCompany />} />
+            
+            {/* Rutas protegidas */}
+            <Route path="dashboard" element={<ProtectedRoute userType="company"><DashboardCompany /></ProtectedRoute>} />
         </Routes>
     );
 }

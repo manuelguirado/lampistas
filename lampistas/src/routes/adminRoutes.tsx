@@ -6,19 +6,21 @@ import RegisterCompany from '../pages/admin/registerCompany';
 import ListCompany from '../pages/admin/listCompany';
 import SuspendCompany from '../pages/admin/suspendCompany';
 import EditCompany from '../pages/admin/editCompany';
+import ProtectedRoute from './protectedRoute';
 
 export default function AdminRoutes() {
-
-
     return (
         <Routes>
+            {/* Rutas públicas */}
             <Route path="registerAdmin" element={<RegisterAdmin />} />
             <Route path="adminLogin" element={<AdminLogin />} />
-            <Route path="adminDashboard/*" element={<DashboardAdmin />} />
-            <Route path="registerCompany" element={<RegisterCompany />} />
-            <Route path="listCompany" element={<ListCompany />} />
-            <Route path="suspendCompany" element={<SuspendCompany />} />
-            <Route path="editCompany" element={<EditCompany />} />
+            
+            {/* Rutas protegidas */}
+            <Route path="adminDashboard/*" element={<ProtectedRoute userType="admin"><DashboardAdmin /></ProtectedRoute>} />
+            <Route path="registerCompany" element={<ProtectedRoute userType="admin"><RegisterCompany /></ProtectedRoute>} />
+            <Route path="listCompany" element={<ProtectedRoute userType="admin"><ListCompany /></ProtectedRoute>} />
+            <Route path="suspendCompany" element={<ProtectedRoute userType="admin"><SuspendCompany /></ProtectedRoute>} />
+            <Route path="editCompany" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
         </Routes>
     );
 }
