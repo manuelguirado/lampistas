@@ -1,30 +1,45 @@
 import { useState } from "react";
-import { Link, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
     return (
-        <header className="w-full h-13 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0">
+        <header className="w-full h-16 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0 z-50">
             <div className="flex items-center p-4">
                 <h1 className="text-2xl text-amber-800 font-bold">Lampistas - Empresas</h1>
-            </div>
-            <nav className="hidden lg:flex space-x-4 justify-end flex-1">
-                {/* Ajuste para unificar estilos */}
-                <li> <a href="/trabajadores" className="text-amber-800 hover:underline">Trabajadores</a></li>
-                <li> <a href="/mis-clientes" className="text-amber-800 hover:underline">Mis clientes</a></li>
-                <li> <a href="/historial-incidencias" className="text-amber-800 hover:underline">Historial de incidencias</a></li>
-                <li> <a href="/crear-presupuesto" className="text-amber-800 hover:underline">Crear presupuesto</a></li>
-            </nav>
-            {/* Mobile Menu Button */}
+                {/* Desktop Navigation */}
+                <nav className="hidden lg:flex space-x-4 justify-end flex-1">
+                    <Link to="/trabajadores" >
+                        <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
+                            Trabajadores
+                        </button>
+                    </Link>
+                    <Link to="/mis-clientes" >
+                        <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
+                            Mis clientes
+                        </button>
+                    </Link>
+                    <Link to="/historial-incidencias" >
+                        <button className="flex items-center rounded-md bg-yellow-500 px-4 py-2 hover:bg-yellow-600 transition-colors text-black">
+                            Historial de incidencias
+                        </button>
+                    </Link>
+                    <Link to="/crear-presupuesto" >
+                        <button className="flex items-center rounded-md bg-yellow-500 px-4 py-2 hover:bg-yellow-600 transition-colors text-black">
+                            Crear presupuesto
+                        </button>
+                    </Link>
+                </nav>
+                {/* Mobile Menu Button */}
                 <button
                     onClick={toggleMenu}
                     className="lg:hidden p-2 rounded-md hover:bg-amber-600 transition-colors text-amber-400"
                 >
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
-
-            {/* Mobile Navigation Menu */}
+            </div>            {/* Mobile Navigation Menu */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div

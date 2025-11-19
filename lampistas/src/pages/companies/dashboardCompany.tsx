@@ -1,8 +1,13 @@
-import Header from '../empresas/components/header';
+import Header from '../companies/components/header';
+import { Outlet } from 'react-router';
 export default function DashboardCompany() {
     return (
-        <div className='min-h-screen flex flex-col items-center justify-center bg-amber-100'>
+        <div >
             <Header />
+            <main className='p-4'>
+            <h2 className='text-2xl font-bold p-20 text-amber-800'>Company Dashboard</h2>
+            <Outlet />
+            </main>
         </div>
     );
 }
