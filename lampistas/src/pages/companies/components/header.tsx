@@ -16,7 +16,7 @@ export default function Header() {
                             Registrar Trabajador
                         </button>
                     </Link>
-                    <Link to="/misTrabajadores" >
+                    <Link to="/company/misTrabajadores" >
                         <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
                             Mis Trabajadores
                         </button>
