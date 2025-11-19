@@ -6,14 +6,19 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
     return (
-        <header className="w-full h-16 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0 z-50">
+        <header className="w-full h-16 bg-amber-100 text-white shadow-lg fixed top-0 left-0  ">
             <div className="flex items-center p-4">
                 <h1 className="text-2xl text-amber-800 font-bold">Lampistas - Empresas</h1>
                 {/* Desktop Navigation */}
                 <nav className="hidden lg:flex space-x-4 justify-end flex-1">
-                    <Link to="/trabajadores" >
+                    <Link to="/company/registrarTrabajador" >
                         <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
-                            Trabajadores
+                            Registrar Trabajador
+                        </button>
+                    </Link>
+                    <Link to="/misTrabajadores" >
+                        <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
+                            Mis Trabajadores
                         </button>
                     </Link>
                     <Link to="/mis-clientes" >
@@ -39,7 +44,9 @@ export default function Header() {
                 >
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
-            </div>            {/* Mobile Navigation Menu */}
+            </div>
+            
+            {/* Mobile Navigation Menu */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -51,8 +58,12 @@ export default function Header() {
                     >
                         {/* Ajuste para unificar estilos en móvil */}
                         <nav className="flex flex-col p-4 space-y-2">
-                            <Link to="/trabajadores" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                                Trabajadores
+                            
+                            <Link to="/registrarTrabajador" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
+                                Registrar Trabajador
+                            </Link>
+                            <Link to="/misTrabajadores" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
+                               Mis Trabajadores
                             </Link>
                             <Link to="/mis-clientes" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
                                 Mis clientes
