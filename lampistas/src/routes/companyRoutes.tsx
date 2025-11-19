@@ -1,5 +1,5 @@
-import LoginCompany from "../pages/empresas/loginCompany";
-import DashboardCompany from "../pages/empresas/dashboardCompany";
+import LoginCompany from "../pages/companies/loginCompany";
+import DashboardCompany from "../pages/companies/dashboardCompany";
 import {Routes,Route} from 'react-router-dom';
 import ProtectedRoute from './protectedRoute';
 
