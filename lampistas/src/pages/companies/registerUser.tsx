@@ -10,6 +10,29 @@ export default function RegisterUser() {
         password: ''
         
     });
+    function handleContractTypeChange(event: React.ChangeEvent<HTMLSelectElement>) {
+          const token = localStorage.getItem('companyToken');
+          fetch(`http://localhost:3000/company/createContract`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ contractType: event.target.value } ),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+               
+                if (data.token ) {
+                    alert('Contract created successfully!');
+
+                    
+                } else {
+                    alert('Error creating contract.');
+                }
+            })
+    }
  
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -74,6 +97,15 @@ export default function RegisterUser() {
                         className="border p-2 mb-4"
                         required
                     />
+                    <select 
+                    className="border p-2 mb-4"
+                    onSubmit={handleContractTypeChange}
+                    >
+                        <option value="" disabled selected>Select Contract Type</option>
+                        <option value="contract">Contract</option>
+                        <option value="freechoice">Free Choice</option>
+                    </select>
+
                     <button type="submit" className="bg-amber-500 text-white px-4 py-2 rounded">
                         Register User
                     </button>
