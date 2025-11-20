@@ -21,7 +21,12 @@ export default function Header() {
                             Mis Trabajadores
                         </button>
                     </Link>
-                    <Link to="/mis-clientes" >
+                    <Link to="/company/registrarCliente" >
+                        <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
+                            Registrar Cliente
+                        </button>
+                    </Link>
+                    <Link to="/company/mis-Clientes" >
                         <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
                             Mis clientes
                         </button>

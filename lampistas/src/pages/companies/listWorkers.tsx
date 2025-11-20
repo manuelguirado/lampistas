@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import  Header from  "../companies/components/header";
 import { Edit, Code, Trash2, ChevronRight, ChevronLeft } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 export default function ListWorkers() {
+    const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalWorkers, setTotalWorkers] = useState(0);
     const pageSize = 5;
@@ -44,6 +46,22 @@ export default function ListWorkers() {
             });
 
     }
+    function handleEliminarWorker(workerID: number){
+        const token = localStorage.getItem('companyToken');
+      fetch(`http://localhost:3000/company/deleteWorker/${workerID}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+      })
+      .then((response) => response.json())
+      .then(() => {
+            alert('Worker deleted successfully!');
+          window.location.reload();
+      }); 
+    }
+    
  
   useEffect(() => {
     const limit = pageSize;
@@ -92,16 +110,16 @@ export default function ListWorkers() {
                             </td>
                             <td className="py-2 px-4 border-b border-gray-300 flex gap-2">
                                 <button className="text-blue-500 hover:text-blue-700">
-                                    <Edit size={16} />
+                                    <Edit size={16} onClick={() => navigate('/company/editarTrabajador')} />
                                 </button>
                                 <button className="text-red-500 hover:text-red-700">
-                                    <Trash2 size={16} />
+                                    <Trash2 size={16} onClick={() => handleEliminarWorker(worker.workerid)} />
                                 </button>
                                 <button 
                                     className="text-purple-500 hover:text-purple-700"
-                                    onClick={() => handleGenerateCode(worker.workerid)}
+                                  
                                 >
-                                    <Code size={16} />
+                                    <Code size={16}   onClick={() => handleGenerateCode(worker.workerid)} />
                                 </button>
                             </td>
                         </tr>

@@ -27,7 +27,7 @@ export default  function RegisterWorker() {
                     alert('Worker registered successfully!');
         
                     setFormData({ name: '', email: '', password: '' });
-                    navigate('/company/listWorkers');
+                    navigate('/company/misTrabajadores');
                 } else {
                     alert('Error registering worker.');
                 }
