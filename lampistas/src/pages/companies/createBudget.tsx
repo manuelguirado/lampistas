@@ -1,44 +1,84 @@
 import BudgetPDFButton from "./components/budgetPDFButton";
 import Header from '../companies/components/header';
 import { useState } from 'react';
+import type { ItemType } from '../../types/itemType';
+import type { FormData } from '../../types/formData';
+import { useNavigate } from "react-router";
 
-type Item = {
-    description: string;
-    quantity: number;
-    unitPrice: number;
-};
 
-type FormData = {
-    clientName: string;
-    clientEmail: string;
-    clientID: number;
-    date: string;
-    items: Item[];
-    budgetNumber: string;
-    companyName: string;
-    incidentID: number;
-};
+
 
 function CreateBudget() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         incidentID : 0,
         clientName: "",
         clientEmail: "",
         clientID: 0,
         date: "",
-        items: [{ description: "", quantity: 0, unitPrice: 0 }],
+        items: [{ description: "", quantity: 0, unitPrice: 0, total: 0 }],
         budgetNumber: "",
         companyName: "",
+        subtotal: 0,
+        tax: 0,
+        totalAmmount: 0
     });
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const token = localStorage.getItem('companyToken');
+        
+        const { itemsWithTotal, subtotal, tax, total } = calculateTotals();
+        
+        fetch('http://localhost:3000/company/CreateBudget', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                budgetNumber: formData.budgetNumber,
+                userID: formData.clientID,
+                items: itemsWithTotal, 
+                subtotal: subtotal,
+                tax: tax,
+                totalAmount: total,
+                incidentID: formData.incidentID || undefined,
+                description: `Presupuesto ${formData.budgetNumber} para ${formData.clientName}`,
+            }),
+        })
+        .then((response) => response.json())
+        .then(() => {
+            alert('Presupuesto creado exitosamente!');
+            // Resetear formulario
+            navigate('/company/dashboard');
+            setFormData({
+                incidentID: 0,
+                clientName: "",
+                clientEmail: "",
+                clientID: 0,
+                date: "",
+                items: [{ description: "", quantity: 0, unitPrice: 0, total: 0 }],
+                budgetNumber: "",
+                companyName: "",
+                subtotal: 0,
+                tax: 0,
+                totalAmmount: total 
+            });
+        })
+        .catch((error) => {
+            console.error('Error creating budget:', error);
+            alert('Error al crear el presupuesto');
+        }); 
+    }
 
     function handleAddItem() {
         setFormData({
             ...formData,
-            items: [...formData.items, { description: "", quantity: 0, unitPrice: 0 }]
+            items: [...formData.items, { description: "", quantity: 0, unitPrice: 0 , total: 0}],
         });
     }
 
-    function handleItemChange(index: number, field: keyof Item, value: string | number) {
+    function handleItemChange(index: number, field: keyof ItemType, value: string | number) {
         const newItems = [...formData.items];
         newItems[index] = { ...newItems[index], [field]: value };
         setFormData({ ...formData, items: newItems });
@@ -81,7 +121,7 @@ function CreateBudget() {
             <h2 className="text-2xl font-bold p-4">Create Budget</h2>
             
             <div className="w-full max-w-4xl">
-                <form className='flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-md'> 
+                <form className='flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-md' onSubmit={handleSubmit}> 
                     <input
                         type="text"
                         placeholder="Budget Number"
@@ -105,6 +145,14 @@ function CreateBudget() {
                         onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                         className="border p-2 rounded"
                         required
+                    />
+                    <input 
+                    type="text"
+                    placeholder="clientid"
+                    value={formData.clientID || ''}
+                    onChange={(e) => setFormData({ ...formData, clientID: Number(e.target.value)})}
+                    className="border p-2 rounded"
+                    required
                     />
                     <input
                         type="number"
@@ -183,20 +231,21 @@ function CreateBudget() {
                     <div className="border-t pt-4 mt-4 space-y-2">
                         <div className="flex justify-between">
                             <span className="font-semibold">Subtotal:</span>
-                            <span>{subtotal.toFixed(2)}€</span>
+                            <span>{subtotal.toFixed(2)}€</span> {/* ✅ Usar el calculado */}
                         </div>
                         <div className="flex justify-between">
                             <span className="font-semibold">IVA (21%):</span>
-                            <span>{tax.toFixed(2)}€</span>
+                            <span>{tax.toFixed(2)}€</span> {/* ✅ Usar el calculado */}
                         </div>
                         <div className="flex justify-between text-lg font-bold">
                             <span>Total:</span>
-                            <span>{total.toFixed(2)}€</span>
+                            <span>{total.toFixed(2)}€</span> {/* ✅ Usar el calculado */}
                         </div>
                     </div>
+                    <button type="submit" className=" bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-600 m5-4 font-semibold">Crear Presupuesto </button>
                 </form>
 
-                <div className="mt-4 flex justify-center">
+                <div className="mt-4 flex justify-center flex-row gap-20">
                     <BudgetPDFButton budgetData={getBudgetData()} />
                 </div>
             </div>

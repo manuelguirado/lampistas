@@ -29,6 +29,9 @@ importers:
       react-router-dom:
         specifier: ^7.9.5
         version: 7.9.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      zod-schema:
+        specifier: ^0.0.1
+        version: 0.0.1
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.1
@@ -1738,6 +1741,9 @@ packages:
   yoga-layout@3.2.1:
     resolution: {integrity: sha512-0LPOt3AxKqMdFBZA3HBAt/t/8vIKq7VaQYbuA8WxCgung+p9TVyKRYdpvCb80HcdTN2NkbIKbhNwKUfm3tQywQ==}
 
+  zod-schema@0.0.1:
+    resolution: {integrity: sha512-hsKIT6si7rKB+yeSXfVSINJ+Z5HzJOVofAM2qEIL4ircq+UtPHxoxIVZj+QzDiPmoZN9i2EXj5gNLR7lq5ormg==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -3343,3 +3349,5 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yoga-layout@3.2.1: {}
+
+  zod-schema@0.0.1: {}
