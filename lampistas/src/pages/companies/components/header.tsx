@@ -36,7 +36,7 @@ export default function Header() {
                             Historial de incidencias
                         </button>
                     </Link>
-                    <Link to="/crear-presupuesto" >
+                    <Link to="/company/crear-presupuesto" >
                         <button className="flex items-center rounded-md bg-yellow-500 px-4 py-2 hover:bg-yellow-600 transition-colors text-black">
                             Crear presupuesto
                         </button>

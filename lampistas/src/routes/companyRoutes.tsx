@@ -7,7 +7,7 @@ import ListWorkers from "../pages/companies/listWorkers";
 import EditWorkers from "../pages/companies/editWorkers";
 import RegisterUser from "../pages/companies/registerUser";
 import ListClients from "../pages/companies/listClients";
-
+import CreateBudget from "../pages/companies/createBudget";
 export default function CompanyRoutes(){
     return (
         <Routes>
@@ -21,6 +21,7 @@ export default function CompanyRoutes(){
             <Route path="editarTrabajador" element={<ProtectedRoute userType="company"><EditWorkers /></ProtectedRoute>} />
             <Route path="registrarCliente" element={<ProtectedRoute userType="company"><RegisterUser /></ProtectedRoute>} />
             <Route path="mis-Clientes" element={<ProtectedRoute userType="company"><ListClients /></ProtectedRoute>} />
+            <Route path="crear-presupuesto" element={<ProtectedRoute userType="company"><CreateBudget /></ProtectedRoute>} />
         </Routes>
     );
 }
