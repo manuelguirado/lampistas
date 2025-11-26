@@ -10,13 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@react-pdf/renderer": "^4.3.1",
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.553.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.66.1",
     "react-router": "^7.9.5",
     "react-router-dom": "^7.9.5",
+    "zod": "^4.1.13",
     "zod-schema": "^0.0.1"
   },
   "devDependencies": {

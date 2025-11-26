@@ -1,14 +1,15 @@
-import type { ItemType } from '../types/itemType';
+import type { ItemType } from './itemType';
+
 export type FormData = {
-    clientName: string;
-    clientEmail: string;
-    clientID: number;
-    date: string;
-    items: ItemType[];
-    budgetNumber: string;
-    companyName: string;
-    incidentID: number;
-    subtotal: number;
-    tax: number;
-    totalAmmount: number;
+  budgetNumber: string;
+  companyName: string;
+  clientName: string;
+  clientEmail: string;
+  clientID: number;
+  date: string;
+  items: ItemType[];
+  incidentID?: number;
+  subtotal: number;
+  tax: number;
+  totalAmmount: number;
 };
