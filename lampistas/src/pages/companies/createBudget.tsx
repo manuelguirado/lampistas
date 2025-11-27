@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+import api from "../../utils/api"; // ✅ Importar
 
 function CreateBudget() {
     const navigate = useNavigate();
@@ -25,7 +26,6 @@ function CreateBudget() {
 
     const items = watch('items') || [];
 
-    // ✅ Actualizar totales automáticamente cuando cambien items
     useEffect(() => {
         items.forEach((item, index) => {
             const newTotal = (item.quantity || 0) * (item.unitPrice || 0);
@@ -35,18 +35,13 @@ function CreateBudget() {
         });
     }, [items, setValue]);
 
-    function onSubmit(data: BudgetFormData) {
-        const token = localStorage.getItem('companyToken');
-        
-        const { itemsWithTotal, subtotal, tax, total } = calculateTotals();
-        
-        fetch('http://localhost:3000/company/CreateBudget', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
+    // ✅ SIMPLIFICADO - De 80 líneas a 20
+    async function onSubmit(data: BudgetFormData) {
+        try {
+            const { itemsWithTotal, subtotal, tax, total } = calculateTotals();
+            
+    
+            await api.post('/company/CreateBudget', {
                 budgetNumber: data.budgetNumber,
                 userID: data.clientID,
                 items: itemsWithTotal,
@@ -55,28 +50,20 @@ function CreateBudget() {
                 totalAmount: total,
                 incidentID: data.incidentID || undefined,
                 description: `Presupuesto ${data.budgetNumber} para ${data.clientName}`,
-            }),
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(() => {
+            });
+
             alert('Presupuesto creado exitosamente!');
             navigate('/company/dashboard');
-        })
-        .catch((error) => {
+            
+        } catch (error : unknown) {
             console.error('Error creating budget:', error);
-            alert('Error al crear el presupuesto: ' + error.message);
-        }); 
+            alert('Error: ' + (error.response?.data?.message || error.message));
+        }
     }
 
     function handleAddItem() {
         const currentItems = watch('items') || [];
         setValue('items', [...currentItems, { description: "", quantity: 0, unitPrice: 0, total: 0 }]);
-        console.log('items ', watch('items'));
     }
 
     function handleRemoveItem(index: number) {
@@ -87,7 +74,7 @@ function CreateBudget() {
     function calculateTotals() {
         const itemsWithTotal = items.map(item => ({
             ...item,
-            total: (item.quantity || 0) * (item.unitPrice || 0) // ✅ Asegurar que no haya NaN
+            total: (item.quantity || 0) * (item.unitPrice || 0)
         }));
 
         const subtotal = itemsWithTotal.reduce((sum, item) => sum + (item.total || 0), 0);
