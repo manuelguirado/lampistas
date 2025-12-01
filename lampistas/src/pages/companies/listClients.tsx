@@ -1,21 +1,8 @@
 import Header from '../companies/components/header';
 import { useState, useEffect } from 'react';
 import { Eye } from 'lucide-react';
-
-interface Contract {
-    id: number;
-    contractType: string;
-    startDate: string;
-    endDate: string | null;
-    isActive: boolean;
-}
-
-interface Client {
-    userID: number;
-    name: string;
-    email: string;
-    contract: string;
-}
+import type { Contract } from '../../types/contract';
+import type { Client } from '../../types/clientType';
 
 export default function ListClients() {
     const [clients, setClients] = useState<Client[]>([]);
@@ -108,7 +95,7 @@ export default function ListClients() {
                                             ? 'bg-blue-100 text-blue-800' 
                                             : 'bg-green-100 text-green-800'
                                     }`}>
-                                        {client.contract === 'contract' ? 'Fixed Contract' : 'Free choice '}
+                                        {client.contract === 'contract' ? 'Contract' : 'Free Choice'}
                                     </span>
                                 </td>
                                 <td className="py-3 px-4 border-b text-center">
@@ -184,7 +171,7 @@ export default function ListClients() {
                                                             ? 'bg-blue-100 text-blue-800' 
                                                             : 'bg-green-100 text-green-800'
                                                     }`}>
-                                                        {contract.contractType === 'contract' ? 'Fixed Contract' : 'Free Choice'}
+                                                        {contract.contractType === 'contract' ? 'Contract' : 'Free Choice'}
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3 text-sm text-gray-900">
