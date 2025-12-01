@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import api from "../../utils/api"; // ✅ Importar
+import api from "../../api/intercepttors"; // ✅ Importar
 
 function CreateBudget() {
     const navigate = useNavigate();
@@ -39,8 +39,8 @@ function CreateBudget() {
     async function onSubmit(data: BudgetFormData) {
         try {
             const { itemsWithTotal, subtotal, tax, total } = calculateTotals();
-            
-    
+            const token = localStorage.getItem('companyToken');
+            console.log('Usando token:', token);
             await api.post('/company/CreateBudget', {
                 budgetNumber: data.budgetNumber,
                 userID: data.clientID,
@@ -50,7 +50,24 @@ function CreateBudget() {
                 totalAmount: total,
                 incidentID: data.incidentID || undefined,
                 description: `Presupuesto ${data.budgetNumber} para ${data.clientName}`,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                }
             });
+            console.log('Presupuesto creado con datos:', {
+                budgetNumber: data.budgetNumber,
+                userID: data.clientID,
+                items: itemsWithTotal,
+                subtotal: subtotal,
+                tax: tax,
+                totalAmount: total,
+                incidentID: data.incidentID || undefined,
+                description: `Presupuesto ${data.budgetNumber} para ${data.clientName}`,
+                token: token
+            });
+            
 
             alert('Presupuesto creado exitosamente!');
             navigate('/company/dashboard');

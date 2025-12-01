@@ -105,6 +105,7 @@ export default function ListWorkers() {
                             <td className="py-2 px-4 border border-gray-300">{worker.workerid}</td>
                             <td className="py-2 px-4 border border-gray-300">{worker.name}</td>
                             <td className="py-2 px-4 border border-gray-300">{worker.email}</td>
+            
                             <td className="py-2 px-4 border border-gray-300">
                                 {worker.activeIncidents.length}
                             </td>

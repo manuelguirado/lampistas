@@ -1,4 +1,5 @@
 import type { UserType } from "../types/userType";
+
 export function getAccessTokenKey(userType: UserType): string | null {
     const tokenMap : Record<UserType, string> = {
         admin: 'adminToken',
@@ -6,8 +7,11 @@ export function getAccessTokenKey(userType: UserType): string | null {
         user: 'userToken',
         worker: 'workerToken'
     };
-    return tokenMap[userType] || null;
+    const token = localStorage.getItem(tokenMap[userType]) || null;
+    console.log("Recuperando token para:", userType, "Token:", token);
+    return token; 
 }
+
 export function getRefreshTokenKey(userType: UserType): string | null {
     const refreshTokenMap : Record<UserType, string> = {
         admin: 'adminRefreshToken',
@@ -15,8 +19,11 @@ export function getRefreshTokenKey(userType: UserType): string | null {
         user: 'userRefreshToken',
         worker: 'workerRefreshToken'
     };
-    return refreshTokenMap[userType] || null;
+    const token = localStorage.getItem(refreshTokenMap[userType]) || null;
+    console.log("Recuperando refresh token para:", userType, "Token:", token);
+    return token;  
 }
+
 export function getIdKey(userType: UserType): string | null {
     const idMap : Record<UserType, string> = {
         admin: 'adminID',
@@ -24,20 +31,25 @@ export function getIdKey(userType: UserType): string | null {
         user: 'userID',
         worker: 'workerID'
     };
-    return idMap[userType] || null;
+    const userId = localStorage.getItem(idMap[userType]) || null;
+    console.log("Recuperando ID para:", userType, "ID:", userId);
+    return userId;  
 }
+
 export function setTokens(userType: UserType, accessToken: string, refreshToken: string, userID: number): void {
-   
+    const tokenMap: Record<UserType, { access: string; refresh: string; id: string }> = {
+        company: { access: 'companyToken', refresh: 'companyRefreshToken', id: 'companyID' },
+        user: { access: 'userToken', refresh: 'userRefreshToken', id: 'userID' },
+        worker: { access: 'workerToken', refresh: 'workerRefreshToken', id: 'workerID' },
+        admin: { access: 'adminToken', refresh: 'adminRefreshToken', id: 'adminID' }
+    };
     
-    const tokenMap: Record<UserType, { access: string; refresh: string }> = {
-    company: { access: 'companyToken', refresh: 'companyRefreshToken' },
-    user: { access: 'userToken', refresh: 'userRefreshToken' },
-    worker: { access: 'workerToken', refresh: 'workerRefreshToken' },
-    admin: { access: 'adminToken', refresh: 'adminRefreshToken' }
-  };
-   localStorage.setItem(tokenMap[userType].access, accessToken);
-  localStorage.setItem(tokenMap[userType].refresh, refreshToken);
+    console.log("Guardando tokens para:", tokenMap[userType].access, tokenMap[userType].refresh);
+    localStorage.setItem(tokenMap[userType].access, accessToken);
+    localStorage.setItem(tokenMap[userType].refresh, refreshToken);
+    localStorage.setItem(tokenMap[userType].id, userID.toString());  // ✅ También guardar el ID
 }
+
 export function getLoginRoute(userType: UserType): string {
     const routeMap : Record<UserType, string> = {
         admin: '/admin/adminLogin',
