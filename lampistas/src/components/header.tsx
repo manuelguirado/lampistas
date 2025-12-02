@@ -35,9 +35,11 @@ export default function Header() {
                             Administradores
                         </button>
                     </Link>
-                    <button className="flex items-center rounded-md bg-yellow-500 px-4 py-2 hover:bg-yellow-600 transition-colors text-black">
-                        Acceso Trabajadores
-                    </button>
+                    <Link to="/worker/workerLogin" >
+                        <button className="flex items-center rounded-md bg-yellow-500 px-4 py-2 hover:bg-yellow-600 transition-colors text-black">
+                            Acceso Trabajadores
+                        </button>
+                    </Link>
                 </nav>
 
                 {/* Mobile Menu Button */}
@@ -68,9 +70,11 @@ export default function Header() {
                                     Acceso Empresas
                                 </button>
                             </Link>
+                            <Link to="/worker/workerLogin">
                             <button className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
                                 Acceso Trabajadores
                             </button>
+                            </Link>
                         </nav>
                     </motion.div>
                 )}

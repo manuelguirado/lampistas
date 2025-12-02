@@ -11,7 +11,7 @@ import CreateBudget from "../pages/companies/createBudget";
 import MyIncidents from "../pages/companies/myIncidents";
 export default function CompanyRoutes() {
   return (
-    <Routes>
+    <Routes >
       {/* Ruta pública */}
       <Route path="companyLogin" element={<LoginCompany />} />
 
