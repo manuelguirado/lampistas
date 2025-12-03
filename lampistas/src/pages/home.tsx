@@ -1,5 +1,7 @@
 import Header from "../components/header";
+import { useNavigate } from "react-router";
 export default function Home() {
+    const navigate = useNavigate();
     return (
         <div className="bg-white/80 w-full h-full  p-16 rounded-xl border border-amber-100  hover:shadow-sm transition-shadow duration-300  mt-0">
             <Header />
@@ -14,7 +16,7 @@ export default function Home() {
                 <button className="mt-4 bg-amber-500 text-white py-2 px-4 rounded-lg hover:bg-amber-600">
                     Buscar Empresas
                 </button>
-                <button className="mt-4 bg-amber-500 text-white py-2 px-4 rounded-lg hover:bg-amber-600">
+                <button className="mt-4 bg-amber-500 text-white py-2 px-4 rounded-lg hover:bg-amber-600" onClick={() => navigate('/user/userRegister')}>
                     Registrarse
                 </button>
             </section>

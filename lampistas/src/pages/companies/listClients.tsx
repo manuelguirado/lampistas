@@ -1,6 +1,6 @@
 import Header from '../companies/components/header';
 import { useState, useEffect } from 'react';
-import { Eye } from 'lucide-react';
+import { Eye,Code } from 'lucide-react';
 import type { Contract } from '../../types/contract';
 import type { Client } from '../../types/clientType';
 
@@ -17,7 +17,29 @@ export default function ListClients() {
     useEffect(() => {
         fetchClients();
     }, [currentPage]);
+        async function handleGenerateCode(userID: number) {
+        try {
+            const response = await fetch(`http://localhost:3000/company/assignUserCode/${userID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+         
+            });
 
+            const data = await response.json();
+            if (data.code) {
+                alert(`Code generated successfully: ${data.code}`);
+                window.navigator.clipboard.writeText(data.code);
+            } else {
+                alert('Error generating code.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error generating code.');
+        }
+    }
     function fetchClients() {
         fetch(`http://localhost:3000/company/listClients?limit=${pageSize}&offset=${(currentPage - 1) * pageSize}`, {
             method: 'GET',
@@ -106,7 +128,15 @@ export default function ListClients() {
                                     >
                                         <Eye className="h-4 w-4" />
                                         <span className="text-sm">View Contracts</span>
+                                    
                                     </button>
+                                        <button 
+                                            className="p-2 hover:bg-amber-200 rounded transition-colors"
+                                            title="Generate code"
+                                            onClick={() => handleGenerateCode(client.userID)}
+                                        >
+                                            <Code size={18} className="text-purple-600" />
+                                        </button>
                                 </td>
                             </tr>
                         ))}

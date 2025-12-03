@@ -16,10 +16,13 @@ export default function Header() {
                 <h1 className="text-2xl text-amber-800 font-bold">Lampistas</h1>
 
                 {/* Desktop Navigation */}
+               
                 <nav className="hidden lg:flex space-x-4 justify-end flex-1">
+                     <Link to="/user/userLogin">
                     <button className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white">
                         Acceso Clientes
                     </button>
+                </Link>
 
                     <Link to="/company/companyLogin" >
                         <button 

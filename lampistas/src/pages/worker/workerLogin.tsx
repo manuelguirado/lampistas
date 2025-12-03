@@ -22,7 +22,7 @@ export default function WorkerLogin() {
     })
       .then((response) => response.json())
       .then((data) => {
-     
+      console.log(data);
         // Guardar el token en localStorage
         if (data.token) {
           localStorage.setItem("workerToken", data.token);
@@ -106,7 +106,7 @@ export default function WorkerLogin() {
           </button>
         </div>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold">o Ingrese su código de empresa</h2>
+          <h2 className="text-2xl font-bold">o Ingrese su código de trabajador</h2>
           <input
             type="text"
             id="companyCode"
