@@ -44,41 +44,69 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
       });
   }
   return ( 
-         <div className=" w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
+         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
                 <Header />
-              <h2 className="text-2xl font-bold p-20">edit company Page</h2>
-               <form action="" method="post" onSubmit={handleSubmit} className='flex flex-col space-y-4'>
-                <input
-                  type="text"
-                  placeholder="Company ID"
-                  value={formData.companyID}
-                  onChange={(e) => setFormData({ ...formData, companyID: e.target.value })}
-                  className="border p-2 mb-4"
-                  required
-                />
-                <input
-                   type='text'
-                   placeholder='name'
-                value={formData.name}
-                className='border p-2 mb-4'
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-                <input
-                   type='text'
-                   placeholder='phone'
-                value={formData.phone}
-                className='border p-2 mb-4'
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                />
-                <input
-                   type='email'
-                   placeholder='email'
-                value={formData.email}
-                className='border p-2 mb-4'
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-                <button type="submit" className="bg-amber-500 text-white px-4 py-2 rounded">
-                  Edit Company
+              <h2 className="text-2xl font-bold mb-6">Editar Empresa</h2>
+              
+               <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        ID de Empresa
+                    </label>
+                    <input
+                        type="text"
+                        placeholder="ID de la empresa"
+                        value={formData.companyID}
+                        onChange={(e) => setFormData({ ...formData, companyID: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Nombre
+                    </label>
+                    <input
+                        type='text'
+                        placeholder='Nombre de la empresa'
+                        value={formData.name}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Teléfono
+                    </label>
+                    <input
+                        type='text'
+                        placeholder='Teléfono'
+                        value={formData.phone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Email
+                    </label>
+                    <input
+                        type='email'
+                        placeholder='Email'
+                        value={formData.email}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full bg-amber-500 text-white px-4 py-3 rounded-lg hover:bg-amber-600 transition-colors font-semibold"
+                >
+                    Actualizar Empresa
                 </button>
               </form>
             </div>

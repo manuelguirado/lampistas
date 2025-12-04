@@ -14,12 +14,12 @@ export default function Header() {
                 
                 {/* Desktop Navigation - Ajustado para pantallas md */}
                 <nav className="hidden md:flex gap-2 flex-wrap justify-end flex-1">
-                    <Link to="/user/miMaquinaria">
+                    <Link to="/user/myMachinery">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
                             Mi maquinaria
                         </button>
                     </Link>
-                    <Link to="/user/crearIncidencia">
+                    <Link to="/user/createIncident">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
                             Crear Incidencia
                         </button>

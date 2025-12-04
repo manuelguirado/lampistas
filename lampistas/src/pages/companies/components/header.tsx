@@ -49,6 +49,11 @@ export default function Header() {
                             Crear presupuesto
                         </button>
                     </Link>
+                    <Link to="/company/maquinaria">
+                        <button className="rounded-md bg-yellow-500 px-3 py-2 hover:bg-yellow-600 transition-colors text-black text-sm whitespace-nowrap">
+                            Maquinaria
+                        </button>
+                    </Link>
                 </nav>
                 
                 {/* Mobile Menu Button */}
@@ -88,6 +93,9 @@ export default function Header() {
                             </Link>
                             <Link to="/company/crear-presupuesto" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
                                 Crear presupuesto
+                            </Link>
+                            <Link to="/company/crear-maquinaria" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
+                                Crear maquinaria
                             </Link>
                         </nav>
                     </motion.div>

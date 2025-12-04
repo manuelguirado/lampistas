@@ -67,9 +67,9 @@ export default function RegisterUser() {
     }
 
     return (
-        <div className="w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
+        <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold p-20">Register User Page</h2>
+            <h2 className="text-2xl font-bold mb-6">Registrar Usuario</h2>
             <form onSubmit={handleSubmit} className='flex flex-col space-y-4'>
                 <input
                     type="text"
