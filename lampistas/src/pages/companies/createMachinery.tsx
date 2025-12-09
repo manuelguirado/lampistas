@@ -1,61 +1,79 @@
 import type { MachineryType } from "../../types/machineryType";
 import { useEffect, useState } from "react";
 import Header from "./components/header";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateMachinery() {
     const token = localStorage.getItem("companyToken");
-    const [clients,setClients] = useState<Array<{ clientID: number; name: string }>>([]);
-const [formData, setFormData] = useState<MachineryType>({
-    machineryID: 0,
-    name: "",
-    description: "",
-    brand: "",
-    model: "",
-    serialNumber: "",
-    companyName: "",
-    machineType: ""
-});
+    const [clients, setClients] = useState<Array<{ userID: number; name: string }>>([]); // ✅ Cambiar clientID a userID
+    const navigate = useNavigate();
+    
+    const [formData, setFormData] = useState<MachineryType>({
+        machineryID: 0,
+        name: "",
+        description: "",
+        brand: "",
+        model: "",
+        installedAT: new Date(),
+        serialNumber: "",
+        companyName: "",
+        machineType: "",
+        clientID: null, // ✅ Cambiar de 0 a null
+    });
 
-useEffect(() => {
-    fetch("http://localhost:3000/company/listClients?limit=100&offset=0", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClients(data.clients || []);
-      })
-      .catch((err) => console.error("Error fetching clients:", err));
-  }, [token]);
- function handleSubmit(event: React.FormEvent) {
+    useEffect(() => {
+        fetch("http://localhost:3000/company/listClients?limit=100&offset=0", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setClients(data.clients || []);
+            })
+            .catch((err) => console.error("Error fetching clients:", err));
+    }, [token]);
+
+    function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
+        
         fetch("http://localhost:3000/company/createMachinery", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+                name: formData.name,
+                description: formData.description || null,
+                brand: formData.brand || null,
+                model: formData.model,
+                serialNumber: formData.serialNumber,
+                installedAT: new Date(),
+                machineType: formData.machineType,
+                companyName : formData.companyName || null,
+                clientID: formData.clientID && formData.clientID !== 0 ? formData.clientID : null, // ✅ null si es 0 o vacío
+            }),
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log("Success:", data);
-               if (data.token) {
-                    alert("Machinery created successfully!");
+            
+        
+                if (data.token) {
+                    alert("Maquinaria creada exitosamente!");
+                    navigate("/company/maquinaria/listarMaquinaria");
                 } else {
-                    alert("Error creating machinery.");
-               }
-                
-
+                    alert("Error al crear maquinaria.");
+                }
             })
             .catch((error) => {
                 console.error("Error creating machinery:", error);
-                alert("Error creating machinery.");
+                alert("Error al crear maquinaria.");
             });
     }
+
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
@@ -94,7 +112,6 @@ useEffect(() => {
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         rows={4}
-                        required
                     />
                 </div>
 
@@ -111,7 +128,6 @@ useEffect(() => {
                             setFormData({ ...formData, brand: e.target.value })
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        required
                     />
                 </div>
 
@@ -131,8 +147,11 @@ useEffect(() => {
                         required
                     />  
                 </div>
+
                 <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Número de Serie</label>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Número de Serie
+                    </label>
                     <input
                         type="text"
                         name="serialNumber"
@@ -145,22 +164,49 @@ useEffect(() => {
                         required
                     />
                 </div>
+
                 <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Tipo de Maquinaria</label>
-                    <input
-                        type="text"
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Tipo de Maquinaria
+                    </label>
+                    <select
                         name="machineType"
-                        placeholder="Tipo de maquinaria"
                         value={formData.machineType}
                         onChange={(e) =>
                             setFormData({ ...formData, machineType: e.target.value })
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         required
+                    >
+                        <option value="">Selecciona un tipo</option>
+                        <option value="CALDERA">Caldera</option>
+                        <option value="BOMBA">Bomba</option>
+                        <option value="COMPRESOR">Compresor</option>
+                        <option value="HVAC">HVAC</option>
+                        <option value="GENERADOR">Generador</option>
+                        <option value="EXCAVADORA">Excavadora</option>
+                        <option value="GRUA">Grúa</option>
+                        <option value="OTRO">Otro</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Fecha de Instalación
+                    </label>
+                    <input
+                        type="date"
+                        name="installedAT"
+                        value={formData.installedAT.toISOString().split('T')[0]}
+                        onChange={(e) =>
+                            setFormData({ ...formData, installedAT: new Date(e.target.value) })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
                 </div>
                 <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">Nombre de la Empresa</label>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Nombre de la Empresa
+                    </label>
                     <input
                         type="text"
                         name="companyName"
@@ -170,31 +216,47 @@ useEffect(() => {
                             setFormData({ ...formData, companyName: e.target.value })
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        required
-                    />
+                    />  
                 </div>
-              <div className="flex items-center gap-2">
+                <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-1">
+                        Asignar a Cliente (Opcional)
+                    </label>
                     <select
-                      value={formData.ClientID || ""}
-                      onChange={(e) =>
-                        setFormData({ ...formData, ClientID: Number(e.target.value) })
-                      }
-                      
-                      className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        value={formData.clientID !== null && formData.clientID !== 0 ? formData.clientID.toString() : ""}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                    
+                            setFormData({ 
+                                ...formData, 
+                                clientID: value !== "" ? Number(value) : null
+                            });
+                          
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
-                      <option value="">Sin asignar</option>
-                      {clients.map((client) => (
-                        <option key={client.clientID} value={client.clientID}>
-                          {client.name}
-                        </option>
-                      ))}
+                        <option value="">Sin asignar</option> 
+                        {clients.map((client) => (
+                            <option key={client.userID} value={client.userID}> {/* ✅ Cambiar a userID */}
+                                {client.name}
+                            </option>
+                        ))}
                     </select>
                 </div>
+
                 <button
                     type="submit"
                     className="w-full bg-amber-500 text-white px-4 py-3 rounded-lg hover:bg-amber-600 transition-colors font-semibold"
                 >
                     Crear Maquinaria
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => navigate("/company/maquinaria")}
+                    className="w-full bg-gray-200 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                    Cancelar
                 </button>
             </form>
         </div>

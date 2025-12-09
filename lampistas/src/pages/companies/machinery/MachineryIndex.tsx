@@ -19,7 +19,7 @@ export default function MachineryIndex() {
         </Link>
 
         <Link
-          to="listar"
+          to="listarMaquinaria"
           className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
         >
           <h3 className="text-xl font-semibold text-amber-600 mb-2">
@@ -29,30 +29,20 @@ export default function MachineryIndex() {
             Ver toda la maquinaria registrada
           </p>
         </Link>
-
-        <Link
-          to="editar"
+        <Link to="añadirMantenimiento"
           className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
         >
           <h3 className="text-xl font-semibold text-amber-600 mb-2">
-            Editar Maquinaria
+            Añadir Mantenimiento
           </h3>
           <p className="text-gray-600">
-            Modificar información de maquinaria existente
+            Registrar una nueva fecha de mantenimiento para la maquinaria
           </p>
         </Link>
 
-        <Link
-          to="eliminar"
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-        >
-          <h3 className="text-xl font-semibold text-amber-600 mb-2">
-            Eliminar Maquinaria
-          </h3>
-          <p className="text-gray-600">
-            Dar de baja maquinaria del sistema
-          </p>
-        </Link>
+      
+
+       
       </div>
     </div>
   );
