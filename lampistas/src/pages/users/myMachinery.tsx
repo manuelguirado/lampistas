@@ -9,7 +9,7 @@ export default function MyMachinery() {
     if (!token) return;
 
     try {
-      const response = fetch("http://localhost:3000/user/userMachinery", {
+   fetch("http://localhost:3000/user/userMachinery", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,6 @@ export default function MyMachinery() {
             <th className="py-2 px-4 border">Descripción</th>
             <th className="py-2 px-4 border">Marca</th>
             <th className="py-2 px-4 border">Número de serie</th>
-            <th className="py-2 px-4 border">Fecha de mantenimiento</th>
             <th className="py-2 px-4 border">Fecha de instalación</th>
             <th className="py-2 px-4 border">Última fecha de inspección</th>
           </tr>
@@ -56,11 +55,9 @@ export default function MyMachinery() {
               <td className="py-2 px-4 border">{machine.description}</td>
               <td className="py-2 px-4 border">{machine.brand}</td>
               <td className="py-2 px-4 border">{machine.serialNumber}</td>
-              <td className="py-2 px-4 border">{machine.maintenanceDate ? machine.maintenanceDate.toString() : ""}</td>
-              <td className="py-2 px-4 border">{machine.installedAT ? machine.installedAT.toString() : ""}</td>
-              <td className="py-2 px-4 border">
-                {machine.lastInspectionDate ? machine.lastInspectionDate.toString() : ""}
-              </td>
+              <td className="py-2 px-4 border">{machine.installedAt ? machine.installedAt.toString() : ""}</td>
+              <td className="py-2 px-4 border">{machine.lastInspectionDate ? machine.lastInspectionDate.toString() : ""}</td>
+        
             </tr>
           ))}
         </tbody>

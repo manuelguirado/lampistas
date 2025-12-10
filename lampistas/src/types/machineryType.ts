@@ -6,9 +6,8 @@ export interface MachineryType {
   model: string;
   clientID?: number;
   serialNumber: string;
-  maintenanceDate?: Date;
   lastInspectionDate?: Date;
-  installedAT?: Date;
+  installedAt?: Date;
   companyName: string;
   machineType: string;
 }

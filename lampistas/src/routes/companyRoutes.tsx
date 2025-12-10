@@ -14,6 +14,7 @@ import MachineryLayout from "../pages/companies/machinery/MachineryLayout";
 import MachineryIndex from "../pages/companies/machinery/MachineryIndex";
 import ListMachinery from "../pages/companies/listMachinery";
 import EditMachinery from "../pages/companies/editMachinery";
+import UpdateMaintence from "../pages/companies/updateMaintence";
 
 export default function CompanyRoutes() {
   return (
@@ -103,6 +104,7 @@ export default function CompanyRoutes() {
         <Route path="crearMaquinaria" element={<CreateMachinery />} />
         <Route path="listarMaquinaria" element={<ListMachinery />} />
         <Route path="editarMaquinaria/:machineryID" element={<EditMachinery />} />
+        <Route path="actualizarMantenimiento" element={<UpdateMaintence />} />
       </Route>
     </Routes>
     
