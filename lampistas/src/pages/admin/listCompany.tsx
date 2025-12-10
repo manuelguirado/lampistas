@@ -91,30 +91,31 @@ export default function ListCompany() {
     }, [currentPage, pageSize]);
 
     return (
-        <div className="min-h-screen bg-amber-50">
+        <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <main className="pt-20 p-4">
-                <h2 className="text-3xl font-bold text-amber-800 mb-6">List Companies</h2>
-                <table className="w-full h-full border-solid">
+            <h2 className="text-2xl font-bold mb-6">Lista de Empresas</h2>
+            
+            <div className="w-full max-w-7xl overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300 shadow-md">
                     <thead>
                         <tr className="bg-amber-200">
-                            <th className="border px-4 py-2">ID</th>
-                            <th className="border px-4 py-2">Company name</th>
-                            <th className="border px-4 py-2">Email</th>
-                            <th className="border px-4 py-2">Phone</th>
-                            <th className="border px-4 py-2">Status</th>
-                            <th className="border px-4 py-2">Address</th>
-                            <th className="border px-4 py-2">Actions</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Nombre</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Email</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Teléfono</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Estado</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Dirección</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {companies.map((company) => (
-                            <tr key={company.name} className="hover:bg-amber-100">
-                                <td className="border px-4 py-2">{company.companyID}</td>
-                                <td className="border px-4 py-2">{company.name}</td>
-                                <td className="border px-4 py-2">{company.email}</td>
-                                <td className="border px-4 py-2">{company.phone}</td>
-                                <td className="border px-4 py-2">
+                            <tr key={company.name} className="hover:bg-amber-50">
+                                <td className="py-2 px-4 border border-gray-300">{company.companyID}</td>
+                                <td className="py-2 px-4 border border-gray-300">{company.name}</td>
+                                <td className="py-2 px-4 border border-gray-300">{company.email}</td>
+                                <td className="py-2 px-4 border border-gray-300">{company.phone}</td>
+                                <td className="py-2 px-4 border border-gray-300">
                                     <span className={`px-2 py-1 rounded text-sm font-semibold ${
                                         company.suspended 
                                             ? 'bg-red-200 text-red-800' 
@@ -123,8 +124,8 @@ export default function ListCompany() {
                                         {company.suspended ? 'Suspended' : 'Active'}
                                     </span>
                                 </td>
-                                <td className="border px-4 py-2">{company.directions?.address || 'N/A'}</td>
-                                <td className="border px-4 py-2">
+                                <td className="py-2 px-4 border border-gray-300">{company.directions?.address || 'N/A'}</td>
+                                <td className="py-2 px-4 border border-gray-300">
                                     <div className="flex gap-2 justify-center">
                                         <button 
                                             className="p-2 hover:bg-amber-200 rounded transition-colors"
@@ -172,29 +173,28 @@ export default function ListCompany() {
                             </tr>
                         ))}
                     </tbody>
-                    <tfoot className="border-t ">
-                        <tr>
-                            <td colSpan={7} className="flex justify-end space-x-4 p-4">
-                                <button
-                                    className="p-2 bg-amber-300 text-white rounded hover:bg-amber-400 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-                                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                                    disabled={currentPage === 1}
-                                >
-                                    <ChevronLeft size={16} />
-                                </button>
-                                <span className="px-4 py-2">Page {currentPage} of {totalPages || 1}</span>
-                                <button
-                                    className="p-2 bg-amber-300 text-white rounded hover:bg-amber-400 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-                                    onClick={() => setCurrentPage((prev) => prev + 1)}
-                                    disabled={currentPage >= totalPages}
-                                >
-                                    <ChevronRight size={16} />
-                                </button>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
-            </main>
+            </div>
+            
+            <div className="flex justify-center mt-6 space-x-4">
+                <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="flex items-center px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <ChevronLeft size={16} className="mr-2" />
+                    Anterior
+                </button>
+                <span className="px-4 py-2 flex items-center">Página {currentPage} de {totalPages || 1}</span>
+                <button
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    disabled={currentPage >= totalPages}
+                    className="flex items-center px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    Siguiente
+                    <ChevronRight size={16} className="ml-2" />
+                </button>
+            </div>
         </div>
     );
 }

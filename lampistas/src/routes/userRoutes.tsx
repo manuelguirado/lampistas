@@ -6,7 +6,7 @@ import MyMachinery from "../pages/users/myMachinery";
 import { Routes, Route } from "react-router-dom";
 import UserDashboard from "../pages/users/userDashboard";
 import UserHome from "../pages/users/userrHome";
-
+import UserBudgets from "../pages/users/userBudgets";
 export default function UserRoutes() {
   return (
     <Routes>
@@ -28,6 +28,7 @@ export default function UserRoutes() {
       </Route>
         <Route path="createIncident" element={ <ProtectedRoute userType="worker"><CreateIncident /></ProtectedRoute> } />
         <Route path="myMachinery" element={ <ProtectedRoute userType="worker"><MyMachinery /></ProtectedRoute> } />
+        <Route path="myBudgets" element={ <ProtectedRoute userType="worker"><UserBudgets /></ProtectedRoute> } />
       {/* Aquí puedes agregar rutas protegidas para usuarios si es necesario */}
     </Routes>
   );

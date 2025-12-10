@@ -70,54 +70,59 @@ export default function ListMachinery() {
     return (
       <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
         <h2 className="text-2xl font-bold mb-6">Lista de Maquinarias</h2>
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b border-gray-300">ID</th>
-              <th className="py-2 px-4 border-b border-gray-300">Nombre</th>
-              <th className="py-2 px-4 border-b border-gray-300">
-                Tipo de Maquinaria
-              </th>
-              <th className="py-2 px-4 border-b border-gray-300">Marca</th>
-              <th className="py-2 px-4 border-b border-gray-300">Modelo</th>
-              <th className="py-2 px-4 border-b border-gray-300">
-                Número de Serie
-              </th>
-              <th className="py-2 px-4 border-b border-gray-300">
-                Fecha de Instalación
-              </th>
-              <th className="py-2 px-4 border-b border-gray-300">cliente</th>
-              <th className="py-2 px-4 border-b border-gray-300">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {machine.map((machinery) => (
-              <tr key={machinery.machineryID}>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.machineryID}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.name}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.machineType}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.brand}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.model}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.serialNumber}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {new Date(machinery.installedAt).toLocaleDateString()}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  {machinery.clientID}
-                </td>
-                <td className="py-2 px-4 border-b border-gray-300 flex space-x-2">
+        <div className="w-full max-w-7xl overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-300 shadow-md">
+            <thead>
+              <tr className="bg-amber-200">
+                <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">Nombre</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Tipo de Maquinaria
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">Marca</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">Modelo</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Número de Serie
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Fecha de Instalación
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">Cliente</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {machine.map((machinery) => (
+                <tr key={machinery.machineryID} className="hover:bg-amber-50">
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.machineryID}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.name}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.machineType}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.brand || "-"}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.model}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.serialNumber}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.installedAt 
+                      ? new Date(machinery.installedAt).toLocaleDateString('es-ES')
+                      : <span className="text-gray-400 italic">Sin instalar</span>
+                    }
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {machinery.clientID || <span className="text-gray-400 italic">Sin asignar</span>}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    <div className="flex gap-2">
                   <button
                     className="text-blue-500 hover:text-blue-700"
                     onClick={() =>
@@ -130,13 +135,16 @@ export default function ListMachinery() {
                   </button>
                   <button className="text-red-500 hover:text-red-700" onClick={() => eliminateMachinery(machinery.machineryID)}>
                     <Trash size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="mt-4 flex space-x-4">
+                    </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="flex justify-center mt-6 space-x-4">
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}

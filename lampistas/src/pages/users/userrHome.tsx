@@ -23,43 +23,43 @@ export default function WorkerHome() {
       });
   }, [token]);
   return (
-    <div className=" w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
+    <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
-      <h2 className="text-2xl font-bold p-20">User Home Page</h2>
+      <h2 className="text-2xl font-bold mb-6">Mis Incidencias</h2>
       
-      {/* Tabla de incidencias */}
-      <table className="min-w-full bg-white border">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="py-2 px-4 border">ID</th>
-            <th className="py-2 px-4 border">Título</th>
-            <th className="py-2 px-4 border ">fecha de reporte</th>
-            <th className="py-2 px-4 border">Estado</th>
-            <th className="py-2 px-4 border">Prioridad</th>
-          </tr>
-        </thead>
-        <tbody>
-          {myIncidents.map((incident) => (
-            <tr key={incident.IncidentsID}>
-              <td className="py-2 px-4 border">{incident.IncidentsID}</td>
-              <td className="py-2 px-4 border">{incident.title}</td>
-              <td className="py-2 px-4 border">
+      <div className="w-full max-w-7xl overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300 shadow-md">
+          <thead>
+            <tr className="bg-amber-200">
+              <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
+              <th className="py-2 px-4 border border-gray-300 text-left">Título</th>
+              <th className="py-2 px-4 border border-gray-300 text-left">Fecha de Reporte</th>
+              <th className="py-2 px-4 border border-gray-300 text-left">Estado</th>
+              <th className="py-2 px-4 border border-gray-300 text-left">Prioridad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {myIncidents.map((incident) => (
+              <tr key={incident.IncidentsID} className="hover:bg-amber-50">
+                <td className="py-2 px-4 border border-gray-300">{incident.IncidentsID}</td>
+                <td className="py-2 px-4 border border-gray-300">{incident.title}</td>
+                <td className="py-2 px-4 border border-gray-300">
                 {incident.dateReported instanceof Date
                   ? incident.dateReported.toLocaleString()
                   : incident.dateReported}
               </td>
 
-              <td className="py-2 px-4 border">
-                {incident.status}
-              </td>
-              <td className="py-2 px-4 border">
-                {incident.priority}
-                
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                <td className="py-2 px-4 border border-gray-300">
+                  {incident.status}
+                </td>
+                <td className="py-2 px-4 border border-gray-300">
+                  {incident.priority}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

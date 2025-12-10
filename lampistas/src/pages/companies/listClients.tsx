@@ -90,28 +90,28 @@ export default function ListClients() {
     }
 
     return (
-        <div className="w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
+        <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold p-4">List Clients Page</h2>
+            <h2 className="text-2xl font-bold mb-6">Lista de Clientes</h2>
             
-            <div className="w-full max-w-6xl">
-                <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="py-3 px-4 border-b text-left">Client ID</th>
-                            <th className="py-3 px-4 border-b text-left">Name</th>
-                            <th className="py-3 px-4 border-b text-left">Email</th>
-                            <th className="py-3 px-4 border-b text-left">Contract Type</th>
-                            <th className="py-3 px-4 border-b text-center">Actions</th>
+            <div className="w-full max-w-7xl overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300 shadow-md">
+                    <thead>
+                        <tr className="bg-amber-200">
+                            <th className="py-2 px-4 border border-gray-300 text-left">ID Cliente</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Nombre</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Email</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Tipo de Contrato</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {clients.map((client) => (
-                            <tr key={client.userID} className="hover:bg-gray-50">
-                                <td className="py-3 px-4 border-b">{client.userID}</td>
-                                <td className="py-3 px-4 border-b">{client.name}</td>
-                                <td className="py-3 px-4 border-b">{client.email}</td>
-                                <td className="py-3 px-4 border-b">
+                            <tr key={client.userID} className="hover:bg-amber-50">
+                                <td className="py-2 px-4 border border-gray-300">{client.userID}</td>
+                                <td className="py-2 px-4 border border-gray-300">{client.name}</td>
+                                <td className="py-2 px-4 border border-gray-300">{client.email}</td>
+                                <td className="py-2 px-4 border border-gray-300">
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                                         client.contract === 'contract' 
                                             ? 'bg-blue-100 text-blue-800' 
@@ -120,7 +120,7 @@ export default function ListClients() {
                                         {client.contract === 'contract' ? 'Contract' : 'Free Choice'}
                                     </span>
                                 </td>
-                                <td className="py-3 px-4 border-b text-center">
+                                <td className="py-2 px-4 border border-gray-300">
                                     <button
                                         onClick={() => viewClientContracts(client.userID, client.name)}
                                         className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 px-3 py-1 rounded hover:bg-blue-50"

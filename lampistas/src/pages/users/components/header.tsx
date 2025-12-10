@@ -24,7 +24,7 @@ export default function Header() {
                             Crear Incidencia
                         </button>
                     </Link>
-                    <Link to="/user/misPresupuestos">
+                    <Link to="/user/myBudgets">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
                            Mis presupuestos
                         </button>
