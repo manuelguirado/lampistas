@@ -2,14 +2,38 @@ import {Link } from "react-router-dom";
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from "react";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-hot-toast";
+interface DecodedToken {
+    workerID: number;
+    role: string;
+    workerEmail: string;
+    workerName: string;
+    
+}
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
+    const token = localStorage.getItem('workerToken');
+    const [workerName, setWorkerName] = useState<string>('');
+    useEffect(() => {
+        if (token) {
+            try {
+                const decoded = jwtDecode<DecodedToken>(token);
+                setWorkerName(decoded.workerName);
+            } catch (error) {
+                toast.error('❌ Error decoding token: ' + (error as Error).message);
+            }
+        }
+    }, [token]);
     
     return (
         <header className="w-full bg-amber-100 text-white shadow-lg fixed top-0 left-0 z-50">
             <div className="flex items-center justify-between p-4">
-                <h1 className="text-xl md:text-2xl text-amber-800 font-bold">Lampistas - Trabajadores</h1>
+                <Link to="/">
+                <h1 className="text-xl md:text-2xl text-amber-800 font-bold">{workerName}</h1>
+                </Link>
                 
                 {/* Desktop Navigation - Ajustado para pantallas md */}
                 <nav className="hidden md:flex gap-2 flex-wrap justify-end flex-1">

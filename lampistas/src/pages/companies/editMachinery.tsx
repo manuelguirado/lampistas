@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 export default function EditMachinery() {
   const [formData, setFormData] = useState({
     name: "",
@@ -34,12 +35,12 @@ export default function EditMachinery() {
       .then((response) => response.json())
       .then(() => {
        
-        alert("Machinery updated successfully!");
+        toast.success("Machinery updated successfully!");
         navigate("/company/maquinaria/listarMaquinaria");
         
       })
       .catch((error) => {
-        console.error("Error updating machinery:", error);
+        toast.error("Error updating machinery: " + error.message);
       });
   };
 

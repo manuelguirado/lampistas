@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 import Header from "../../components/header";
 export default function UserRegister() {
     const navigate = useNavigate();
@@ -21,17 +22,17 @@ export default function UserRegister() {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-            console.log('Response data:', data);
+          
             if (data ) {
-                alert('User registered successfully!');
+                toast.success('¡Usuario registrado exitosamente!');
                 setFormData({ name: '', email: '', password: '' });
                 navigate('/user/userLogin');
             } else {
-                alert('Error registering user.');
+                toast.error('Error al registrar usuario.');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error registering user.');
+    
+            toast.error('Error al registrar usuario: ' + (error as Error).message);
         }
     }
 

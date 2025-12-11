@@ -1,4 +1,4 @@
-
+import {Toaster,toast} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
 import Header from '../admin/components/header';
 export default function RegisterCompany() {
@@ -8,6 +8,13 @@ export default function RegisterCompany() {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
         const formData = new FormData(form);
+              <Toaster
+                    position='top-right'
+                    toastOptions={{
+                        success: {duration:3000},
+                        error: {duration : 400}
+                    }}
+                    />
         
         // Obtener el adminID del token almacenado
         const token = localStorage.getItem('adminToken');
@@ -17,7 +24,7 @@ export default function RegisterCompany() {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 adminID = payload.adminID;
             } catch (error) {
-                console.error('Error decoding token:', error);
+                toast.error('Error decoding token: ' + (error as Error).message);
             }
         }
 
@@ -47,15 +54,16 @@ export default function RegisterCompany() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.token) {
-                    alert('Company registered successfully!');
+                    toast.success('Company registered successfully!');
+
                     navigate('/admin/listCompany');
                 } else {
-                    alert('Error registering company.');
+                    toast.error('Error registering company.');
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
-                alert('Error registering company.');
+              
+                toast.error('Error al registrar empresa.' + (error as Error).message);
             });
     }
     return (

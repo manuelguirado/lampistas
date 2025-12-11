@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import Header from "../../components/header";
 import { useState } from "react";
+import toast from "react-hot-toast";
 export default function WorkerLogin() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -22,18 +23,18 @@ export default function WorkerLogin() {
     })
       .then((response) => response.json())
       .then((data) => {
-      console.log(data);
+
         // Guardar el token en localStorage
         if (data.token) {
           localStorage.setItem("workerToken", data.token);
 
           navigate("/worker/workerDashboard");
         } else {
-          console.error("No se recibió token en la respuesta");
+          toast.error('Código inválido. Por favor, inténtelo de nuevo.');
         }
       })
       .catch((error) => {
-        console.error("Error en login:", error);
+        toast.error('Error en login: ' + error.message);
       });
   }
   function handleLogin(e: React.FormEvent) {
@@ -51,14 +52,15 @@ export default function WorkerLogin() {
       .then((res) => res.json())
       .then((data) => {
         if (data.token) {
+          toast.success('¡Inicio de sesión exitoso!');
           localStorage.setItem("workerToken", data.token);
           navigate("/worker/workerDashboard");
         } else {
-          alert("Login failed");
+          toast.error('Credenciales incorrectas');
         }
       })
       .catch((err) => {
-        console.error("Error during login:", err);
+        toast.error('Error during login: ' + err.message);
       });
   }
   return (

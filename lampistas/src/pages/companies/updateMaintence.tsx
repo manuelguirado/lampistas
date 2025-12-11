@@ -1,5 +1,6 @@
 import { useState,useEffect} from "react";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 export default function EditMachinery() {
     const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ export default function EditMachinery() {
            
         })
         .catch((error) => {
-            console.error("Error fetching machinery list:", error);
+            toast.error("Error fetching machinery list: " + (error as Error).message);
         });
     }, [token]);
     
@@ -52,11 +53,11 @@ export default function EditMachinery() {
         .then(() => {
 
   
-            alert("Maintenance updated successfully!");
+            toast.success('¡Mantenimiento actualizado exitosamente!');
             navigate("/company/machinery/listarMaquinaria");
         })
         .catch((error) => {
-            console.error("Error updating maintenance:", error);
+            toast.error("Error updating maintenance: " + (error as Error).message);
         });
     };
     return (

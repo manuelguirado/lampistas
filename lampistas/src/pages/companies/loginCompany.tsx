@@ -1,4 +1,5 @@
 
+import toast from 'react-hot-toast';
 import Header from '../../components/header';
 import { useState } from 'react';
 export default function LoginCompany() {
@@ -19,20 +20,21 @@ export default function LoginCompany() {
         )
             .then((data) => {
                 // Guardar el token en localStorage
-                console.log('Response data for company code validation:', data.token);
+               
                 if (data.token) {
+                    toast.success('¡Código válido! Inicio de sesión exitoso.');
                     localStorage.setItem('companyToken', data.token);
                  
                     // Redirigir al dashboard de la empresa
                         window.location.href = "/company/dashboard";
                 } else {
-                    console.error('No se recibió token en la respuesta');
+                    toast.error('No se recibió token en la respuesta');
                 }
               
             
             })
             .catch((error) => {
-                console.error('Error en login:', error);
+                toast.error('Error en login: ' + (error as Error).message);
             });
     }
     function handleSubmitEmail(event: React.FormEvent) {
@@ -54,15 +56,15 @@ export default function LoginCompany() {
                 // Guardar el token en localStorage
                 if (data.token) {
                     localStorage.setItem('companyToken', data.token);
-                    console.log('Token guardado:', data.token);
+                    toast.success('¡Inicio de sesión exitoso!');
                     // Redirigir al dashboard de la empresa
                     window.location.href = "/company/dashboard";
                 } else {
-                    console.error('No se recibió token en la respuesta');
+                    toast.error('No se recibió token en la respuesta');
                 }
             })
             .catch((error) => {
-                console.error('Error en login:', error);
+                toast.error('Error en login: ' + (error as Error).message);
             });
     }
     return (

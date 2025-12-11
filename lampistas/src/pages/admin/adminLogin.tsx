@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header";
+import toast from "react-hot-toast";
 export default function AdminLogin() {
   const navigate = useNavigate();
   
@@ -23,14 +24,15 @@ export default function AdminLogin() {
           // Guardar el token en localStorage
           if (data.token) {
             localStorage.setItem('adminToken', data.token);
-            console.log('Token guardado:', data.token);
+             toast.success('Login successful!');
             navigate("/admin/adminDashboard");
           } else {
-            console.error('No se recibió token en la respuesta');
+            toast.error('Login failed. Please check your credentials.');
+            
           }
         })
         .catch((error) => {
-          console.error('Error en login:', error);
+          toast.error('Error during login: ' + (error as Error).message);
         });
     }
 return (

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Header from '../worker/components/header';
 import Calendar from './components/calendar';
 import type { EventInput } from '@fullcalendar/core';
+import toast from 'react-hot-toast';
 import type { Shift } from '../../types/shitfts';
 export default function WorkerShifts() {
   const [shifts, setShifts] = useState<EventInput[]>([]);
@@ -34,7 +35,7 @@ export default function WorkerShifts() {
         }));
         setShifts(events);
       })
-      .catch(err => console.error('Error fetching shifts:', err))
+      .catch(err => toast.error('Error fetching shifts: ' + err.message))
       .finally(() => setLoading(false));
   }, [token]);
 

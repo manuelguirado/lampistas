@@ -9,9 +9,10 @@ title: string;
   status: 'pending' | 'approved' | 'rejected';
   items ?: Array<{
     itemID: string;
-    name: string;
+    description: string;
     quantity: number;
-    price: number;
+    total: number;
+ 
   }>;
   createdAt?: Date;
 

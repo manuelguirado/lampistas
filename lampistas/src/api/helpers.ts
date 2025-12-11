@@ -8,7 +8,7 @@ export function getAccessTokenKey(userType: UserType): string | null {
         worker: 'workerToken'
     };
     const token = localStorage.getItem(tokenMap[userType]) || null;
-    console.log("Recuperando token para:", userType, "Token:", token);
+ 
     return token; 
 }
 
@@ -20,7 +20,7 @@ export function getRefreshTokenKey(userType: UserType): string | null {
         worker: 'workerRefreshToken'
     };
     const token = localStorage.getItem(refreshTokenMap[userType]) || null;
-    console.log("Recuperando refresh token para:", userType, "Token:", token);
+  
     return token;  
 }
 
@@ -32,7 +32,7 @@ export function getIdKey(userType: UserType): string | null {
         worker: 'workerID'
     };
     const userId = localStorage.getItem(idMap[userType]) || null;
-    console.log("Recuperando ID para:", userType, "ID:", userId);
+   
     return userId;  
 }
 
@@ -44,7 +44,7 @@ export function setTokens(userType: UserType, accessToken: string, refreshToken:
         admin: { access: 'adminToken', refresh: 'adminRefreshToken', id: 'adminID' }
     };
     
-    console.log("Guardando tokens para:", tokenMap[userType].access, tokenMap[userType].refresh);
+  
     localStorage.setItem(tokenMap[userType].access, accessToken);
     localStorage.setItem(tokenMap[userType].refresh, refreshToken);
     localStorage.setItem(tokenMap[userType].id, userID.toString());  // ✅ También guardar el ID

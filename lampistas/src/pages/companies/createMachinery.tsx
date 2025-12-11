@@ -2,6 +2,7 @@ import type { MachineryType } from "../../types/machineryType";
 import { useEffect, useState } from "react";
 import Header from "./components/header";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function CreateMachinery() {
     const token = localStorage.getItem("companyToken");
@@ -33,7 +34,7 @@ export default function CreateMachinery() {
             .then((data) => {
                 setClients(data.clients || []);
             })
-            .catch((err) => console.error("Error fetching clients:", err));
+            .catch((err) => toast.error("Error fetching clients: " + err.message));
     }, [token]);
 
     function handleSubmit(event: React.FormEvent) {
@@ -62,15 +63,14 @@ export default function CreateMachinery() {
             
         
                 if (data.token) {
-                    alert("Maquinaria creada exitosamente!");
+                    toast.success("Maquinaria creada exitosamente!");
                     navigate("/company/maquinaria/listarMaquinaria");
                 } else {
-                    alert("Error al crear maquinaria.");
+                    toast.error('Error al crear maquinaria.');
                 }
             })
             .catch((error) => {
-                console.error("Error creating machinery:", error);
-                alert("Error al crear maquinaria.");
+                toast.error("Error creating machinery: " + error.message);
             });
     }
 

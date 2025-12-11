@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import Header from "./components/header";
 
 export default function RegisterUser() {
@@ -33,7 +34,7 @@ export default function RegisterUser() {
             const userData = await userResponse.json();
 
             if (!userData.userID) {
-                alert('Error registering user.');
+                toast.error('Error al registrar usuario.');
                 return;
             }
 
@@ -61,8 +62,7 @@ export default function RegisterUser() {
             }
 
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error during registration process.');
+            toast.error('Error durante el proceso de registro.' + (error as string));
         }
     }
 

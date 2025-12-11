@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router";
 import Header from '../companies/components/header';
+import toast from "react-hot-toast";
 export default  function RegisterWorker() {
     const [formData, setFormData] = useState({
         email: '',
@@ -12,7 +13,7 @@ export default  function RegisterWorker() {
    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const token = localStorage.getItem('companyToken');
-        console.log('Submitting worker registration with data:', formData);
+    
         fetch('http://localhost:3000/company/RegisterWorker', {
             method: 'POST',
             headers: {
@@ -24,17 +25,16 @@ export default  function RegisterWorker() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.token && data.workerid) {
-                    alert('Worker registered successfully!');
+                    toast.success('¡Trabajador registrado exitosamente!');
         
                     setFormData({ name: '', email: '', password: '' });
                     navigate('/company/misTrabajadores');
                 } else {
-                    alert('Error registering worker.');
+                   toast.error('Error registering worker: ' + (data.message || 'No se pudo registrar'));
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
-                alert('Error registering worker.');
+                alert('Error registering worker: ' + error.message);
             });
     }
     const token = localStorage.getItem('companyToken');

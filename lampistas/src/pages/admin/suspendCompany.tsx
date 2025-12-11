@@ -1,6 +1,7 @@
 
 import {useState} from 'react';
 import Header from "./components/header";
+import toast from 'react-hot-toast';
 export default function SuspendCompany() {
     const [formData, setFormData] = useState({ companyID: "" ,until :""});
 function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -18,10 +19,10 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     })
       .then((response) => response.json())
       .then(() => {
-        alert('Company suspended successfully!');
+        toast.success('Company suspended successfully!');
       })
       .catch((error) => {
-        console.error('Error suspending company:', error);
+        toast.error('Error suspending company.' + error.message);
       });
   }
   return (

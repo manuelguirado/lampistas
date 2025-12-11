@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import Header from "../../components/header";
+import toast from "react-hot-toast";
 export default function UserLogin() {
   const [Formdata, setFormdata] = useState({ email: "", password: "",code : "" });
   const navigate = useNavigate();
@@ -27,18 +28,19 @@ export default function UserLogin() {
         // Guardar el token en localStorage
         
         if (data.token) {
+          toast.success('✅ Código válido! Inicio de sesión exitoso.');
           localStorage.setItem('userToken', data.token);
        
           // Redirigir al dashboard del usuario
              navigate("/user/userDashboard");
         } else {
-          console.error('No se recibió token en la respuesta');
+          toast.error('No se recibió token en la respuesta');
         }
       
       
       })
       .catch((error) => {
-        console.error('Error en login:', error);
+        toast.error('Error en login: ' + (error as Error).message);
       });
   };
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,12 +59,13 @@ export default function UserLogin() {
       .then((data) => {
     
         if (data.token) {
+          toast.success("¡Inicio de sesión exitoso!");
           // Guardar el token en localStorage
           localStorage.setItem("userToken", data.token);
 
           navigate("/user/userDashboard");
         } else {
-          console.error("No se recibió token en la respuesta");
+          toast.error("No se recibió token en la respuesta");
         }
       });
   };

@@ -15,7 +15,12 @@ import MachineryIndex from "../pages/companies/machinery/MachineryIndex";
 import ListMachinery from "../pages/companies/listMachinery";
 import EditMachinery from "../pages/companies/editMachinery";
 import UpdateMaintence from "../pages/companies/updateMaintence";
-
+import WorkerIndex from "../pages/companies/worker/workerIndex";
+import WorkerLayout from "../pages/companies/worker/workerLayout";
+import ClientLayout from "../pages/companies/clients/clientLayout";
+import ClientsIndex from "../pages/companies/clients/clientsIndex";
+import IncidentIndex from "../pages/companies/incidents/incidentIndex";
+import IncidentLayout from "../pages/companies/incidents/incidentsLayout";
 export default function CompanyRoutes() {
   return (
     <Routes >
@@ -31,7 +36,43 @@ export default function CompanyRoutes() {
           </ProtectedRoute>
         }
       />
+     
+      
       <Route
+        path="crear-presupuesto"
+        element={
+          <ProtectedRoute userType="company">
+            <CreateBudget />
+          </ProtectedRoute>
+        }
+      />
+     
+      
+      {/* Nested routes para maquinaria */}
+      <Route
+        path="maquinaria"
+        element={
+          <ProtectedRoute userType="company">
+            <MachineryLayout />
+          </ProtectedRoute>
+        }
+      >
+        {/* Ruta index - se muestra cuando estás en /company/maquinaria */}
+        <Route index element={<MachineryIndex />} />
+        
+        {/* Rutas hijas - /company/maquinaria/crear, /company/maquinaria/listar, etc */}
+        <Route path="crearMaquinaria" element={<CreateMachinery />} />
+        <Route path="listarMaquinaria" element={<ListMachinery />} />
+        <Route path="editarMaquinaria/:machineryID" element={<EditMachinery />} />
+        <Route path="actualizarMantenimiento" element={<UpdateMaintence />} />
+      </Route>
+      <Route path="trabajadores" element={
+        <ProtectedRoute userType="company">
+          <WorkerLayout />
+        </ProtectedRoute>
+      }>
+        <Route index element={<WorkerIndex />} />
+         <Route
         path="registrarTrabajador"
         element={
           <ProtectedRoute userType="company">
@@ -55,7 +96,15 @@ export default function CompanyRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
+
+      </Route>
+      <Route path="clientes" element={
+        <ProtectedRoute userType="company">
+          <ClientLayout />
+        </ProtectedRoute>
+      }>
+        <Route index element={<ClientsIndex />} />
+        <Route
         path="registrarCliente"
         element={
           <ProtectedRoute userType="company">
@@ -71,15 +120,16 @@ export default function CompanyRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="crear-presupuesto"
-        element={
-          <ProtectedRoute userType="company">
-            <CreateBudget />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="Mis-incidencias" element={
+        
+  
+        </Route>
+        <Route path="incidencias" element={
+        <ProtectedRoute userType="company">
+          <IncidentLayout />
+        </ProtectedRoute>
+      }>
+        <Route index element={<IncidentIndex />} />
+         <Route path="Mis-incidencias" element={
         <ProtectedRoute userType="company">
           <MyIncidents />
         </ProtectedRoute>
@@ -87,25 +137,9 @@ export default function CompanyRoutes() {
      
     
       </Route>
-      
-      {/* Nested routes para maquinaria */}
-      <Route
-        path="maquinaria"
-        element={
-          <ProtectedRoute userType="company">
-            <MachineryLayout />
-          </ProtectedRoute>
-        }
-      >
-        {/* Ruta index - se muestra cuando estás en /company/maquinaria */}
-        <Route index element={<MachineryIndex />} />
         
-        {/* Rutas hijas - /company/maquinaria/crear, /company/maquinaria/listar, etc */}
-        <Route path="crearMaquinaria" element={<CreateMachinery />} />
-        <Route path="listarMaquinaria" element={<ListMachinery />} />
-        <Route path="editarMaquinaria/:machineryID" element={<EditMachinery />} />
-        <Route path="actualizarMantenimiento" element={<UpdateMaintence />} />
-      </Route>
+  
+        </Route>
     </Routes>
     
   );

@@ -1,7 +1,7 @@
 import Header from "../companies/components/header";
 import { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft, UserPlus } from "lucide-react";
-
+import toast from 'react-hot-toast';
 export default function MyIncidents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalIncidents, setTotalIncidents] = useState(0);
@@ -39,7 +39,7 @@ export default function MyIncidents() {
       .then((data) => {
         setWorkers(data.workers || []);
       })
-      .catch((err) => console.error("Error fetching workers:", err));
+      .catch((err) => toast.error("Error fetching workers: " + (err as Error).message));
   }, [token]);
 
   // Cargar incidencias
@@ -60,7 +60,7 @@ export default function MyIncidents() {
         setTotalIncidents(data.total);
       })
       .catch((error) => {
-        console.error("Error fetching incidents:", error);
+        toast.error("Error fetching incidents: " + (error as Error).message);
       });
   }, [currentPage, token, offset]);
 
@@ -85,10 +85,10 @@ export default function MyIncidents() {
       );
 
       const data = await response.json();
-      console.log(data);
+     
 
       if (response.ok) {
-        alert("Trabajador asignado exitosamente!");
+        toast.success('¡Trabajador asignado exitosamente!');
         // Actualizar la lista para reflejar el cambio
         setIncidents((prev) =>
           prev.map((inc) =>
@@ -98,11 +98,11 @@ export default function MyIncidents() {
           )
         );
       } else {
-        alert("Error: " + (data.message || "No se pudo asignar"));
+        toast.error('Error: ' + (data.message || 'No se pudo asignar'));
       }
     } catch (error) {
-      console.error("Error assigning worker:", error);
-      alert("Error al asignar trabajador");
+      toast.error('Error al asignar trabajador: ' + (error as Error).message);
+     
     }
   }
 

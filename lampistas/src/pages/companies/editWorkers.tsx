@@ -1,6 +1,7 @@
 import Header from '../companies/components/header';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 export default function EditWorkers() {
     const navigate = useNavigate();
     const [FormData, setFormData] = useState({
@@ -32,11 +33,11 @@ export default function EditWorkers() {
         })
             .then((response) => response.json())
             .then(() => {
-                alert('Worker modified successfully!');
+                toast.success('Worker modified successfully!');
                 navigate('/company/misTrabajadores');
             })
             .catch((error) => {
-                console.error('Error modifying worker:', error);
+                toast.error('Error modifying worker: ' + error.message);
             });
     }
     return (

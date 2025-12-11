@@ -1,5 +1,6 @@
 import Header from '../admin/components/header';
 import {useState} from 'react';
+import toast from 'react-hot-toast';
 export default function EditCompany() {
     
     const [formData, setFormData] = useState({ companyID: "" , name:"", phone:"", email:""});
@@ -14,7 +15,7 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             const payload = JSON.parse(atob(token.split('.')[1]));
             adminID = payload.adminID;
         } catch (error) {
-            console.error('Error decoding token:', error);
+            toast.error('Error decoding token: ' + (error as Error).message);
         }
     }
     
@@ -37,10 +38,11 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     })
       .then((response) => response.json())
       .then(() => {
-        alert('Company modified successfully!');
+        toast.success('Company updated successfully!');
       })
       .catch((error) => {
-        console.error('Error modifying company:', error);
+        
+        toast.error('Error updating company.' + error.message);
       });
   }
   return ( 

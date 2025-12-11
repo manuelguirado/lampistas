@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../companies/components/header";
 import { Edit, Code, Trash2, ChevronRight, ChevronLeft, X, Calendar } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 export default function ListWorkers() {
     const navigate = useNavigate();
@@ -54,8 +55,7 @@ export default function ListWorkers() {
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
-                alert('Error generating code.');
+                toast.error('Error generating code: ' + (error as Error).message);
             });
     }
 
@@ -70,7 +70,7 @@ export default function ListWorkers() {
         })
             .then((response) => response.json())
             .then(() => {
-                alert('Worker deleted successfully!');
+                toast.success('¡Trabajador eliminado exitosamente!');
                 window.location.reload();
             });
     }
@@ -113,17 +113,17 @@ export default function ListWorkers() {
             });
 
             const data = await response.json();
-            console.log('Assign Shift Response:', data);
+         
 
             if (response.ok) {
-                alert('Guardia asignada exitosamente!');
+                toast.success('¡Guardia asignada exitosamente!');
                 handleCloseModal();
             } else {
-                alert('Error: ' + (data.message || 'No se pudo asignar la guardia'));
+                toast.error('Error: ' + (data.message || 'No se pudo asignar la guardia'));
             }
         } catch (error) {
-            console.error('Error assigning shift:', error);
-            alert('Error al asignar guardia');
+         
+            toast.error('Error al asignar guardia: ' + (error as Error).message);
         }
     }
 
@@ -141,12 +141,12 @@ export default function ListWorkers() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('Workers data:', data);
+              
                 setWorkers(data.workers || []);
                 setTotalWorkers(data.total || 0);
             })
             .catch((error) => {
-                console.error('Error fetching workers:', error);
+                toast.error('Error fetching workers: ' + (error as Error).message);
             });
     }, [currentPage]);
 

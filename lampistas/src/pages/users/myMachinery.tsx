@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { MachineryType } from "../../types/machineryType";
 import Header from "../users/components/header";
-
+import toast from "react-hot-toast";
 export default function MyMachinery() {
   const [machinery, setMachinery] = useState<MachineryType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,12 +20,13 @@ export default function MyMachinery() {
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data.machinery)) {
+          toast.success("Maquinarias cargadas correctamente");
           setMachinery(data.machinery);
         }
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching machinery:", error);
+        toast.error("Error fetching machinery: " + (error as Error).message);
         setLoading(false);
       });
   }, []);

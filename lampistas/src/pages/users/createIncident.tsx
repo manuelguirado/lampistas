@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import Header from "./components/header";
+import toast from "react-hot-toast";
 export default function CreateIncident() {
     const token = localStorage.getItem("userToken");
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -30,11 +33,12 @@ export default function CreateIncident() {
             }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                console.log("Success:", data);
+            .then(() => {
+                toast.success("Incident created successfully!");
+                navigate("/user/userDashboard");
             })
             .catch((error) => {
-                console.error("Error:", error);
+                toast.error("Error creating incident: " + (error as Error).message);
             });
     }
 
@@ -103,24 +107,7 @@ export default function CreateIncident() {
                     </select>
                 </div>
 
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Estado
-                    </label>
-                    <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        value={formData.status}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                        required
-                    >
-                        <option value="">Selecciona estado</option>
-                        <option value="OPEN">Abierta</option>
-                        <option value="IN_PROGRESS">En progreso</option>
-                        <option value="CLOSED">Cerrada</option>
-                        <option value="RESOLVED">Resuelta</option>
-                    </select>
-                </div>
-
+             
                 <div className="flex items-center gap-2">
                     <input
                         type="checkbox"

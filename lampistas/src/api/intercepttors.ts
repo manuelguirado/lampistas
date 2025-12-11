@@ -16,11 +16,9 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const userType = (localStorage.getItem("userType") || "company") as UserType;
   const token = getAccessTokenKey(userType);
-  console.log("Usando token para:", userType, "Token:", token);
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("token guardado" + token);
   }
 
   return config;
@@ -39,16 +37,16 @@ api.interceptors.response.use(
         
         const userType = (localStorage.getItem("userType") ||
           "company") as UserType;
-        console.log("userType en el interceptor de response:", userType);
+      
         const refreshToken = getRefreshTokenKey(userType);
-        console.log("Intentando renovar token para:", userType);
+      
            const getUserID = getIdKey(userType);
-           console.log("id del usuario" , getUserID)
+        
 
         if (!refreshToken) {
           throw new Error("No refresh token available");
         }
-        console.log(`🔄 Token expirado para ${userType}, renovando...`);
+       
 
         const { data } = await axios.post(
           "http://localhost:3000/auth/refreshToken",

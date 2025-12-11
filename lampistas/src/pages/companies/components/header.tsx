@@ -1,49 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { jwtDecode } from 'jwt-decode';
+import { toast } from "react-hot-toast";
 
+interface DecodedToken {
+    companyID: number;
+    role: string;
+    email: string;
+    name?: string;        // ✅ Agregar name opcional
+}
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
+    const token = localStorage.getItem('companyToken');
+    const [companyName, setCompanyName] = useState<string>('');
+    useEffect(() => {
+        if (token) {
+            try {
+                const decoded = jwtDecode<DecodedToken>(token);
+           
+                setCompanyName(decoded.name || 'Empresa');
+            } catch (error) {
+                toast.error('❌ Error decoding token: ' + (error as Error).message);
+            }
+        }
+    }, [token]);
     
     return (
         <header className="w-full bg-amber-100 text-white shadow-lg fixed top-0 left-0 z-50">
             <div className="flex items-center justify-between p-4">
-                <h1 className="text-xl md:text-2xl text-amber-800 font-bold">Lampistas - Empresas</h1>
+                <Link to="/">
+                <h1 className="text-xl md:text-2xl text-amber-800 font-bold">{companyName || "Cargando..."}</h1>
+                </Link>
                 
                 {/* Desktop Navigation - Ajustado para pantallas md */}
                 <nav className="hidden md:flex gap-2 flex-wrap justify-end flex-1">
-                    <Link to="/company/registrarTrabajador">
+                    <Link to="/company/trabajadores">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Registrar Trabajador
+                            Trabajadores
                         </button>
                     </Link>
-                    <Link to="/company/misTrabajadores">
+                  
+                    <Link to="/company/clientes">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Mis Trabajadores
+                            clientes
                         </button>
                     </Link>
-                    <Link to="/company/registrarCliente">
+                   
+                    <Link to="/company/incidencias">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Registrar Cliente
+                             incidencias
                         </button>
                     </Link>
-                    <Link to="/company/mis-Clientes">
-                        <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Mis clientes
-                        </button>
-                    </Link>
-                    <Link to="/company/Mis-incidencias">
-                        <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Mis incidencias
-                        </button>
-                    </Link>
-                    <Link to="/historial-incidencias">
-                        <button className="rounded-md bg-yellow-500 px-3 py-2 hover:bg-yellow-600 transition-colors text-black text-sm whitespace-nowrap">
-                            Historial de incidencias
-                        </button>
-                    </Link>
+                  
                     <Link to="/company/crear-presupuesto">
                         <button className="rounded-md bg-yellow-500 px-3 py-2 hover:bg-yellow-600 transition-colors text-black text-sm whitespace-nowrap">
                             Crear presupuesto
@@ -76,20 +87,16 @@ export default function Header() {
                         className="md:hidden bg-amber-100 border-t border-amber-400 overflow-hidden"
                     >
                         <nav className="flex flex-col p-4 space-y-2">
-                            <Link to="/company/registrarTrabajador" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                                Registrar Trabajador
+                            <Link to="/company/trabajadores" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
+                                Trabajadores
                             </Link>
-                            <Link to="/company/misTrabajadores" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                               Mis Trabajadores
-                            </Link>
-                            <Link to="/company/registrarCliente" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
+                           
+                            <Link to="/company/clientes" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
                                 Registrar Cliente
                             </Link>
-                            <Link to="/company/mis-Clientes" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                                Mis clientes
-                            </Link>
-                            <Link to="/historial-incidencias" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
-                                Historial de incidencias
+                           
+                            <Link to="/company/incidencias" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
+                                Incidencias
                             </Link>
                             <Link to="/company/crear-presupuesto" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
                                 Crear presupuesto

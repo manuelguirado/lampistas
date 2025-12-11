@@ -1,16 +1,36 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
+
+interface DecodedToken {
+    adminID: number;
+    role: string;
+    email: string;
+    
+}
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const token = localStorage.getItem('adminToken');
+    const [adminEmail, setAdminEmail] = useState<string>('');
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
+    useEffect(() => {
+        if (token) {
+            try {
+                const decoded = jwtDecode<DecodedToken>(token);
+                setAdminEmail(decoded.email);
+            } catch (error) {
+                toast.error('❌ Error decoding token: ' + (error as Error).message);
+            }
+        }
+    }, [token]);
     return (
     <header className="w-full h-16 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0 z-50">
             <div className="flex items-center p-4">
-                <h1 className="text-2xl text-amber-800 font-bold">Admin Dashboard</h1>
+                <Link to="/"><h1 className="text-2xl text-amber-800 font-bold">{adminEmail}</h1></Link>
                 {/* Desktop Navigation */}
                 <nav className="hidden lg:flex space-x-4 justify-end flex-1">
                     <Link to="/admin/registerCompany" >

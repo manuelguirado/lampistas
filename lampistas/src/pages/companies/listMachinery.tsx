@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft, Edit, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 export default function ListMachinery() {
   const navigate = useNavigate();
   const [machine, setMachine] = useState<
@@ -29,7 +30,7 @@ export default function ListMachinery() {
     })
       .then((response) => response.json())
       .then(() => {
-        alert("Machinery eliminated successfully!");
+        toast.success('Machinery eliminated successfully!');
         // Refresh the machinery list after deletion
         setMachine((prevMachines) =>
           prevMachines.filter(
@@ -38,7 +39,7 @@ export default function ListMachinery() {
         );
         window.location.reload();
       }).catch((error) => {
-        console.error("Error eliminating machinery:", error);
+        toast.error('Error eliminating machinery.' + (error as Error).message);
       });
   }
 
@@ -58,7 +59,7 @@ export default function ListMachinery() {
           setMachine(data.machinery || []);
         })
         .catch((error) => {
-          console.error("Error fetching machinery:", error);
+          toast.error('Error fetching machinery.' + (error as Error).message);
         });
     }, [currentPage, offset, token]);
     function handleNextPage() {

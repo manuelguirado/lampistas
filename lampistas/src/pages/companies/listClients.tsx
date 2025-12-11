@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Eye,Code } from 'lucide-react';
 import type { Contract } from '../../types/contract';
 import type { Client } from '../../types/clientType';
+import toast from 'react-hot-toast';
 
 export default function ListClients() {
     const [clients, setClients] = useState<Client[]>([]);
@@ -30,14 +31,13 @@ export default function ListClients() {
 
             const data = await response.json();
             if (data.code) {
-                alert(`Code generated successfully: ${data.code}`);
+                toast.success(`Code generated successfully: ${data.code}`);
                 window.navigator.clipboard.writeText(data.code);
             } else {
-                alert('Error generating code.');
+                toast.error('Error generating code.');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error generating code.');
+            toast.error('Error generating code.' + (error as Error).message);
         }
     }
     function fetchClients() {
@@ -50,13 +50,12 @@ export default function ListClients() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('Fetched clients:', data);
+                
                 setClients(data.clients);
                 setTotalClient(data.total);
             })
             .catch((error) => {
-                console.error('Error:', error);
-                alert('Error fetching clients.');
+                toast.error('Error fetching clients.' + (error as Error).message);
             });
     }
 
@@ -71,16 +70,14 @@ export default function ListClients() {
             });
 
             const data = await response.json();
-            console.log('Contracts data:', data);
-
+         
             if (data.contracts) {
                 setSelectedClientContracts(data.contracts);
                 setSelectedClientName(clientName);
                 setShowContractsModal(true);
             }
         } catch (error) {
-            console.error('Error fetching contracts:', error);
-            alert('Error loading contracts');
+            toast.error('Error fetching client contracts.' + (error as Error).message);
         }
     }
 

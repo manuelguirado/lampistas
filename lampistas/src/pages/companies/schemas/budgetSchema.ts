@@ -26,10 +26,9 @@ export const itemSchema = z.object({
 export const budgetFormSchema = z.object({
     budgetNumber: z.string().min(1, 'Budget number is required'),
     companyName: z.string().min(1, 'Company name is required'),
-    clientName: z.string().min(1, 'Client name is required'),
+    title: z.string().min(1, 'Title is required'),
     clientID: z.number().min(1, 'Client ID is required'),
     incidentID: z.number().optional(),
-    clientEmail: z.string().email('Invalid email address'),
     date: z.string().min(1, 'Date is required'), // Usar string para input type="date"
     items: z.array(itemSchema).min(1, 'At least one item is required'),
     subtotal: z.number().optional(),

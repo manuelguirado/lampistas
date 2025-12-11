@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import api from "../../api/intercepttors"; // ✅ Importar
-
+import toast from "react-hot-toast";
 function CreateBudget() {
   const navigate = useNavigate();
   const token = localStorage.getItem("companyToken");
@@ -30,9 +30,8 @@ function CreateBudget() {
     resolver: zodResolver(budgetFormSchema),
     defaultValues: {
       incidentID: 0,
-      clientName: "",
-      clientEmail: "",
       clientID: 0,
+      title: "",
       date: "",
       items: [{ description: "", quantity: 0, unitPrice: 0, total: 0 }],
       budgetNumber: "",
@@ -54,7 +53,7 @@ function CreateBudget() {
         setIncidents(data.incidents);
       })
       .catch((error) => {
-        console.error("Error fetching incidents:", error);
+        toast.error("Error fetching incidents:" + error.message);
       });
   }, [token]);
   useEffect(() => {
@@ -70,7 +69,7 @@ function CreateBudget() {
         setClients(data.clients);
       })
       .catch((error) => {
-        console.error("Error fetching clients:", error);
+        toast.error("Error fetching clients:" + error.message);
       });
   }, [token]);
   useEffect(() => {
@@ -84,34 +83,24 @@ function CreateBudget() {
 
 
   async function onSubmit(data: BudgetFormData) {
-    console.log("📝 Form submitted with data:", data);
-    console.log("❌ Form errors:", errors);
-    
+ 
     try {
       const { itemsWithTotal, subtotal, tax, total } = calculateTotals();
       const token = localStorage.getItem("companyToken");
+    
       
-      console.log("🚀 Enviando presupuesto:", {
-        budgetNumber: data.budgetNumber,
-        userID: data.clientID,
-        items: itemsWithTotal,
-        subtotal: subtotal,
-        tax: tax,
-        totalAmount: total,
-        incidentID: data.incidentID || undefined,
-      });
-      
-      const response = await api.post( // ✅ Agregar await
+        await api.post( // ✅ Agregar await
         "/company/CreateBudget",
         {
           budgetNumber: data.budgetNumber,
           userID: data.clientID,
           items: itemsWithTotal,
+          title: data.title,
           subtotal: subtotal,
           tax: tax,
           totalAmount: total,
           incidentID: data.incidentID || undefined,
-          description: `Presupuesto ${data.budgetNumber} para ${data.clientName}`,
+          description: `Presupuesto ${data.budgetNumber} `,
         },
         {
           headers: {
@@ -121,13 +110,11 @@ function CreateBudget() {
         }
       );
 
-      console.log("✅ Presupuesto creado:", response.data);
-      alert("Presupuesto creado exitosamente!");
+      toast.success("Presupuesto creado exitosamente!");
+    
       navigate("/company/dashboard");
     } catch (error: any) {
-      console.error("💥 Error creating budget:", error);
-      console.error("💥 Error response:", error.response?.data);
-      alert("Error: " + (error.response?.data?.message || error.message));
+     toast.error("Error creating budget: " + error.message);
     }
   }
 
@@ -169,6 +156,7 @@ function CreateBudget() {
     const formValues = watch();
     return {
       ...formValues,
+      budgetTitle: formValues.title, 
       items: itemsWithTotal,
       subtotal,
       tax,
@@ -187,8 +175,8 @@ function CreateBudget() {
           onSubmit={handleFormSubmit(
             onSubmit,
             (errors) => {
-              console.log("❌ Validation errors:", errors);
-              alert("Por favor completa todos los campos requeridos");
+             
+              toast.error('Por favor completa todos los campos requeridos' + JSON.stringify(errors));
             }
           )}
         >
@@ -216,6 +204,19 @@ function CreateBudget() {
             {errors.companyName && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.companyName.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+            type="text"
+            placeholder="budget title"
+            {...register("title")}
+            className="border p-2 rounded w-full"
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.title.message}
               </p>
             )}
           </div>
