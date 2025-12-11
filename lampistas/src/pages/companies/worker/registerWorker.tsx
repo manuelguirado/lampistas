@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router";
-import Header from '../companies/components/header';
+import Header from '../components/header';
 import toast from "react-hot-toast";
 export default  function RegisterWorker() {
     const [formData, setFormData] = useState({

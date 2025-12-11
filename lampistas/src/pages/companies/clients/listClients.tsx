@@ -1,8 +1,8 @@
-import Header from '../companies/components/header';
+import Header from '../components/header';
 import { useState, useEffect } from 'react';
 import { Eye,Code } from 'lucide-react';
-import type { Contract } from '../../types/contract';
-import type { Client } from '../../types/clientType';
+import type { Contract } from '../../../types/contract';
+import type { Client } from '../../../types/clientType';
 import toast from 'react-hot-toast';
 
 export default function ListClients() {

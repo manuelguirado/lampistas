@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Header from "../companies/components/header";
+import Header from "../components/header";
 import { Edit, Code, Trash2, ChevronRight, ChevronLeft, X, Calendar } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';

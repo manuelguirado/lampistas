@@ -55,8 +55,8 @@ export default function LoginCompany() {
             .then((data) => {
                 // Guardar el token en localStorage
                 if (data.token) {
-                    localStorage.setItem('companyToken', data.token);
                     toast.success('¡Inicio de sesión exitoso!');
+                    localStorage.setItem('companyToken', data.token);
                     // Redirigir al dashboard de la empresa
                     window.location.href = "/company/dashboard";
                 } else {

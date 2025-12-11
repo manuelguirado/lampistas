@@ -1,134 +1,171 @@
-import {Toaster,toast} from 'react-hot-toast';
+import {toast} from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {registerCompanySchema, type RegisterCompanySchema } from './schemas/registerCompanySchema';
 import Header from '../admin/components/header';
 export default function RegisterCompany() {
     const navigate = useNavigate();
-
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
-              <Toaster
-                    position='top-right'
-                    toastOptions={{
-                        success: {duration:3000},
-                        error: {duration : 400}
-                    }}
-                    />
+  const {
+            register : registerForm, // renombrado para evitar conflicto con función handleRegister
+            handleSubmit : handleSubmitregister,
+            formState: { errors : registerErrors },
+        } = useForm<RegisterCompanySchema>({
+            resolver: zodResolver(registerCompanySchema),
+            mode: "onChange", // ✅ Valida mientras escribes
+        });
         
-        // Obtener el adminID del token almacenado
+    
+    
+
         const token = localStorage.getItem('adminToken');
-        let adminID = null;
-        if (token) {
-            try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                adminID = payload.adminID;
-            } catch (error) {
-                toast.error('Error decoding token: ' + (error as Error).message);
-            }
-        }
-
-        // Construir el objeto con la estructura que espera el backend
-        const data = {
-            name: formData.get('name') as string,
-            phone: formData.get('phone') as string,
-            email: formData.get('email') as string,
-            password: formData.get('password') as string,
-            admin: adminID,
-            directions: {
-                address: formData.get('address') as string,
-                city: formData.get('city') as string,
-                state: formData.get('state') as string,
-                zipCode: formData.get('zipCode') as string,
-            }
-        };
-
-        fetch('http://localhost:3000/admin/registerCompany', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.token) {
-                    toast.success('Company registered successfully!');
-
-                    navigate('/admin/listCompany');
-                } else {
-                    toast.error('Error registering company.');
-                }
-            })
-            .catch((error) => {
-              
-                toast.error('Error al registrar empresa.' + (error as Error).message);
+   async function handleSubmit(data : RegisterCompanySchema) {
+        // Obtener el adminID del token almacenado
+        try {
+            const response = await fetch('http://localhost:3000/admin/registerCompany', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data),
             });
+             
+            const result = await response.json();
+        
+            
+            if (result.token){
+                toast.success('¡Empresa registrada exitosamente!');
+                navigate('/admin/adminDashboard');
+            } else {
+                const errorMsg = result.message || 'Error al registrar empresa';
+              
+                toast.error(errorMsg);
+            }
+        } catch (error) {
+         
+            toast.error('Error de conexión con el servidor' + (error as Error).message);
+        }
     }
     return (
         <div className=" w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
         <Header />
         <h2 className="text-2xl font-bold p-20">Register Company</h2>
         {/* Formulario de registro de empresa */}
-        <form className="flex flex-col" onSubmit={handleSubmit}>
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="text"
-                name="name"
-                placeholder="Company Name"
-                required
-            />
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="email"
-                name="email"
-                placeholder="Company Email"
-                required
-            />
-         
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="password"
-                name="password"
-                placeholder="Company Password"
-                required
-            />
+        <form className="flex flex-col w-full max-w-md space-y-4" onSubmit={handleSubmitregister(handleSubmit)}>
+            <div>
                 <input
-                    className="mb-4 p-2 border border-amber-300 rounded"
-                    type="tel"
-                    name="phone"
-                    placeholder="Company Phone"
-                    required
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.name ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="text"
+                    placeholder="Company Name"
+                    {...registerForm("name")}
                 />
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="text"
-                name="address"
-                placeholder="Company Address"
-                required
-            />
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="text"
-                name="city"
-                placeholder="City"
-                required
-            />
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="text"
-                name="state"
-                placeholder="State"
-                required
-            />
-            <input
-                className="mb-4 p-2 border border-amber-300 rounded"
-                type="text"
-                name="zipCode"
-                placeholder="Zip Code"
-                required
-            />
+                {registerErrors.name && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.name.message}</p>
+                )}
+            </div>
+
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.email ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="email"
+                    inputMode='email'
+                    placeholder="Company Email"
+                    {...registerForm("email")}
+                />
+                {registerErrors.email && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.email.message}</p>
+                )}
+            </div>
+         
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.password ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="password"
+                    {...registerForm("password")}
+                    placeholder="Company Password"
+                />
+                {registerErrors.password && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.password.message}</p>
+                )}
+            </div>
+
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.phone ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="tel"
+                    inputMode='tel'
+                    {...registerForm("phone")}
+                    placeholder="Company Phone"
+                />
+                {registerErrors.phone && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.phone.message}</p>
+                )}
+            </div>
+
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.directions?.address ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="text"
+                    {...registerForm("directions.address")}
+                    placeholder="Company Address"
+                />
+                {registerErrors.directions?.address && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.directions.address.message}</p>
+                )}
+            </div>
+
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.directions?.city ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="text"
+                    {...registerForm("directions.city")}
+                    placeholder="City"
+                />
+                {registerErrors.directions?.city && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.directions.city.message}</p>
+                )}
+            </div>
+
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.directions?.state ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="text"
+                    {...registerForm("directions.state")}
+                    placeholder="State"
+                />
+                {registerErrors.directions?.state && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.directions.state.message}</p>
+                )}
+            </div>
+
+            <div>
+                <input
+                    className={`w-full p-2 border rounded ${
+                        registerErrors.directions?.zipCode ? 'border-red-500' : 'border-amber-300'
+                    }`}
+                    type="text"
+                    {...registerForm("directions.zipCode")}
+                    placeholder="Zip Code"
+                />
+                {registerErrors.directions?.zipCode && (
+                    <p className="text-red-500 text-sm mt-1">{registerErrors.directions.zipCode.message}</p>
+                )}
+            </div>
             
             <button
                 type="submit"

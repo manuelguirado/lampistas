@@ -45,7 +45,7 @@ export default function ListCompany() {
     })
       .then((response) => response.json())
       .then(() => {
-        alert("Company activated successfully");
+        toast.success("Company activated successfully");
         window.location.reload();
       })
       .catch((error) => {
@@ -63,7 +63,7 @@ export default function ListCompany() {
     })
       .then((response) => response.json())
       .then(() => {
-        alert("Company deleted successfully");
+        toast.success("Company deleted successfully");
         window.location.reload();
       })
       .catch((error) => {
@@ -179,7 +179,7 @@ export default function ListCompany() {
                       <button
                         className="p-2 hover:bg-amber-200 rounded transition-colors"
                         title="Suspend company"
-                        onClick={() => navigate("/admin/suspendCompany")}
+                        onClick={() => navigate(`/admin/suspendCompany/${company.companyID}`)}
                       >
                         <UserX size={18} className="text-red-600" />
                       </button>

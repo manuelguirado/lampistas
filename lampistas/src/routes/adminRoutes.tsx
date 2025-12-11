@@ -1,6 +1,6 @@
 import {Routes,Route} from 'react-router-dom';
-import RegisterAdmin from '../pages/admin/registerAdmin';
-import AdminLogin from '../pages/admin/adminLogin';
+import RegisterAdmin from '../pages/admin/adminAuth';
+
 import DashboardAdmin from '../pages/admin/adminDashboard';
 import RegisterCompany from '../pages/admin/registerCompany';
 import ListCompany from '../pages/admin/listCompany';
@@ -13,14 +13,14 @@ export default function AdminRoutes() {
         <Routes>
             {/* Rutas públicas */}
             <Route path="registerAdmin" element={<RegisterAdmin />} />
-            <Route path="adminLogin" element={<AdminLogin />} />
+       
             
             {/* Rutas protegidas */}
             <Route path="adminDashboard/*" element={<ProtectedRoute userType="admin"><DashboardAdmin /></ProtectedRoute>} />
             <Route path="registerCompany" element={<ProtectedRoute userType="admin"><RegisterCompany /></ProtectedRoute>} />
             <Route path="listCompany" element={<ProtectedRoute userType="admin"><ListCompany /></ProtectedRoute>} />
-            <Route path="suspendCompany" element={<ProtectedRoute userType="admin"><SuspendCompany /></ProtectedRoute>} />
-            <Route path="editCompany" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
+            <Route path="suspendCompany/:companyID" element={<ProtectedRoute userType="admin"><SuspendCompany /></ProtectedRoute>} />
+            <Route path="editCompany/:companyID" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
         </Routes>
     );
 }

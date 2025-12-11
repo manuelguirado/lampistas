@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import Header from "./components/header";
+import Header from "../components/header";
 
 export default function RegisterUser() {
     const navigate = useNavigate();

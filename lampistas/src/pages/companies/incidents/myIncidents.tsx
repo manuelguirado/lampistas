@@ -1,4 +1,4 @@
-import Header from "../companies/components/header";
+import Header from "../components/header";
 import { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft, UserPlus } from "lucide-react";
 import toast from 'react-hot-toast';

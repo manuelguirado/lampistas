@@ -1,8 +1,9 @@
 import Header from '../admin/components/header';
 import {useState} from 'react';
+import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 export default function EditCompany() {
-    
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ companyID: "" , name:"", phone:"", email:""});
 function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -39,6 +40,7 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
       .then((response) => response.json())
       .then(() => {
         toast.success('Company updated successfully!');
+        navigate('/admin/listCompany');
       })
       .catch((error) => {
         

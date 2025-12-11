@@ -1,6 +1,6 @@
-import type { MachineryType } from "../../types/machineryType";
+import type { MachineryType } from "../../../types/machineryType";
 import { useEffect, useState } from "react";
-import Header from "./components/header";
+import Header from "../components/header";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
