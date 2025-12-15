@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { BudgetType } from "../../types/budgetType";
+import toast from "react-hot-toast";
 import Header from "./components/header";
 export default function UserBudgets() {
   const token = localStorage.getItem("userToken");
@@ -18,6 +19,7 @@ export default function UserBudgets() {
         setBudgets(data.budgets);
       })
       .catch((error) => {
+        toast.error("Error fetching budgets: " + (error as Error).message);
       });
   }, [token]);
   return (

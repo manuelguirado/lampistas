@@ -1,4 +1,4 @@
-import type { MachineryType } from "../../../types/machineryType";
+
 import { useEffect, useState } from "react";
 import Header from "../components/header";
 import { useNavigate } from "react-router-dom";
@@ -20,19 +20,7 @@ export default function CreateMachinery() {
         mode: "onChange",
     });
     
-    const [formData, setFormData] = useState<MachineryType>({
-        machineryID: 0,
-        name: "",
-        description: "",
-        brand: "",
-        model: "",
-        installedAT: new Date(),
-        serialNumber: "",
-        companyName: "",
-        machineType: "",
-        clientID: null, // ✅ Cambiar de 0 a null
-    });
-
+  
     useEffect(() => {
         fetch("http://localhost:3000/company/listClients?limit=100&offset=0", {
             method: "GET",

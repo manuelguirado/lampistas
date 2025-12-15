@@ -1,5 +1,6 @@
 import {z} from "zod";
 
+// Schema para el formulario (input type)
 export const CreateMachinerySchema = z.object({
     name: z.string().min(1, "El nombre es obligatorio"),
     description: z.string().min(1, "La descripción es obligatoria"),
@@ -15,10 +16,13 @@ export const CreateMachinerySchema = z.object({
             return parsedDate <= now;
         }, { message: "La fecha de instalación no puede ser futura" }),
     companyName: z.string().min(1, "El nombre de la empresa es obligatorio"),
-    clientID: z.string()
-        .optional()
-        .or(z.literal(''))
-        .transform((val) => val && val !== '' ? parseInt(val) : undefined),
+    clientID: z.string().optional().or(z.literal('')),
 });
 
+// Tipo para React Hook Form (antes de transform)
 export type CreateMachineryType = z.infer<typeof CreateMachinerySchema>;
+
+// Tipo para el output (después de transform)
+export type CreateMachineryOutput = Omit<CreateMachineryType, 'clientID'> & {
+    clientID?: number;
+};

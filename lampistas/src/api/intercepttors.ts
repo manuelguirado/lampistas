@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { UserType } from "../../../backend/src/utils/types/userType";
+import type { UserType } from "../types/userType";
 import {
   getAccessTokenKey,
   getRefreshTokenKey,

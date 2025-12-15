@@ -1,17 +1,12 @@
 import { useNavigate } from "react-router";
 import Header from "../../components/header";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {workerLoginSchema, type WorkerLoginSchema} from '../worker/schemas/workerLogin';
 export default function WorkerLogin() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    companyCode: "",
-  });
+
     const {
         register : loginRegister,
         handleSubmit : handleLoginSubmit,
