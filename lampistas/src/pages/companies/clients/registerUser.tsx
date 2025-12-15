@@ -2,18 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Header from "../components/header";
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import { registerUserSchema, type RegisterUserSchema } from "../schemas/registerUser";
 
 export default function RegisterUser() {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        contractType: '',
+  
+    const { register, handleSubmit:handleSubmitRegister, formState: { errors } } = useForm<RegisterUserSchema>({
+        resolver: zodResolver(registerUserSchema),
+        mode: "onChange",
     });
 
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
+    async function handleSubmit(data : RegisterUserSchema) {
+     
         const token = localStorage.getItem('companyToken');
 
         try {
@@ -24,11 +26,7 @@ export default function RegisterUser() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    password: formData.password,
-                }),
+                body: JSON.stringify(data),
             });
 
             const userData = await userResponse.json();
@@ -47,18 +45,17 @@ export default function RegisterUser() {
                 },
                 body: JSON.stringify({
                     userID: userData.userID, // ✅ Ahora sí tenemos el userID
-                    contractType: formData.contractType,
+                    contractType: data.contractType,
                 }),
             });
 
             const contractData = await contractResponse.json();
 
             if (contractData.token || contractData.id) {
-                alert('User and contract created successfully!');
-                setFormData({ name: '', email: '', password: '', contractType: '' });
-                navigate('/company/mis-clientes');
+                toast.success('¡Usuario y contrato creados exitosamente!');
+                navigate('/company/clientes/mis-clientes');
             } else {
-                alert('User created but error creating contract.');
+                toast.error('Usuario creado pero error al crear el contrato.');
             }
 
         } catch (error) {
@@ -70,45 +67,57 @@ export default function RegisterUser() {
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
             <h2 className="text-2xl font-bold mb-6">Registrar Usuario</h2>
-            <form onSubmit={handleSubmit} className='flex flex-col space-y-4'>
+            <form onSubmit={handleSubmitRegister(handleSubmit)} className='flex flex-col space-y-4'>
+                <div className="mb-4">
                 <input
                     type="text"
-                    name="name"
+                  
                     placeholder="Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    {...register("name")}
                     className="border p-2 mb-4"
                     required
+                    
                 />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+            </div>
+            <div className="mb-6">
                 <input
                     type="email"
-                    name="email"
                     placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    {...register("email")}
                     className="border p-2 mb-4"
                     required
                     inputMode="email"
+                    
                 />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+            </div>
+            <div className="mb-4">
                 <input
                     type="password"
-                    name="password"
+                  
                     placeholder="Password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    {...register("password")}
+                 
                     className="border p-2 mb-4"
                     required
-                />
+                />  
+                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+            </div>
+
+            <div className="mb-4">        
                 <select 
                     className="border p-2 mb-4"
-                    value={formData.contractType}
-                    onChange={(e) => setFormData({ ...formData, contractType: e.target.value })}
+                    {...register("contractType")}
+                  
                     required
                 >
                     <option value="" disabled>Select Contract Type</option>
                     <option value="contract">Contract</option>
                     <option value="freeChoice">Free Choice</option>
                 </select>
+                {errors.contractType && <p className="text-red-500 text-sm mt-1">{errors.contractType.message}</p>}
+            </div>
 
                 <button type="submit" className="bg-amber-500 text-white px-4 py-2 rounded">
                     Register User

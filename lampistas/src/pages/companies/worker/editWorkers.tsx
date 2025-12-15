@@ -1,40 +1,46 @@
 import Header from '../components/header';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {editSchema } from '../schemas/editSchema';
+import type {EditSchema} from '../schemas/editSchema';
+
 export default function EditWorkers() {
     const navigate = useNavigate();
-    const [FormData, setFormData] = useState({
-        workerID: '',
-        name: '',
-        email: '',
-        password: ''
+  
+    const {register, handleSubmit : handleEditWorker, formState: { errors } } = useForm<EditSchema>({
+        resolver: zodResolver(editSchema),
+        mode: 'onChange',
     });
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
+    const token = localStorage.getItem('companyToken');
+    function handleSubmit(data : EditSchema) {
+       
 
-        const token = localStorage.getItem('companyToken');
+        // Excluir workerID del body, solo enviarlo en la URL
+        const { workerid, ...updateData } = data;
+     
+        // Filtrar campos vacíos - solo enviar los que tienen valor
+        const filteredData = Object.fromEntries(
+            Object.entries(updateData).filter(([_, value]) => value && value.length > 0)
+        );
+  
 
-        // Construir el objeto data solo con campos que tienen valor
-        const data: { name?: string; email?: string; password?: string } = {};
-        if (FormData.name) data.name = FormData.name;
-        if (FormData.email) data.email = FormData.email;
-        if (FormData.password) data.password = FormData.password;
-
-        fetch(`http://localhost:3000/company/editWorker/${FormData.workerID}`, {
+        fetch(`http://localhost:3000/company/editWorker/${workerid}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
+            
             body: JSON.stringify({
-                data: data
+                data: filteredData // Solo campos con valor
             }),
         })
             .then((response) => response.json())
             .then(() => {
                 toast.success('Worker modified successfully!');
-                navigate('/company/misTrabajadores');
+                navigate('/company/trabajadores/misTrabajadores');
             })
             .catch((error) => {
                 toast.error('Error modifying worker: ' + error.message);
@@ -44,36 +50,36 @@ export default function EditWorkers() {
         <div className=" w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
             <Header />
             <h2 className="text-2xl font-bold p-20">Edit Worker Page</h2>
-            <form action="" method="post" onSubmit={handleSubmit} className='flex flex-col space-y-4'>
+            <form action="" method="post" onSubmit={handleEditWorker(handleSubmit)} className='flex flex-col space-y-4'>
                 <input
-                    type="text"
+                    type="number"
                     placeholder="Worker ID"
-                    value={FormData.workerID}
-                    onChange={(e) => setFormData({ ...FormData, workerID: e.target.value })}
+                    {...register('workerid')}
                     className="border p-2 mb-4"
-                    required
                 />
+                {errors.workerid && <p className="text-red-500">{errors.workerid.message}</p>}
                 <input
                     type='text'
                     placeholder='Name'
-                    value={FormData.name}
-                    onChange={(e) => setFormData({ ...FormData, name: e.target.value })}
+                    {...register('name')}
+                    
                     className='border p-2 mb-4'
                 />
+                {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                 <input
                     type='email'
                     placeholder='Email'
-                    value={FormData.email}
-                    onChange={(e) => setFormData({ ...FormData, email: e.target.value })}
+                    {...register('email')}
                     className='border p-2 mb-4'
                 />
+                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                 <input
                     type='password'
                     placeholder='Password'
-                    value={FormData.password}
-                    onChange={(e) => setFormData({ ...FormData, password: e.target.value })}
+                    {...register('password')}
                     className='border p-2 mb-4'
                 />
+                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
                 <button type="submit" className="bg-amber-300 text-white p-2 rounded">Edit Worker</button>
             </form>
         </div>

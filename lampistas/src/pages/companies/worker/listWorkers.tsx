@@ -3,6 +3,10 @@ import Header from "../components/header";
 import { Edit, Code, Trash2, ChevronRight, ChevronLeft, X, Calendar } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {shiftSchema } from '../schemas/shiftSchema';
+import type {ShiftSchema} from '../schemas/shiftSchema';
 
 export default function ListWorkers() {
     const navigate = useNavigate();
@@ -11,7 +15,11 @@ export default function ListWorkers() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedWorker, setSelectedWorker] = useState<{ workerid: number; name: string } | null>(null);
     const pageSize = 5;
-    
+    const {register, handleSubmit, formState: { errors }, reset} = useForm<ShiftSchema>({
+        resolver: zodResolver(shiftSchema),
+        mode: 'onChange',
+    });
+   
     const [workers, setWorkers] = useState<
         Array<{ 
             workerid: number; 
@@ -26,17 +34,10 @@ export default function ListWorkers() {
             }>;
         }>
     >([]);
-
-    // Estado para el formulario de guardias
-    const [shiftData, setShiftData] = useState({
-        startDate: '',
-        endDate: '',
-        shiftType: 'morning', // morning, afternoon, night
-        notes: ''
-    });
+    const token = localStorage.getItem('companyToken');
 
     function handleGenerateCode(workerID: number) {
-        const token = localStorage.getItem('companyToken');
+       
 
         fetch(`http://localhost:3000/company/assignWorkerCode/${workerID}`, {
             method: 'GET',
@@ -48,10 +49,10 @@ export default function ListWorkers() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.code) {
-                    alert(`Code generated successfully: ${data.code}`);
+                   toast.success('¡Código generado y copiado al portapapeles! ' + data.code);
                     window.navigator.clipboard.writeText(data.code);
                 } else {
-                    alert('Error generating code.');
+                    toast.error('Error generating code.');
                 }
             })
             .catch((error) => {
@@ -60,7 +61,7 @@ export default function ListWorkers() {
     }
 
     function handleEliminarWorker(workerID: number) {
-        const token = localStorage.getItem('companyToken');
+
         fetch(`http://localhost:3000/company/deleteWorker/${workerID}`, {
             method: 'DELETE',
             headers: {
@@ -78,8 +79,8 @@ export default function ListWorkers() {
     function handleOpenShiftModal(worker: { workerid: number; name: string }) {
         setSelectedWorker(worker);
         setIsModalOpen(true);
-        // Reset form
-        setShiftData({
+        // Reset form con valores por defecto
+        reset({
             startDate: '',
             endDate: '',
             shiftType: 'morning',
@@ -92,13 +93,13 @@ export default function ListWorkers() {
         setSelectedWorker(null);
     }
 
-    async function handleSubmitShift(e: React.FormEvent) {
-        e.preventDefault();
+    async function handleSubmitShift(data : ShiftSchema) {
+  
         
         if (!selectedWorker) return;
 
-        const token = localStorage.getItem('companyToken');
-
+    
+      
         try {
             const response = await fetch(`http://localhost:3000/company/assignShiftWorker`, {
                 method: 'POST',
@@ -108,18 +109,18 @@ export default function ListWorkers() {
                 },
                 body: JSON.stringify({
                     workerID: selectedWorker.workerid,
-                    ...shiftData
+                     data
                 })
-            });
+            }).then((res) => res.json());
 
-            const data = await response.json();
-         
+       
 
-            if (response.ok) {
+            // Si el backend devuelve token, significa que se creó correctamente
+            if (response.token || response.shiftScheduleID) {
                 toast.success('¡Guardia asignada exitosamente!');
                 handleCloseModal();
             } else {
-                toast.error('Error: ' + (data.message || 'No se pudo asignar la guardia'));
+                toast.error('Error: ' + (response.message || 'No se pudo asignar la guardia'));
             }
         } catch (error) {
          
@@ -181,7 +182,7 @@ export default function ListWorkers() {
                                             className="text-blue-500 hover:text-blue-700"
                                             title="Editar"
                                         >
-                                            <Edit size={16} onClick={() => navigate('/company/editarTrabajador')} />
+                                            <Edit size={16} onClick={() => navigate('/company/trabajadores/editarTrabajador')} />
                                         </button>
                                         <button 
                                             className="text-red-500 hover:text-red-700"
@@ -234,6 +235,7 @@ export default function ListWorkers() {
 
             {/* Modal para asignar guardias */}
             {isModalOpen && selectedWorker && (
+                
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
                         {/* Header */}
@@ -256,18 +258,22 @@ export default function ListWorkers() {
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleSubmitShift} className="space-y-4">
+                        <form onSubmit={handleSubmit(handleSubmitShift)} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Fecha de Inicio
                                 </label>
                                 <input
-                                    type="datetime-local"
-                                    value={shiftData.startDate}
-                                    onChange={(e) => setShiftData({ ...shiftData, startDate: e.target.value })}
-                                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                                    required
+                                    type="date"
+                                    {...register('startDate')}
+                                    
+                                    className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                                        errors.startDate ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                                 />
+                                {errors.startDate && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.startDate.message}</p>
+                                )}
                             </div>
 
                             <div>
@@ -275,12 +281,15 @@ export default function ListWorkers() {
                                     Fecha de Fin
                                 </label>
                                 <input
-                                    type="datetime-local"
-                                    value={shiftData.endDate}
-                                    onChange={(e) => setShiftData({ ...shiftData, endDate: e.target.value })}
-                                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                                    required
+                                    type="date"
+                                    {...register('endDate')}
+                                    className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                                        errors.endDate ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                                 />
+                                {errors.endDate && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.endDate.message}</p>
+                                )}
                             </div>
 
                             <div>
@@ -288,15 +297,19 @@ export default function ListWorkers() {
                                     Tipo de Guardia
                                 </label>
                                 <select
-                                    value={shiftData.shiftType}
-                                    onChange={(e) => setShiftData({ ...shiftData, shiftType: e.target.value })}
-                                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                    {...register('shiftType')}
+                                    className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                                        errors.shiftType ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                                 >
                                     <option value="morning">Mañana (8:00 - 16:00)</option>
                                     <option value="afternoon">Tarde (16:00 - 00:00)</option>
                                     <option value="night">Noche (00:00 - 8:00)</option>
                                     <option value="fullday">Día completo (24h)</option>
                                 </select>
+                                {errors.shiftType && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.shiftType.message}</p>
+                                )}
                             </div>
 
                             <div>
@@ -304,8 +317,7 @@ export default function ListWorkers() {
                                     Notas (opcional)
                                 </label>
                                 <textarea
-                                    value={shiftData.notes}
-                                    onChange={(e) => setShiftData({ ...shiftData, notes: e.target.value })}
+                                    {...register('notes')}
                                     className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                                     rows={3}
                                     placeholder="Ej: Zona sur, urgencias prioritarias..."

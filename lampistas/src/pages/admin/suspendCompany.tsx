@@ -32,7 +32,7 @@ export default function SuspendCompany() {
             });
             
             const result = await response.json();
-            console.log('📦 Respuesta:', result);
+          
             
             if (result.company || result.success !== false) {
                 toast.success('¡Empresa suspendida exitosamente!');

@@ -1,63 +1,62 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import Header from "../../components/header";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  userloginSchema,
+  type UserLoginSchema,
+} from "./schemas/userLoginSchema";
 export default function UserLogin() {
-  const [Formdata, setFormdata] = useState({ email: "", password: "",code : "" });
   const navigate = useNavigate();
+  const {
+    register: loginRegister,
+    handleSubmit: handleLoginSubmit,
+    formState: { errors: loginErrors },
+  } = useForm<UserLoginSchema>({
+    resolver: zodResolver(userloginSchema),
+    mode: "onChange",
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormdata({ ...Formdata, [e.target.name]: e.target.value });
-  };
-
-  const handleValidateCode = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleValidateCode = (data: UserLoginSchema) => {
     fetch(`http://localhost:3000/user/validateCode`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "userType": "user",
-        code: Formdata.code,
+        userType: "user",
+        code: data.code,
       }),
     })
-      .then((response) => response.json()
-    )
+      .then((response) => response.json())
       .then((data) => {
         // Guardar el token en localStorage
-        
+
         if (data.token) {
-          toast.success('✅ Código válido! Inicio de sesión exitoso.');
-          localStorage.setItem('userToken', data.token);
-       
+          toast.success("✅ Código válido! Inicio de sesión exitoso.");
+          localStorage.setItem("userToken", data.token);
+
           // Redirigir al dashboard del usuario
-             navigate("/user/userDashboard");
+          navigate("/user/userDashboard");
         } else {
-          toast.error('No se recibió token en la respuesta');
+          toast.error("No se recibió token en la respuesta");
         }
-      
-      
       })
       .catch((error) => {
-        toast.error('Error en login: ' + (error as Error).message);
+        toast.error("Error en login: " + (error as Error).message);
       });
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (data: UserLoginSchema) => {
     fetch("http://localhost:3000/user/userLogin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email: Formdata.email,
-        password: Formdata.password,
-      }),
+      body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => {
-    
         if (data.token) {
           toast.success("¡Inicio de sesión exitoso!");
           // Guardar el token en localStorage
@@ -75,7 +74,7 @@ export default function UserLogin() {
       <h2 className="text-2xl font-bold mb-6">Login de Usuario</h2>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleLoginSubmit(handleSubmit)}
         className="w-full max-w-md bg-white p-6 rounded-lg space-y-4"
       >
         {/* Input text/email */}
@@ -86,14 +85,16 @@ export default function UserLogin() {
           </label>
           <input
             type="email"
-            name="email"
+            {...loginRegister("email")}
             placeholder="Email"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-         
             inputMode="email"
-            value={Formdata.email}
-            onChange={handleChange}
           />
+          {loginErrors.email && (
+            <p className="text-red-500 text-sm mt-1">
+              {loginErrors.email.message}
+            </p>
+          )}
         </div>
 
         {/* Password Input */}
@@ -103,13 +104,15 @@ export default function UserLogin() {
           </label>
           <input
             type="password"
-            name="password"
+            {...loginRegister("password")}
             placeholder="Password"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-          
-            value={Formdata.password}
-            onChange={handleChange}
           />
+          {loginErrors.password && (
+            <p className="text-red-500 text-sm mt-1">
+              {loginErrors.password.message}
+            </p>
+          )}
         </div>
 
         {/* Botón submit */}
@@ -119,20 +122,28 @@ export default function UserLogin() {
         >
           Login
         </button>
-         <div className="mb-6">
-                        <h2 className="text-2xl font-bold">o Ingrese su código de empresa</h2>
-                        <input
-                            type="text"
-                            id="companyCode"
-                            className="w-full mt-4 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                            placeholder="Ingrese su código de empresa"
-                            value={Formdata.code}
-                            onChange={(e) => setFormdata({ ...Formdata, code: e.target.value })}
-    
-                        />
-                        <button  type="submit"  onClick={handleValidateCode} className='w-full bg-amber-500 text-white py-2 mt-4 px-4 rounded-lg hover:bg-amber-600 transition-colors'>Ingresar con codigo</button>
-                     </div>   
-                    
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold">o Ingrese su código de empresa</h2>
+          <input
+            type="text"
+            id="companyCode"
+            className="w-full mt-4 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+            placeholder="Ingrese su código de empresa"
+            {...loginRegister("code")}
+          />
+          {loginErrors.code && (
+            <p className="text-red-500 text-sm mt-1">
+              {loginErrors.code.message}
+            </p>
+          )}
+          <button
+            type="submit"
+            onClick={handleLoginSubmit(handleValidateCode)}
+            className="w-full bg-amber-500 text-white py-2 mt-4 px-4 rounded-lg hover:bg-amber-600 transition-colors"
+          >
+            Ingresar con codigo
+          </button>
+        </div>
       </form>
     </div>
   );

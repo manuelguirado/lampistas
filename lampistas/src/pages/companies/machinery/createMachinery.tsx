@@ -3,11 +3,22 @@ import { useEffect, useState } from "react";
 import Header from "../components/header";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import { CreateMachinerySchema, type CreateMachineryType } from "../schemas/CreateMachinerySchema";
 
 export default function CreateMachinery() {
     const token = localStorage.getItem("companyToken");
     const [clients, setClients] = useState<Array<{ userID: number; name: string }>>([]); // ✅ Cambiar clientID a userID
     const navigate = useNavigate();
+    const {
+        register,
+        handleSubmit: handleSubmitForm,
+        formState: { errors },
+    } = useForm<CreateMachineryType>({
+        resolver: zodResolver(CreateMachinerySchema),
+        mode: "onChange",
+    });
     
     const [formData, setFormData] = useState<MachineryType>({
         machineryID: 0,
@@ -37,8 +48,13 @@ export default function CreateMachinery() {
             .catch((err) => toast.error("Error fetching clients: " + err.message));
     }, [token]);
 
-    function handleSubmit(event: React.FormEvent) {
-        event.preventDefault();
+    function handleSubmit(data: CreateMachineryType) {
+        // Convertir la fecha a ISO string para el backend
+        const payload = {
+            ...data,
+            installedAt: new Date(data.installedAt).toISOString(),
+            clientID: data.clientID ? Number(data.clientID) : undefined,
+        };
         
         fetch("http://localhost:3000/company/createMachinery", {
             method: "POST",
@@ -46,22 +62,10 @@ export default function CreateMachinery() {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                name: formData.name,
-                description: formData.description || null,
-                brand: formData.brand || null,
-                model: formData.model,
-                serialNumber: formData.serialNumber,
-                installedAT: new Date(),
-                machineType: formData.machineType,
-                companyName : formData.companyName || null,
-                clientID: formData.clientID && formData.clientID !== 0 ? formData.clientID : null, // ✅ null si es 0 o vacío
-            }),
+            body: JSON.stringify(payload),
         })
             .then((response) => response.json())
             .then((data) => {
-            
-        
                 if (data.token) {
                     toast.success("Maquinaria creada exitosamente!");
                     navigate("/company/maquinaria/listarMaquinaria");
@@ -79,7 +83,7 @@ export default function CreateMachinery() {
             <Header />
             <h2 className="text-2xl font-bold mb-6">Crear Maquinaria</h2>
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmitForm(handleSubmit)}
                 className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4"
             >
                 <div>
@@ -88,15 +92,12 @@ export default function CreateMachinery() {
                     </label>
                     <input
                         type="text"
-                        name="name"
-                        placeholder="Nombre de la maquinaria"
-                        value={formData.name}
-                        onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                        }
+                        {...register("name")}
+                        placeholder="Nombre de la maquinaria"                      
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         required
                     />
+                    {errors.name && (<p className="text-red-500 text-sm mt-1">{errors.name.message}</p>)}
                 </div>
 
                 <div>
@@ -104,15 +105,13 @@ export default function CreateMachinery() {
                         Descripción
                     </label>
                     <textarea
-                        name="description"
+                      
                         placeholder="Descripción de la maquinaria"
-                        value={formData.description}
-                        onChange={(e) =>
-                            setFormData({ ...formData, description: e.target.value })
-                        }
+                       {...register("description")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         rows={4}
                     />
+                    {errors.description && (<p className="text-red-500 text-sm mt-1">{errors.description.message}</p>)}
                 </div>
 
                 <div>
@@ -121,14 +120,12 @@ export default function CreateMachinery() {
                     </label>
                     <input
                         type="text"
-                        name="brand"
+                
                         placeholder="Marca de la maquinaria"
-                        value={formData.brand}
-                        onChange={(e) =>
-                            setFormData({ ...formData, brand: e.target.value })
-                        }
+                        {...register("brand")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
+                    {errors.brand && (<p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>)}
                 </div>
 
                 <div>
@@ -137,15 +134,13 @@ export default function CreateMachinery() {
                     </label>
                     <input
                         type="text"
-                        name="model"
+                    
                         placeholder="Modelo de la maquinaria"
-                        value={formData.model}
-                        onChange={(e) =>
-                            setFormData({ ...formData, model: e.target.value })
-                        }
+                        {...register("model")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         required
                     />  
+                    {errors.model && (<p className="text-red-500 text-sm mt-1">{errors.model.message}</p>)}
                 </div>
 
                 <div>
@@ -154,15 +149,13 @@ export default function CreateMachinery() {
                     </label>
                     <input
                         type="text"
-                        name="serialNumber"
+                        {...register("serialNumber")}
                         placeholder="Número de serie"
-                        value={formData.serialNumber}
-                        onChange={(e) =>
-                            setFormData({ ...formData, serialNumber: e.target.value })
-                        }
+                       
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         required
                     />
+                    {errors.serialNumber && (<p className="text-red-500 text-sm mt-1">{errors.serialNumber.message}</p>)}
                 </div>
 
                 <div>
@@ -170,11 +163,7 @@ export default function CreateMachinery() {
                         Tipo de Maquinaria
                     </label>
                     <select
-                        name="machineType"
-                        value={formData.machineType}
-                        onChange={(e) =>
-                            setFormData({ ...formData, machineType: e.target.value })
-                        }
+                        {...register("machineType")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         required
                     >
@@ -188,6 +177,7 @@ export default function CreateMachinery() {
                         <option value="GRUA">Grúa</option>
                         <option value="OTRO">Otro</option>
                     </select>
+                    {errors.machineType && (<p className="text-red-500 text-sm mt-1">{errors.machineType.message}</p>)}
                 </div>
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
@@ -195,13 +185,10 @@ export default function CreateMachinery() {
                     </label>
                     <input
                         type="date"
-                        name="installedAT"
-                        value={formData.installedAT.toISOString().split('T')[0]}
-                        onChange={(e) =>
-                            setFormData({ ...formData, installedAT: new Date(e.target.value) })
-                        }
+                        {...register("installedAt")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
+                    {errors.installedAt && (<p className="text-red-500 text-sm mt-1">{errors.installedAt.message}</p>)}
                 </div>
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
@@ -209,39 +196,30 @@ export default function CreateMachinery() {
                     </label>
                     <input
                         type="text"
-                        name="companyName"
+                        {...register("companyName")}
                         placeholder="Nombre de la empresa"
-                        value={formData.companyName}
-                        onChange={(e) =>
-                            setFormData({ ...formData, companyName: e.target.value })
-                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />  
+                    {errors.companyName && (<p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>)}
                 </div>
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
                         Asignar a Cliente (Opcional)
                     </label>
                     <select
-                        value={formData.clientID !== null && formData.clientID !== 0 ? formData.clientID.toString() : ""}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                    
-                            setFormData({ 
-                                ...formData, 
-                                clientID: value !== "" ? Number(value) : null
-                            });
-                          
-                        }}
+                        {...register("clientID")}
+                      
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
                         <option value="">Sin asignar</option> 
                         {clients.map((client) => (
+                            console.log('Rendering client option:', client),
                             <option key={client.userID} value={client.userID}> {/* ✅ Cambiar a userID */}
                                 {client.name}
                             </option>
                         ))}
                     </select>
+                    {errors.clientID && (<p className="text-red-500 text-sm mt-1">{errors.clientID.message}</p>)}
                 </div>
 
                 <button

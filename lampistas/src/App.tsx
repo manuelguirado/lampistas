@@ -13,7 +13,7 @@ function App() {
         position="top-right"
         toastOptions={{
           success: {
-            duration: 3000,
+            duration: 1000,
             style: {
               background: '#10b981',
               color: 'white',

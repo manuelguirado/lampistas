@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import Header from "./components/header";
 import toast from "react-hot-toast";
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import { incidentSchema,type typeIncidentSchema } from "./schemas/incidentSchema";
 export default function CreateIncident() {
     const token = localStorage.getItem("userToken");
     const navigate = useNavigate();
@@ -15,22 +18,24 @@ export default function CreateIncident() {
         createdAt : new Date().toISOString().slice(0, 10),
         updateAT : new Date().toISOString().slice(0, 10),
     });
-
+    const {
+        register : incidentRegister,
+        handleSubmit : handleIncidentSubmit,
+        formState: { errors : incidentErrors },
+    } = useForm<typeIncidentSchema>({
+        resolver: zodResolver(incidentSchema),
+        mode: "onChange",
+    });
      
-    function handleSubmit(event: React.FormEvent) {
-        event.preventDefault();
+    function handleSubmit(data : typeIncidentSchema) {
+        
         fetch("http://localhost:3000/user/createIncident", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                ...formData,
-            
-
-               
-            }),
+            body: JSON.stringify(data),
         })
             .then((response) => response.json())
             .then(() => {
@@ -47,7 +52,7 @@ export default function CreateIncident() {
             <Header />
             <h2 className="text-2xl font-bold mb-6">Crear Incidencia</h2>
             
-            <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
+            <form onSubmit={handleIncidentSubmit(handleSubmit)} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4">
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
                         Título
@@ -56,10 +61,12 @@ export default function CreateIncident() {
                         type="text"
                         placeholder="Título de la incidencia"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        {...incidentRegister("title")}
                         required
                     />
+                    {incidentErrors.title && (
+                        <p className="text-red-500 text-sm mt-1">{incidentErrors.title.message}</p>
+                    )}
                 </div>
 
                 <div>
@@ -70,8 +77,7 @@ export default function CreateIncident() {
                         placeholder="Describe la incidencia"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         rows={4}
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        {...incidentRegister("description")}
                         required
                     />
                 </div>
@@ -84,8 +90,7 @@ export default function CreateIncident() {
                         type="text"
                         placeholder="Ubicación"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        {...incidentRegister("location")}
                         required
                     />
                 </div>
@@ -96,8 +101,7 @@ export default function CreateIncident() {
                     </label>
                     <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        value={formData.priority}
-                        onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                        {...incidentRegister("priority")}
                         required
                     >
                         <option value="">Selecciona prioridad</option>
@@ -105,6 +109,9 @@ export default function CreateIncident() {
                         <option value="MEDIUM">Media</option>
                         <option value="HIGH">Alta</option>
                     </select>
+                    {incidentErrors.priority && (
+                        <p className="text-red-500 text-sm mt-1">{incidentErrors.priority.message}</p>
+                    )}
                 </div>
 
              
@@ -113,12 +120,14 @@ export default function CreateIncident() {
                         type="checkbox"
                         id="urgency"
                         className="w-4 h-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
-                        checked={formData.urgency}
-                        onChange={(e) => setFormData({ ...formData, urgency: e.target.checked })}
+                        {...incidentRegister("urgency")}
                     />
                     <label htmlFor="urgency" className="text-gray-700 text-sm font-medium">
                         Marcar como urgente
                     </label>
+                    {incidentErrors.urgency && (
+                        <p className="text-red-500 text-sm mt-1">{incidentErrors.urgency.message}</p>
+                    )}
                 </div>
 
                 <button

@@ -28,15 +28,7 @@ function CreateBudget() {
     formState: { errors },
   } = useForm<BudgetFormData>({
     resolver: zodResolver(budgetFormSchema),
-    defaultValues: {
-      incidentID: 0,
-      clientID: 0,
-      title: "",
-      date: "",
-      items: [{ description: "", quantity: 0, unitPrice: 0, total: 0 }],
-      budgetNumber: "",
-      companyName: "",
-    },
+    mode: "onChange",
   });
 
   const items = watch("items") || [];
