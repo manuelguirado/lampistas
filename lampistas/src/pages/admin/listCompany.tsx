@@ -112,7 +112,7 @@ export default function ListCompany() {
       <h2 className="text-2xl font-bold mb-6">Lista de Empresas</h2>
 
       <div className="w-full max-w-7xl overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-md">
+        <table className="min-w-full bg-white border border-gray-300 shadow-md ">
           <thead>
             <tr className="bg-amber-200">
               <th className="py-2 px-4 border border-gray-300 text-left">ID</th>

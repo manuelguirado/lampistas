@@ -28,11 +28,11 @@ export default function Header() {
         }
     }, [token]);
     return (
-    <header className="w-full h-16 bg-amber-100 text-white shadow-lg lg:fixed lg:top-0 lg:left-0 lg:right-0 z-50">
-            <div className="flex items-center p-4">
-                <Link to="/"><h1 className="text-2xl text-amber-800 font-bold">{adminEmail}</h1></Link>
+    <header className="w-full h-16 bg-amber-100 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
+            <div className="flex items-center p-4 gap-4">
+                <Link to="/"><h1 className="text-2xl text-amber-800 font-bold flex-shrink-0">{adminEmail}</h1></Link>
                 {/* Desktop Navigation */}
-                <nav className="hidden lg:flex space-x-4 justify-end flex-1">
+                <nav className="hidden lg:flex space-x-4 justify-end flex-1 overflow-x-auto lg:overflow-visible">
                     <Link to="/admin/registerCompany" >
                         <button
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"

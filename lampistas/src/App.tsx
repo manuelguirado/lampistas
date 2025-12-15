@@ -1,14 +1,22 @@
 
 
+import { useEffect } from 'react';
 import Footer from './components/footer';
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { setupAllAutoRefresh } from './utils/authUtils';
 
 import './App.css'
 
 function App() {
+  useEffect(() => {
+    // Configurar auto-refresh para todos los tipos de usuario logueados
+    const cleanup = setupAllAutoRefresh();
+    return cleanup; // Limpiar todos los intervalos al desmontar
+  }, []);
+
   return (
-    <div className="min-h-screen max-w-screen flex flex-col">
+    <div className=" flex flex-col">
       <Toaster 
         position="top-right"
         toastOptions={{

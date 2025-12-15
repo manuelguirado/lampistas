@@ -38,16 +38,16 @@ export default function Header() {
     }, [token]);
     
     return (
-        <header className="w-full bg-amber-100 text-white shadow-lg fixed top-0 left-0 z-50">
-            <div className="flex items-center justify-between p-4">
+        <header className="w-full bg-amber-100 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
+            <div className="flex items-center justify-between p-4 gap-4">
                 <Link to="/">
-                    <h1 className="text-xl md:text-2xl text-amber-800 font-bold">
+                    <h1 className="text-xl md:text-2xl text-amber-800 font-bold flex-shrink-0">
                        {userName || "Cargando..."}
                     </h1>
                 </Link>
                 
                 {/* Desktop Navigation */}
-                <nav className="hidden md:flex gap-2 flex-wrap justify-end flex-1">
+                <nav className="hidden md:flex gap-2 flex-wrap justify-end flex-1 overflow-x-auto md:overflow-visible">
                     <Link to="/user/myMachinery">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
                             Mi maquinaria

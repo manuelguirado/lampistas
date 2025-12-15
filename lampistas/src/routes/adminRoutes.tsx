@@ -20,7 +20,7 @@ export default function AdminRoutes() {
             <Route path="registerCompany" element={<ProtectedRoute userType="admin"><RegisterCompany /></ProtectedRoute>} />
             <Route path="listCompany" element={<ProtectedRoute userType="admin"><ListCompany /></ProtectedRoute>} />
             <Route path="suspendCompany/:companyID" element={<ProtectedRoute userType="admin"><SuspendCompany /></ProtectedRoute>} />
-            <Route path="editCompany/:companyID" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
+            <Route path="editCompany" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
         </Routes>
     );
 }

@@ -64,7 +64,7 @@ export default function WorkerShifts() {
         <h2 className="text-3xl font-bold mb-6">Mis Guardias</h2>
         
         {/* Leyenda */}
-        <div className="flex gap-4 mb-6">
+        <div className="flex gap-4 mb-6 sm:flex flex-col">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-400 rounded"></div>
             <span className="text-sm">Mañana</span>
