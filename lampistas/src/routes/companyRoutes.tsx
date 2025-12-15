@@ -29,7 +29,7 @@ export default function CompanyRoutes() {
 
       {/* Rutas protegidas */}
       <Route
-        path="dashboard"
+        path="companyDashboard"
         element={
           <ProtectedRoute userType="company">
             <DashboardCompany />

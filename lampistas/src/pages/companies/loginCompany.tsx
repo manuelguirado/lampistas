@@ -48,7 +48,7 @@ export default function LoginCompany() {
                     localStorage.setItem('companyToken', data.token);
                  
                     // Redirigir al dashboard de la empresa
-                        window.location.href = "/company/dashboard";
+                        window.location.href = "/company/companyDashboard";
                 } else {
                     toast.error('No se recibió token en la respuesta');
                 }
@@ -79,7 +79,7 @@ export default function LoginCompany() {
                     toast.success('¡Inicio de sesión exitoso!');
                     localStorage.setItem('companyToken', data.token);
                     // Redirigir al dashboard de la empresa
-                    window.location.href = "/company/dashboard";
+                    window.location.href = "/company/companyDashboard";
                 } else {
                     toast.error('No se recibió token en la respuesta');
                 }
