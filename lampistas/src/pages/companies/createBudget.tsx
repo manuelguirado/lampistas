@@ -104,7 +104,7 @@ function CreateBudget() {
 
       toast.success("Presupuesto creado exitosamente!");
     
-      navigate("/company/dashboard");
+      navigate("/company/companyDashboard");
     } catch (error: any) {
      toast.error("Error creating budget: " + error.message);
     }

@@ -36,6 +36,14 @@ export default function CompanyRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="dashboard"
+        element={
+          <ProtectedRoute userType="company">
+            <DashboardCompany />
+          </ProtectedRoute>
+        }
+      />
      
       
       <Route
