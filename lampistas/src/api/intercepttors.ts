@@ -9,7 +9,7 @@ import {
 } from "../api/helpers";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
 });
 
 // ✅ Interceptar request
@@ -49,7 +49,7 @@ api.interceptors.response.use(
        
 
         const { data } = await axios.post(
-          "http://localhost:3000/auth/refreshToken",
+          `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
           {
             token: refreshToken,
             userType: userType,

@@ -19,7 +19,7 @@ export default function UserLogin() {
   });
 
   const handleValidateCode = (data: UserLoginSchema) => {
-    fetch(`http://localhost:3000/user/validateCode`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/validateCode`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function UserLogin() {
       });
   };
   const handleSubmit = async (data: UserLoginSchema) => {
-    fetch("http://localhost:3000/user/userLogin", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userLogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

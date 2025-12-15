@@ -22,7 +22,7 @@ export default function CreateMachinery() {
     
   
     useEffect(() => {
-        fetch("http://localhost:3000/company/listClients?limit=100&offset=0", {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listClients?limit=100&offset=0`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function CreateMachinery() {
             clientID: data.clientID ? Number(data.clientID) : undefined,
         };
         
-        fetch("http://localhost:3000/company/createMachinery", {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/createMachinery`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

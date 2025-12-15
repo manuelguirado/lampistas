@@ -4,22 +4,22 @@ import type { UserType } from '../types/userType';
 const USER_CONFIG = {
   admin: {
     tokenKey: 'adminToken',
-    refreshUrl: 'http://localhost:3000/admin/refreshToken',
+    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/admin/refreshToken`,
     loginUrl: '/admin',
   },
   company: {
     tokenKey: 'companyToken',
-    refreshUrl: 'http://localhost:3000/company/refreshToken',
+    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/company/refreshToken`,
     loginUrl: '/company/companyLogin',
   },
   worker: {
     tokenKey: 'workerToken',
-    refreshUrl: 'http://localhost:3000/worker/refreshToken',
+    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/worker/refreshToken`,
     loginUrl: '/worker/workerLogin',
   },
   user: {
     tokenKey: 'userToken',
-    refreshUrl: 'http://localhost:3000/user/refreshToken',
+    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/refreshToken`,
     loginUrl: '/user/userLogin',
   },
 };

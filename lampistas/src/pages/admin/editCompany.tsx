@@ -26,7 +26,7 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     if (formData.phone) data.phone = formData.phone;
     if (formData.email) data.email = formData.email;
     
-    fetch(`http://localhost:3000/admin/editCompany/${formData.companyID}`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/editCompany/${formData.companyID}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

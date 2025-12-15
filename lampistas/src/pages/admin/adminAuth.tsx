@@ -34,7 +34,7 @@ export default function AdminAuth() {
   const onRegisterSubmit = async (data: RegisterSchema) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/admin/adminRegister",
+        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/adminRegister`,
         {
           method: "POST",
           headers: {
@@ -65,7 +65,7 @@ export default function AdminAuth() {
   // ✅ FUNCIÓN DE LOGIN - Recibe data validada por Zod
   const onLoginSubmit = async (data: RegisterSchema) => {
     try {
-      const response = await fetch("http://localhost:3000/admin/adminLogin", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/adminLogin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -22,7 +22,7 @@ export default function EditMachinery() {
     };
     useEffect(() => {
  
-        fetch(`http://localhost:3000/company/listMachinery?limit=${limit}&offset=${offset}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listMachinery?limit=${limit}&offset=${offset}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export default function EditMachinery() {
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        fetch(`http://localhost:3000/company/updateMaintenceDate/${formData.machineryID}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/updateMaintenceDate/${formData.machineryID}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

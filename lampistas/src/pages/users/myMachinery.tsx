@@ -10,7 +10,7 @@ export default function MyMachinery() {
     const token = localStorage.getItem("userToken");
     if (!token) return;
 
-    fetch("http://localhost:3000/user/userMachinery", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userMachinery`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

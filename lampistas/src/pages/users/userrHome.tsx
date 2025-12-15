@@ -8,7 +8,7 @@ export default function WorkerHome() {
     useState<boolean>(false);
  
   useEffect(() => {
-    fetch(`http://localhost:3000/user/myIncidents`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/myIncidents`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -19,7 +19,7 @@ export default function RegisterUser() {
 
         try {
             // PASO 1: Crear el usuario primero
-            const userResponse = await fetch(`http://localhost:3000/company/companyCreateUser`, {
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/companyCreateUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export default function RegisterUser() {
             }
 
             // PASO 2: Crear el contrato con el userID obtenido
-            const contractResponse = await fetch(`http://localhost:3000/company/createContract`, {
+            const contractResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/createContract`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

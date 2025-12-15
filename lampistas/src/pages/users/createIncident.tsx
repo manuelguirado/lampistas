@@ -21,7 +21,7 @@ export default function CreateIncident() {
   });
 
   function handleSubmit(data: typeIncidentSchema) {
-    fetch("http://localhost:3000/user/createIncident", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/createIncident`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -21,7 +21,7 @@ export default function ListMachinery() {
   const offset = (currentPage - 1) * itemsPerPage;
   const token = localStorage.getItem("companyToken");
   function eliminateMachinery(machineryID: number) {
-    fetch(`http://localhost:3000/company/eliminateMachinery/${machineryID}`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/eliminateMachinery/${machineryID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function ListMachinery() {
 
     useEffect(() => {
       fetch(
-        `http://localhost:3000/company/listMachinery?limit=${itemsPerPage}&offset=${offset}`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listMachinery?limit=${itemsPerPage}&offset=${offset}`,
         {
           method: "GET",
           headers: {

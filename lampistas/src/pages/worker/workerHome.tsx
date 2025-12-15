@@ -10,7 +10,7 @@ export default function WorkerHome() {
   const token = localStorage.getItem('workerToken');
 
   function handleupdateStatusIncident(incidentID: number, status: incidentStatus) {
-    fetch(`http://localhost:3000/worker/updateIncidentStatus`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/updateIncidentStatus`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export default function WorkerHome() {
       return;
     }
     setLoading(true);
-    fetch(`http://localhost:3000/worker/assignedIncidents`, { 
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/assignedIncidents`, { 
       method: 'GET',
       headers: {
         "Content-Type": "application/json",

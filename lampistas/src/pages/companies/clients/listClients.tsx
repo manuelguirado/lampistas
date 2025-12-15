@@ -20,7 +20,7 @@ export default function ListClients() {
     }, [currentPage]);
         async function handleGenerateCode(userID: number) {
         try {
-            const response = await fetch(`http://localhost:3000/company/assignUserCode/${userID}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignUserCode/${userID}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export default function ListClients() {
         }
     }
     function fetchClients() {
-        fetch(`http://localhost:3000/company/listClients?limit=${pageSize}&offset=${(currentPage - 1) * pageSize}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listClients?limit=${pageSize}&offset=${(currentPage - 1) * pageSize}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export default function ListClients() {
 
     async function viewClientContracts(userID: number, clientName: string) {
         try {
-            const response = await fetch(`http://localhost:3000/company/getClientContracts/${userID}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/getClientContracts/${userID}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

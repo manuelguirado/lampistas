@@ -33,7 +33,7 @@ function CreateBudget() {
 
   const items = watch("items") || [];
   useEffect(() => {
-    fetch("http://localhost:3000/company/listIncidents?limit=5&offset=0", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listIncidents?limit=5&offset=0`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +49,7 @@ function CreateBudget() {
       });
   }, [token]);
   useEffect(() => {
-    fetch("http://localhost:3000/company/listClients?limit=5&offset=0", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listClients?limit=5&offset=0`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

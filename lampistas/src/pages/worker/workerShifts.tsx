@@ -13,7 +13,7 @@ export default function WorkerShifts() {
     if (!token) return;
 
     // Fetch guardias del trabajador
-    fetch('http://localhost:3000/worker/myShifts', {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/myShifts`, {
         method: 'GET',
       headers: {
         'Content-Type': 'application/json',

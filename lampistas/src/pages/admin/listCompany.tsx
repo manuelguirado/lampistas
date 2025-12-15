@@ -18,7 +18,7 @@ export default function ListCompany() {
   const pageSize = 5;
 
   function handleGenerateCode(companyId: string) {
-    fetch(`http://localhost:3000/admin/assignCode/${companyId}`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/assignCode/${companyId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function ListCompany() {
       });
   }
   function handleActivateCompany(companyId: string) {
-    fetch(`http://localhost:3000/admin/activateCompany/${companyId}`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/activateCompany/${companyId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function ListCompany() {
   }
 
   function handleDeleteCompany(companyId: string) {
-    fetch(`http://localhost:3000/admin/eliminateCompany/${companyId}`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/eliminateCompany/${companyId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export default function ListCompany() {
     const limit = pageSize;
     const offset = (currentPage - 1) * pageSize;
     fetch(
-      `http://localhost:3000/admin/listCompany?limit=${limit}&offset=${offset}`,
+      `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/listCompany?limit=${limit}&offset=${offset}`,
       {
         method: "GET",
         headers: {

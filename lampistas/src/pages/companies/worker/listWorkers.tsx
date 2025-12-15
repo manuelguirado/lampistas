@@ -39,7 +39,7 @@ export default function ListWorkers() {
     function handleGenerateCode(workerID: number) {
        
 
-        fetch(`http://localhost:3000/company/assignWorkerCode/${workerID}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignWorkerCode/${workerID}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default function ListWorkers() {
 
     function handleEliminarWorker(workerID: number) {
 
-        fetch(`http://localhost:3000/company/deleteWorker/${workerID}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/deleteWorker/${workerID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export default function ListWorkers() {
     
       
         try {
-            const response = await fetch(`http://localhost:3000/company/assignShiftWorker`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignShiftWorker`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export default function ListWorkers() {
         const offset = (currentPage - 1) * pageSize;
         const token = localStorage.getItem('companyToken');
 
-        fetch(`http://localhost:3000/company/listWorkers?limit=${limit}&offset=${offset}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listWorkers?limit=${limit}&offset=${offset}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

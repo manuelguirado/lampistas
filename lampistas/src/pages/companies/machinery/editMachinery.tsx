@@ -24,7 +24,7 @@ export default function EditMachinery() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem("companyToken");
-    fetch(`http://localhost:3000/company/editMachinery`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/editMachinery`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

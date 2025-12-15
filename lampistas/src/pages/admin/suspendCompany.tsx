@@ -20,7 +20,7 @@ export default function SuspendCompany() {
 
     async function handleSubmit(data: SuspendCompanySchema) {
         try {
-            const response = await fetch(`http://localhost:3000/admin/suspendCompany/${data.companyId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/suspendCompany/${data.companyId}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

@@ -28,7 +28,7 @@ export default function LoginCompany() {
     });
     function handleSubmitCompanyCode(data : LoginSchema) {
         
-        fetch(`http://localhost:3000/company/validateCode`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/validateCode`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export default function LoginCompany() {
     function handleSubmitEmail(data : LoginSchema) {
         
         // Aquí puedes manejar el envío del formulario
-        fetch("http://localhost:3000/company/companyLogin", {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/companyLogin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

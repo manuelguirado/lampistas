@@ -17,7 +17,7 @@ export default function RegisterWorker() {
   function handleSubmit(data: RegisterSchema) {
     const token = localStorage.getItem("companyToken");
 
-    fetch("http://localhost:3000/company/RegisterWorker", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/RegisterWorker`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -14,7 +14,7 @@ export default function UserRegister() {
         event.preventDefault();
        
         try {
-            const response = await fetch('http://localhost:3000/user/userRegister', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userRegister`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

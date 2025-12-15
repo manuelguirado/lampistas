@@ -28,7 +28,7 @@ export default function MyIncidents() {
 
   // Cargar trabajadores
   useEffect(() => {
-    fetch("http://localhost:3000/company/listWorkers?limit=100&offset=0", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listWorkers?limit=100&offset=0`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function MyIncidents() {
   // Cargar incidencias
   useEffect(() => {
     fetch(
-      `http://localhost:3000/company/listIncidents?limit=${pageSize}&offset=${offset}`,
+      `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listIncidents?limit=${pageSize}&offset=${offset}`,
       {
         method: "GET",
         headers: {
@@ -70,7 +70,7 @@ export default function MyIncidents() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/company/assignIncident`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignIncident`,
         {
           method: "POST",
           headers: {

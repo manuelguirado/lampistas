@@ -26,7 +26,7 @@ export default function EditWorkers() {
         );
   
 
-        fetch(`http://localhost:3000/company/editWorker/${workerid}`, {
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/editWorker/${workerid}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

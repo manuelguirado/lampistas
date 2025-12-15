@@ -17,7 +17,7 @@ export default function WorkerLogin() {
     });
   function handleValidateCode(data : WorkerLoginSchema) {
 
-    fetch(`http://localhost:3000/worker/validateCode`, {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/validateCode`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function WorkerLogin() {
   }
   function handleLogin(data : WorkerLoginSchema) {
  
-    fetch("http://localhost:3000/worker/workerLogin", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/workerLogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

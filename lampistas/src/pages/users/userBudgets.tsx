@@ -7,7 +7,7 @@ export default function UserBudgets() {
   const [budgets, setBudgets] = useState<BudgetType[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/user/recievedBudgets", {
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/recievedBudgets`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
