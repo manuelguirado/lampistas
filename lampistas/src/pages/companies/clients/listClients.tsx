@@ -110,11 +110,11 @@ export default function ListClients() {
                                 <td className="py-2 px-4 border border-gray-300">{client.email}</td>
                                 <td className="py-2 px-4 border border-gray-300">
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                        client.contract === 'contract' 
+                                        client.contract === ' CONTRACT' 
                                             ? 'bg-blue-100 text-blue-800' 
                                             : 'bg-green-100 text-green-800'
                                     }`}>
-                                        {client.contract === 'contract' ? 'Contract' : 'Free Choice'}
+                                        {client.contract === ' CONTRACT' ? 'Contract' : 'Free Choice'}
                                     </span>
                                 </td>
                                 <td className="py-2 px-4 border border-gray-300">
@@ -194,11 +194,11 @@ export default function ListClients() {
                                             <tr key={contract.id} className="hover:bg-gray-50">
                                                 <td className="px-4 py-3">
                                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                                        contract.contractType === 'contract' 
-                                                            ? 'bg-blue-100 text-blue-800' 
+                                                        contract.contractType === " CONTRACT"
+                                                            ? 'bg-blue-100 text-blue-800'
                                                             : 'bg-green-100 text-green-800'
                                                     }`}>
-                                                        {contract.contractType === 'contract' ? 'Contract' : 'Free Choice'}
+                                                        {contract.contractType === " CONTRACT" ? 'Contract' : 'Free Choice'}
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3 text-sm text-gray-900">
