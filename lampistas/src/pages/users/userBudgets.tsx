@@ -49,6 +49,9 @@ export default function UserBudgets() {
                <th className="py-2 px-4 border border-gray-300 text-left">
                 Monto Total
               </th>
+              <th className="py-2 px-4 border border-gray-300 text-left">
+               Descargar PDF
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -81,6 +84,9 @@ export default function UserBudgets() {
                 </td>
                 <td className="py-2 px-4 border border-gray-300">
                   {budget.totalAmount}€
+                </td>
+                <td className="py-2 px-4 border border-gray-300">
+                  <button className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold">descargar PDF</button>
                 </td>
               </tr>
                

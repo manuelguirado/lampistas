@@ -124,6 +124,7 @@ export default function MyIncidents() {
               <th className="py-2 px-4 border border-gray-300">Prioridad</th>
               <th className="py-2 px-4 border border-gray-300">Fecha</th>
               <th className="py-2 px-4 border border-gray-300">Asignar a</th>
+              <th className="py-2 px-4 border border-gray-300">Reportes del trabajador</th>
             </tr>
           </thead>
           <tbody>
@@ -190,6 +191,11 @@ export default function MyIncidents() {
                       <UserPlus size={16} className="text-green-600" />
                     )}
                   </div>
+                  <td className="py-2 px-4 border border-gray-300">
+                     <button className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold">
+                      Ver Reportes del Trabajador
+                     </button>
+                  </td>
                 </td>
               </tr>
             ))}

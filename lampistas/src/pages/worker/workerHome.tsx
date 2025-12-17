@@ -2,13 +2,27 @@ import { useEffect, useState } from 'react';
 import type { IncidentType } from '../../types/incidentType';
 import toast from 'react-hot-toast';
 import type { incidentStatus } from '../../types/incidentStatus';
+import { X } from 'lucide-react';
+import Header from './components/header';
 
 export default function WorkerHome() {
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedIncident, setSelectedIncident] = useState<{ incidentID: number; name: string } | null>(null);
   const token = localStorage.getItem('workerToken');
+  function handleOpenIncidentModal(incident: { incidentID: number; name: string }) {
+        setSelectedIncident(incident);
+        setIsModalOpen(true);
+     
+        
+    }
 
+    function handleCloseModal() {
+        setIsModalOpen(false);
+        setSelectedIncident(null);
+    }
   function handleupdateStatusIncident(incidentID: number, status: incidentStatus) {
     fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/updateIncidentStatus`, {
       method: 'PATCH',
@@ -90,6 +104,7 @@ export default function WorkerHome() {
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
+      <Header />
       <h1 className="text-3xl font-bold mb-6 text-amber-800">Incidencias Asignadas</h1>
 
       {activeIncidents.length === 0 ? (
@@ -107,6 +122,7 @@ export default function WorkerHome() {
                 <th className="py-2 px-4 border border-gray-300 text-left">Usuario que Reportó</th>
                 <th className="py-2 px-4 border border-gray-300 text-left">Estado</th>
                 <th className="py-2 px-4 border border-gray-300 text-left">Prioridad</th>
+                <th className='py-2 px-4 border border-gray-300 text-left'>Añadir fotos </th>
               </tr>
             </thead>
             <tbody>
@@ -154,12 +170,90 @@ export default function WorkerHome() {
                        incident.priority === 'medium' ? 'Media' : 'Baja'}
                     </span>
                   </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    <button 
+                      onClick={() => handleOpenIncidentModal({ incidentID: incident.IncidentsID, name: incident.title })}
+                      className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-600 transition-colors"
+                    >
+                      Añadir Fotos
+                    </button>
+                  </td>
                 </tr>
               ))}
+
             </tbody>
           </table>
         </div>
       )}
-    </div>
-  );
+   
+            {/* Modal para subir fotos */}
+            {isModalOpen && selectedIncident && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+                        {/* Header */}
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">
+                                Añadir Fotos a Incidencia
+                            </h3>
+                            <button 
+                                onClick={handleCloseModal}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        {/* Incident Info */}
+                        <div className="mb-4 p-3 bg-amber-50 rounded">
+                            <p className="text-sm text-gray-600">Incidencia:</p>
+                            <p className="font-semibold text-gray-800">{selectedIncident.name}</p>
+                        </div>
+
+                        {/* Form */}
+                        <form 
+                            action={`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/uploadIncidentPhotos`}
+                            method="POST"
+                            encType="multipart/form-data"
+                            className="space-y-4"
+                        >
+                            <input type="hidden" name="incidentID" value={selectedIncident.incidentID} />
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Selecciona fotos o documentos
+                                </label>
+                                <input 
+                                    type="file" 
+                                    name="incidentPhotos" 
+                                    multiple 
+                                    accept="image/jpeg,image/png,image/webp,image/svg+xml,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/zip,application/x-rar-compressed,application/gzip"
+                                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Formatos permitidos: JPG, PNG, PDF, DOC, XLS, ZIP, RAR
+                                </p>
+                            </div>
+
+                            {/* Buttons */}
+                            <div className="flex gap-2 justify-end pt-4">
+                                <button
+                                    type="button"
+                                    onClick={handleCloseModal}
+                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
+                                >
+                                    Subir Fotos
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }

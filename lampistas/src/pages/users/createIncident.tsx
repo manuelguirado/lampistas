@@ -21,14 +21,19 @@ export default function CreateIncident() {
   });
 
   function handleSubmit(data: typeIncidentSchema) {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/createIncident`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    })
+    fetch(
+      `${
+        import.meta.env.VITE_API_URL || "http://localhost:3000"
+      }/user/createIncident`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      }
+    )
       .then((response) => response.json())
       .then(() => {
         toast.success("Incident created successfully!");
@@ -126,6 +131,13 @@ export default function CreateIncident() {
           >
             Marcar como urgente
           </label>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/svg+xml,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/zip,application/x-rar-compressed,application/gzip"
+            className="w-4 h-4 text-amber-500 border-gray-300 rounded  focus:ring-amber-500"
+            multiple
+            placeholder="sube fotos de la incidencia"
+          />
           {incidentErrors.urgency && (
             <p className="text-red-500 text-sm mt-1">
               {incidentErrors.urgency.message}
