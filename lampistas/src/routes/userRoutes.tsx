@@ -18,7 +18,7 @@ export default function UserRoutes() {
       <Route
         path="userdashboard"
         element={
-          <ProtectedRoute userType="worker">
+          <ProtectedRoute userType="user">
             <UserDashboard />
           </ProtectedRoute>
         }
@@ -26,9 +26,9 @@ export default function UserRoutes() {
         {/* ✅ Ruta index - se muestra en /worker/workerdashboard */}
         <Route index element={<UserHome />} />
       </Route>
-        <Route path="createIncident" element={ <ProtectedRoute userType="worker"><CreateIncident /></ProtectedRoute> } />
-        <Route path="myMachinery" element={ <ProtectedRoute userType="worker"><MyMachinery /></ProtectedRoute> } />
-        <Route path="myBudgets" element={ <ProtectedRoute userType="worker"><UserBudgets /></ProtectedRoute> } />
+        <Route path="createIncident" element={ <ProtectedRoute userType="user"><CreateIncident /></ProtectedRoute> } />
+        <Route path="myMachinery" element={ <ProtectedRoute userType="user"><MyMachinery /></ProtectedRoute> } />
+        <Route path="myBudgets" element={ <ProtectedRoute userType="user"><UserBudgets /></ProtectedRoute> } />
       {/* Aquí puedes agregar rutas protegidas para usuarios si es necesario */}
     </Routes>
   );

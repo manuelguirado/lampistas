@@ -4,7 +4,9 @@ import toast from 'react-hot-toast';
 import type { incidentStatus } from '../../types/incidentStatus';
 import { X } from 'lucide-react';
 import Header from './components/header';
-
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { uploadFilesSchema, type typeUploadFilesSchema } from '../worker/schemas/uploadFilesSchema';
 export default function WorkerHome() {
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -12,6 +14,15 @@ export default function WorkerHome() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedIncident, setSelectedIncident] = useState<{ incidentID: number; name: string } | null>(null);
   const token = localStorage.getItem('workerToken');
+  const {
+    register: filesRegister,
+    handleSubmit: handleFilesSubmit,
+    formState: { errors: filesErrors },
+  } = useForm<typeUploadFilesSchema>({
+    resolver: zodResolver(uploadFilesSchema),
+    mode: "onChange",
+  });
+  
   function handleOpenIncidentModal(incident: { incidentID: number; name: string }) {
         setSelectedIncident(incident);
         setIsModalOpen(true);

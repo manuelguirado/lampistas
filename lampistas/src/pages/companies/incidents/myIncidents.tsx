@@ -4,6 +4,8 @@ import { ChevronRight, ChevronLeft, UserPlus } from "lucide-react";
 import toast from 'react-hot-toast';
 export default function MyIncidents() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedIncident, setSelectedIncident] = useState<{ incidentID: number; name: string } | null>(null);
   const [totalIncidents, setTotalIncidents] = useState(0);
   const [workers, setWorkers] = useState<
     Array<{ workerid: number; name: string }>
@@ -25,7 +27,17 @@ export default function MyIncidents() {
   >([]);
 
   const token = localStorage.getItem("companyToken");
+function handleOpenIncidentModal(incident: { incidentID: number; name: string }) {
+        setSelectedIncident(incident);
+        setIsModalOpen(true);
+     
+        
+    }
 
+    function handleCloseModal() {
+        setIsModalOpen(false);
+        setSelectedIncident(null);
+    }
   // Cargar trabajadores
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listWorkers?limit=100&offset=0`, {
@@ -192,7 +204,7 @@ export default function MyIncidents() {
                     )}
                   </div>
                   <td className="py-2 px-4 border border-gray-300">
-                     <button className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold">
+                     <button  onClick={() => handleOpenIncidentModal(incident)} className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold">
                       Ver Reportes del Trabajador
                      </button>
                   </td>

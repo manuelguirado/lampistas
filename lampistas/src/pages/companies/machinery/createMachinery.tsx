@@ -6,6 +6,16 @@ import toast from "react-hot-toast";
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { CreateMachinerySchema, type CreateMachineryType } from "../schemas/CreateMachinerySchema";
+import { 
+  Settings, 
+  FileText, 
+  Tag, 
+  Calendar, 
+  User, 
+  MapPin, 
+  Send,
+  Wrench
+} from 'lucide-react';
 
 export default function CreateMachinery() {
     const token = localStorage.getItem("companyToken");
@@ -116,115 +126,45 @@ export default function CreateMachinery() {
                     {errors.brand && (<p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>)}
                 </div>
 
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Modelo
-                    </label>
-                    <input
-                        type="text"
-                    
-                        placeholder="Modelo de la maquinaria"
-                        {...register("model")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        required
-                    />  
-                    {errors.model && (<p className="text-red-500 text-sm mt-1">{errors.model.message}</p>)}
-                </div>
-
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Número de Serie
-                    </label>
-                    <input
-                        type="text"
-                        {...register("serialNumber")}
-                        placeholder="Número de serie"
-                       
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        required
-                    />
-                    {errors.serialNumber && (<p className="text-red-500 text-sm mt-1">{errors.serialNumber.message}</p>)}
-                </div>
-
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Tipo de Maquinaria
-                    </label>
-                    <select
-                        {...register("machineType")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        required
-                    >
-                        <option value="">Selecciona un tipo</option>
-                        <option value="CALDERA">Caldera</option>
-                        <option value="BOMBA">Bomba</option>
-                        <option value="COMPRESOR">Compresor</option>
-                        <option value="HVAC">HVAC</option>
-                        <option value="GENERADOR">Generador</option>
-                        <option value="EXCAVADORA">Excavadora</option>
-                        <option value="GRUA">Grúa</option>
-                        <option value="OTRO">Otro</option>
-                    </select>
-                    {errors.machineType && (<p className="text-red-500 text-sm mt-1">{errors.machineType.message}</p>)}
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Fecha de Instalación
-                    </label>
-                    <input
-                        type="date"
-                        {...register("installedAt")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    />
-                    {errors.installedAt && (<p className="text-red-500 text-sm mt-1">{errors.installedAt.message}</p>)}
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Nombre de la Empresa
-                    </label>
-                    <input
-                        type="text"
-                        {...register("companyName")}
-                        placeholder="Nombre de la empresa"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    />  
-                    {errors.companyName && (<p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>)}
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Asignar a Cliente (Opcional)
-                    </label>
-                    <select
-                        {...register("clientID")}
-                      
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    >
-                        <option value="">Sin asignar</option> 
-                        {clients.map((client) => (
-                            console.log('Rendering client option:', client),
-                            <option key={client.userID} value={client.userID}> {/* ✅ Cambiar a userID */}
-                                {client.name}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.clientID && (<p className="text-red-500 text-sm mt-1">{errors.clientID.message}</p>)}
-                </div>
-
-                <button
-                    type="submit"
-                    className="w-full bg-amber-500 text-white px-4 py-3 rounded-lg hover:bg-amber-600 transition-colors font-semibold"
-                >
-                    Crear Maquinaria
-                </button>
-
-                <button
-                    type="button"
-                    onClick={() => navigate("/company/maquinaria")}
-                    className="w-full bg-gray-200 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors"
-                >
-                    Cancelar
-                </button>
-            </form>
-        </div>
-    );
+                            <div>
+                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                    Modelo
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Modelo de la maquinaria"
+                                    {...register("model")}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                    required
+                                />
+                                {errors.model && (<p className="text-red-500 text-sm mt-1">{errors.model.message}</p>)}
+                            </div>
+            
+                            <div>
+                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                    Cliente
+                                </label>
+                                <select
+                                    {...register("clientID")}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                >
+                                    <option value="">Seleccionar cliente (opcional)</option>
+                                    {clients.map((client) => (
+                                        <option key={client.userID} value={client.userID}>
+                                            {client.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.clientID && (<p className="text-red-500 text-sm mt-1">{errors.clientID.message}</p>)}
+                            </div>
+            
+                            <button
+                                type="submit"
+                                className="w-full bg-amber-500 text-white py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors font-medium"
+                            >
+                                Crear Maquinaria
+                            </button>
+                        </form>
+                    </div>
+                );
 }
