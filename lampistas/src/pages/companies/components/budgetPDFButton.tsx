@@ -4,8 +4,10 @@ import {
   Text,
   View,
   StyleSheet,
-  PDFDownloadLink,
+  pdf
 } from "@react-pdf/renderer";
+import api from "../../../api/intercepttors"; // Asegúrate de importar tu api
+import toast from "react-hot-toast";
 
 // Estilos para el PDF
 const styles = StyleSheet.create({
@@ -86,7 +88,10 @@ const styles = StyleSheet.create({
     color: "#f59e0b", // Color amber para el total
   },
 });
-
+interface BudgetPDFButtonProps {
+  budgetData : BudgetData;
+  enctype?: string;
+}
 interface BudgetItem {
   description: string;
   quantity: number;
@@ -105,7 +110,7 @@ interface BudgetData {
   tax: number;
   total: number;
 }
-
+    
 // Componente del documento PDF
 const BudgetDocument = ({ data }: { data: BudgetData }) => (
   <Document>
@@ -185,15 +190,52 @@ export default function BudgetPDFButton({
 }: {
   budgetData: BudgetData;
 }) {
+  const handleDownloadAndUpload = async () => {
+    try {
+      // 1. Generar el PDF como blob
+      const blob = await pdf(<BudgetDocument data={budgetData} />).toBlob();
+      
+      // 2. Crear FormData para subir a Cloudflare
+      const formData = new FormData();
+      formData.append('file', blob, `budget_${budgetData.budgetNumber}.pdf`);
+      formData.append('budgetNumber', budgetData.budgetNumber);
+      
+      // 3. Subir a tu backend/Cloudflare
+      const token = localStorage.getItem("companyToken");
+      
+      const response = await api.post('/company/uploadFile', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+         
+        },
+      }).then(res => res.data).catch(err => {
+        throw new Error("Error subiendo el PDF");
+      });
+      
+      console.log('PDF subido con éxito:', response);
+      
+      toast.success("PDF generado y subido exitosamente!");
+      
+      // 4. También descargar localmente (opcional)
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `budget_${budgetData.budgetNumber}.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error uploading PDF:', error);
+      toast.error("Error al generar o subir el PDF");
+    }
+  };
+
   return (
-    <PDFDownloadLink
-      document={<BudgetDocument data={budgetData} />}
-      fileName={`presupuesto-${budgetData.budgetNumber}.pdf`}
-      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-flex items-center gap-2"
+    <button 
+      onClick={handleDownloadAndUpload} 
+      className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold"
     >
-      {({ loading }) =>
-        loading ? "Generando PDF..." : "📄 Descargar Presupuesto"
-      }
-    </PDFDownloadLink>
+      Crear y enviar presupuesto 
+    </button>
   );
 }

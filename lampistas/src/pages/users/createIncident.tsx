@@ -19,11 +19,12 @@ import {
   Image,
   Upload
 } from 'lucide-react';
+import { boolean } from "zod";
 
 export default function CreateIncident() {
   const token = localStorage.getItem("userToken");
   const navigate = useNavigate(); 
-  const [files, setFiles] = useState<FileList | null>(null);
+    const [files, setFiles] = useState<FileList | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -35,70 +36,40 @@ export default function CreateIncident() {
     mode: "onChange",
   });
 
-  // Función para subir archivos que retorna una promesa
-  async function uploadFiles(): Promise<string[]> {
-    if (!files || files.length === 0) {
-      return [];
-    }
-
-    const uploadPromises = Array.from(files).map(async (file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/uploadFile`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Error uploading file ${file.name}`);
-      }
-
-      const result = await response.json();
-      return result.fileUrl || result.fileName; // Ajusta según tu respuesta del backend
-    });
-
-    return Promise.all(uploadPromises);
-  }
-
   // Función principal que maneja todo el flujo
   async function handleSubmit(data: typeIncidentSchema) {
  
     setIsSubmitting(true);
     
     try {
-      // 1. Primero subir los archivos
-      let uploadedFiles: string[] = [];
+      // Crear FormData para enviar tanto datos como archivos
+      const formData = new FormData();
+      
+      // Añadir los datos de la incidencia
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('location', data.location);
+      if (data.priority) formData.append('priority', data.priority);
+      formData.append('urgency', data.urgency ? 'true' : 'false');
+      
+      // Añadir los archivos si existen
       if (files && files.length > 0) {
-        toast.loading("Subiendo archivos...", { id: "upload" });
-        uploadedFiles = await uploadFiles();
-        toast.success("Archivos subidos correctamente!", { id: "upload" });
+        Array.from(files).forEach((file) => {
+          formData.append('files', file);
+        });
       }
 
-      // 2. Crear la incidencia con los archivos subidos
       toast.loading("Creando incidencia...", { id: "incident" });
       
-      const incidentData = {
-        ...data,
-        files: uploadedFiles, // Añadir las URLs/nombres de los archivos subidos
-      };
-
       const response = await fetch(
         `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/createIncident`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-         
             Authorization: `Bearer ${token}`,
+            // NO incluir Content-Type para multipart/form-data
           },
-          body: JSON.stringify(incidentData),
+          body: formData,
         }
       );
 

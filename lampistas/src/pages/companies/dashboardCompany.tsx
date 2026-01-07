@@ -1,5 +1,6 @@
 import Header from '../companies/components/header';
 import { Outlet } from 'react-router';
+
 export default function DashboardCompany() {
     return (
         <div >
@@ -8,6 +9,8 @@ export default function DashboardCompany() {
             <h2 className='text-2xl font-bold p-20 text-amber-800'>Company Dashboard</h2>
             <Outlet />
             </main>
+        
+
         </div>
     );
 }

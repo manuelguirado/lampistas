@@ -10,33 +10,40 @@ export default function WorkerHome() {
     incidentID: number;
     name: string;
     files: Array<{
+      bucketName?: string;
       key: string;
       signedUrl: string;
       size?: number;
+      url?: string;
       lastModified?: Date;
       token: string;
     }>;
     description: string;
     dateReported: Date;
   } | null>(null);
-  const token = localStorage.getItem("userToken");
   
+  const token = localStorage.getItem("userToken");
+  console.log("file" , selectedIncident?.files)
+  console.log("bucketName main" , selectedIncident?.files?.[0]?.bucketName)
   function handleOpenIncidentModal(incident: {
     incidentID: number;
     name: string;
     files: Array<{
+      bucketName?: string;
       key: string;
       signedUrl: string;
       size?: number;
+      url?: string;
       lastModified?: Date;
       token: string;
     }>;
     description: string;
     dateReported: Date;
   }) {
+    console.log("files data " , incident.files);
     setSelectedIncident(incident);
     setIsModalOpen(true);
-    // Cargar archivos cuando se abra la modal
+  
     fetchIncidentFiles(incident.incidentID);
   }
 
@@ -76,12 +83,14 @@ export default function WorkerHome() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Fetched files:", data);
+          console.log("bucketName:", data?.[0]?.bucketName);
           if (data && Array.isArray(data)) {
             setSelectedIncident((prevIncident) =>
               prevIncident
                 ? { ...prevIncident, files: data }
                 : prevIncident
             );
+         
           } else {
             setSelectedIncident((prevIncident) =>
               prevIncident
@@ -100,7 +109,7 @@ export default function WorkerHome() {
   }
 
   // Función para descargar archivos
-  async function downloadFile(file: { key: string; signedUrl: string; token?: string }, fileName: string) {
+  async function downloadFile(file: { bucketName?: string; key: string; signedUrl: string; token?: string }, fileName: string) {
     try {
       const response = await fetch(file.signedUrl, {
         method: 'GET',
@@ -240,7 +249,7 @@ export default function WorkerHome() {
                       const fileExtension = fileName.split('.').pop()?.toLowerCase();
                       const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension || '');
                       const isPdf = fileExtension === 'pdf';
-                      
+
                       return (
                         <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
                           <div className="flex items-center justify-between mb-2">
@@ -262,7 +271,8 @@ export default function WorkerHome() {
                                 alt={fileName}
                                 className="max-w-full h-32 object-cover rounded border"
                                 onError={(e) => {
-                                  console.error('Error loading image:', file.signedUrl);
+                                  
+                                  toast.error('Error loading image:' + file.signedUrl);
                                   e.currentTarget.style.display = 'none';
                                   // Mostrar mensaje de error
                                   const errorDiv = document.createElement('div');
@@ -271,7 +281,7 @@ export default function WorkerHome() {
                                   e.currentTarget.parentNode?.appendChild(errorDiv);
                                 }}
                                 onLoad={() => {
-                                  console.log('Image loaded successfully:', file.signedUrl);
+                                  toast.success('Image loaded successfully:' + file.signedUrl);
                                 }}
                               />
                             </div>
@@ -287,14 +297,16 @@ export default function WorkerHome() {
                           )}
                           
                           <div className="flex gap-2">
-                            <a
-                              href={file.signedUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline text-sm flex-1 text-center py-1 px-2 bg-blue-50 rounded"
-                            >
-                              👁️ Ver
-                            </a>
+                            {file.signedUrl && (
+                              <a
+                                href={file.signedUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:bg-blue-100 text-sm flex-1 text-center py-1 px-2 bg-blue-50 rounded border-none cursor-pointer"
+                              >
+                                🔍 Ver
+                              </a>
+                            )}
                             <button
                               onClick={() => downloadFile(file, fileName)}
                               className="text-green-600 hover:bg-green-100 text-sm flex-1 text-center py-1 px-2 bg-green-50 rounded border-none cursor-pointer"
