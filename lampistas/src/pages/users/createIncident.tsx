@@ -8,23 +8,23 @@ import {
   type typeIncidentSchema,
 } from "./schemas/incidentSchema";
 import { useState } from "react";
-import { 
-  AlertTriangle, 
-  FileText, 
-  MapPin, 
-  Flag, 
-  Zap, 
+import {
+  AlertTriangle,
+  FileText,
+  MapPin,
+  Flag,
+  Zap,
   Paperclip,
   Send,
   Image,
-  Upload
-} from 'lucide-react';
+  Upload,
+} from "lucide-react";
 import { boolean } from "zod";
 
 export default function CreateIncident() {
   const token = localStorage.getItem("userToken");
-  const navigate = useNavigate(); 
-    const [files, setFiles] = useState<FileList | null>(null);
+  const navigate = useNavigate();
+  const [files, setFiles] = useState<FileList | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -38,31 +38,32 @@ export default function CreateIncident() {
 
   // Función principal que maneja todo el flujo
   async function handleSubmit(data: typeIncidentSchema) {
- 
     setIsSubmitting(true);
-    
+
     try {
       // Crear FormData para enviar tanto datos como archivos
       const formData = new FormData();
-      
+
       // Añadir los datos de la incidencia
-      formData.append('title', data.title);
-      formData.append('description', data.description);
-      formData.append('location', data.location);
-      if (data.priority) formData.append('priority', data.priority);
-      formData.append('urgency', data.urgency ? 'true' : 'false');
-      
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("location", data.location);
+      if (data.priority) formData.append("priority", data.priority);
+      formData.append("urgency", data.urgency ? "true" : "false");
+
       // Añadir los archivos si existen
       if (files && files.length > 0) {
         Array.from(files).forEach((file) => {
-          formData.append('files', file);
+          formData.append("files", file);
         });
       }
 
       toast.loading("Creando incidencia...", { id: "incident" });
-      
+
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/createIncident`,
+        `${
+          import.meta.env.VITE_API_URL || "http://localhost:3000"
+        }/user/createIncident`,
         {
           method: "POST",
           headers: {
@@ -79,7 +80,6 @@ export default function CreateIncident() {
 
       toast.success("Incidencia creada correctamente!", { id: "incident" });
       navigate("/user/userDashboard");
-
     } catch (error) {
       toast.error("Error: " + (error as Error).message);
     } finally {
@@ -96,15 +96,19 @@ export default function CreateIncident() {
   return (
     <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-red-50 to-orange-100 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
-      
+
       <div className="w-full max-w-2xl">
         {/* Título con diseño de emergencia */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center mb-4 shadow-lg animate-pulse">
             <AlertTriangle className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Reportar Incidencia</h2>
-          <p className="text-gray-600">Describe el problema que necesita atención</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            Reportar Incidencia
+          </h2>
+          <p className="text-gray-600">
+            Describe el problema que necesita atención
+          </p>
         </div>
 
         {/* Formulario moderno */}
@@ -250,7 +254,8 @@ export default function CreateIncident() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-xl">
                   <Paperclip className="w-4 h-4 text-green-600" />
                   <span className="text-sm text-green-700 font-medium">
-                    {files.length} archivo{files.length > 1 ? 's' : ''} seleccionado{files.length > 1 ? 's' : ''}
+                    {files.length} archivo{files.length > 1 ? "s" : ""}{" "}
+                    seleccionado{files.length > 1 ? "s" : ""}
                   </span>
                 </div>
               )}
@@ -280,16 +285,18 @@ export default function CreateIncident() {
               </button>
             </div>
           </form>
-          
+
           {/* Información adicional */}
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-blue-800 font-semibold text-sm">Información importante:</h4>
+                <h4 className="text-blue-800 font-semibold text-sm">
+                  Información importante:
+                </h4>
                 <p className="text-blue-700 text-xs mt-1">
-                  Tu reporte será revisado y asignado a un técnico especializado. 
-                  Recibirás notificaciones sobre el progreso.
+                  Tu reporte será revisado y asignado a un técnico
+                  especializado. Recibirás notificaciones sobre el progreso.
                 </p>
               </div>
             </div>

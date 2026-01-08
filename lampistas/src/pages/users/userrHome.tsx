@@ -1,11 +1,12 @@
 import Header from "./components/header";
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X,ChevronRight,ChevronLeft } from "lucide-react";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
 export default function WorkerHome() {
   const [myIncidents, setMyIncidents] = useState<IncidentType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedIncident, setSelectedIncident] = useState<{
     incidentID: number;
     name: string;
@@ -21,10 +22,33 @@ export default function WorkerHome() {
     description: string;
     dateReported: Date;
   } | null>(null);
-  
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5); // Cambiado para permitir modificación
+   
   const token = localStorage.getItem("userToken");
-  console.log("file" , selectedIncident?.files)
-  console.log("bucketName main" , selectedIncident?.files?.[0]?.bucketName)
+ 
+  // Pagination logic
+  const totalPages = Math.ceil(myIncidents.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedIncidents = myIncidents.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Resetear a la primera página cuando cambie el número de elementos
+  };
   function handleOpenIncidentModal(incident: {
     incidentID: number;
     name: string;
@@ -40,7 +64,7 @@ export default function WorkerHome() {
     description: string;
     dateReported: Date;
   }) {
-    console.log("files data " , incident.files);
+
     setSelectedIncident(incident);
     setIsModalOpen(true);
   
@@ -52,6 +76,7 @@ export default function WorkerHome() {
     setSelectedIncident(null);
   }
   useEffect(() => {
+    setIsLoading(true);
     fetch(
       `${
         import.meta.env.VITE_API_URL || "http://localhost:3000"
@@ -69,8 +94,22 @@ export default function WorkerHome() {
         if (Array.isArray(data.incidents)) {
           setMyIncidents(data.incidents);
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching incidents:", error);
+        toast.error("Error al cargar las incidencias");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [token]);
+
+  // Resetear página cuando no hay suficientes elementos
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
   function fetchIncidentFiles(incidentID: number): void {
     try {
       fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/listFiles/${incidentID}`, {
@@ -82,8 +121,7 @@ export default function WorkerHome() {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Fetched files:", data);
-          console.log("bucketName:", data?.[0]?.bucketName);
+       
           if (data && Array.isArray(data)) {
             setSelectedIncident((prevIncident) =>
               prevIncident
@@ -144,10 +182,38 @@ export default function WorkerHome() {
   return (
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
-      <h2 className="text-2xl font-bold mb-6">Mis Incidencias</h2>
+      <div className="w-full max-w-7xl mb-4 flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Mis Incidencias</h2>
+        
+        {/* Selector de elementos por página */}
+        <div className="flex items-center space-x-2">
+          <label htmlFor="itemsPerPage" className="text-sm text-gray-600">
+            Mostrar:
+          </label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+            className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={15}>15</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+          <span className="text-sm text-gray-600">por página</span>
+        </div>
+      </div>
 
       <div className="w-full max-w-7xl overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-md">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+            <span className="ml-2 text-gray-600">Cargando incidencias...</span>
+          </div>
+        ) : (
+          <table className="min-w-full bg-white border border-gray-300 shadow-md">
           <thead>
             <tr className="bg-amber-200">
               <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
@@ -169,46 +235,131 @@ export default function WorkerHome() {
             </tr>
           </thead>
           <tbody>
-            {myIncidents.map((incident) => (
-              <tr key={incident.IncidentsID} className="hover:bg-amber-50">
-                <td className="py-2 px-4 border border-gray-300">
-                  {incident.IncidentsID}
-                </td>
-                <td className="py-2 px-4 border border-gray-300">
-                  {incident.title}
-                </td>
-                <td className="py-2 px-4 border border-gray-300">
-                  {incident.dateReported instanceof Date
-                    ? incident.dateReported.toLocaleString("")
-                    : incident.dateReported}
-                </td>
+            {paginatedIncidents.length > 0 ? (
+              paginatedIncidents.map((incident) => (
+                <tr key={incident.IncidentsID} className="hover:bg-amber-50">
+                  <td className="py-2 px-4 border border-gray-300">
+                    {incident.IncidentsID}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {incident.title}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {incident.dateReported instanceof Date
+                      ? incident.dateReported.toLocaleString("")
+                      : incident.dateReported}
+                  </td>
 
-                <td className="py-2 px-4 border border-gray-300">
-                  {incident.status}
-                </td>
-                <td className="py-2 px-4 border border-gray-300">
-                  {incident.priority}
-                </td>
-                <td className="py-2 px-4 border border-gray-300">
-                  <button
-                    onClick={() =>
-                      handleOpenIncidentModal({
-                        incidentID: incident.IncidentsID,
-                        name: incident.title,
-                        files: [],
-                        description: incident.description,
-                        dateReported: incident.dateReported,
-                      })
-                    }
-                    className="text-blue-600 hover:underline"
-                  >
-                    Ver
-                  </button>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {incident.status}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    {incident.priority}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300">
+                    <button
+                      onClick={() =>
+                        handleOpenIncidentModal({
+                          incidentID: incident.IncidentsID,
+                          name: incident.title,
+                          files: [],
+                          description: incident.description,
+                          dateReported: incident.dateReported,
+                        })
+                      }
+                      className="text-blue-600 hover:underline"
+                    >
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="py-8 px-4 text-center text-gray-500">
+                  No se encontraron incidencias
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
+        )}
+
+        {/* Paginación */}
+        {!isLoading && myIncidents.length > itemsPerPage && (
+          <div className="flex items-center justify-between mt-4 px-4 py-3 bg-white border border-gray-300 rounded-b-lg">
+            <div className="flex items-center text-sm text-gray-500">
+              Mostrando {startIndex + 1} a {Math.min(endIndex, myIncidents.length)} de {myIncidents.length} incidencias
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              {/* Botón Anterior */}
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                  currentPage === 1
+                    ? 'text-gray-400 cursor-not-allowed bg-gray-100'
+                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                } transition-colors`}
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Anterior
+              </button>
+
+              {/* Números de página */}
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const pageNumber = index + 1;
+                  const showPage = 
+                    pageNumber === 1 || 
+                    pageNumber === totalPages || 
+                    (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1);
+                  
+                  if (!showPage) {
+                    // Mostrar "..." para páginas omitidas
+                    if (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) {
+                      return (
+                        <span key={pageNumber} className="px-2 py-1 text-gray-500">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+
+                  return (
+                    <button
+                      key={pageNumber}
+                      onClick={() => setCurrentPage(pageNumber)}
+                      className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                        currentPage === pageNumber
+                          ? 'bg-amber-500 text-white'
+                          : 'text-gray-700 bg-white border border-gray-300 hover:bg-amber-50'
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Botón Siguiente */}
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                  currentPage === totalPages
+                    ? 'text-gray-400 cursor-not-allowed bg-gray-100'
+                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                } transition-colors`}
+              >
+                Siguiente
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       {isModalOpen && selectedIncident && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

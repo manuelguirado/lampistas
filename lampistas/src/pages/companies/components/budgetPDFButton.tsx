@@ -212,7 +212,7 @@ export default function BudgetPDFButton({
         throw new Error("Error subiendo el PDF");
       });
       
-      console.log('PDF subido con éxito:', response);
+
       
       toast.success("PDF generado y subido exitosamente!");
       

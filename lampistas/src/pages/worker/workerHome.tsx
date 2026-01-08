@@ -18,11 +18,49 @@ export default function WorkerHome() {
     register: filesRegister,
     handleSubmit: handleFilesSubmit,
     formState: { errors: filesErrors },
+    reset: filesReset,
   } = useForm<typeUploadFilesSchema>({
     resolver: zodResolver(uploadFilesSchema),
     mode: "onChange",
-  });
+  }); 
+  function uploadfile(data: typeUploadFilesSchema) {
+    console.log('Uploading files:', data.files);
+    const formData = new FormData();
+    formData.append('incidentID', selectedIncident?.incidentID.toString() || '');
+    
+    if (data.files && data.files.length > 0) {
+      Array.from(data.files).forEach((file) => {
+        formData.append('files', file);
+      });
+    }
+
+    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/uploadFile/${selectedIncident?.incidentID}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
+          });
+        }
+        return response.json();
+      })
+      .then(() => {
+        toast.success('¡Fotos subidas exitosamente!');
+        filesReset();
+        handleCloseModal();
+      })
+      .catch((error) => {
+        console.error('Error uploading files:', error);
+        toast.error('Error al subir las fotos: ' + error.message);
+      });
+  }
   
+
   function handleOpenIncidentModal(incident: { incidentID: number; name: string }) {
         setSelectedIncident(incident);
         setIsModalOpen(true);
@@ -33,6 +71,7 @@ export default function WorkerHome() {
     function handleCloseModal() {
         setIsModalOpen(false);
         setSelectedIncident(null);
+        filesReset();
     }
   function handleupdateStatusIncident(incidentID: number, status: incidentStatus) {
     fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/updateIncidentStatus`, {
@@ -222,7 +261,7 @@ export default function WorkerHome() {
 
                         {/* Form */}
                         <form 
-                            action={`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/uploadIncidentPhotos`}
+                            onSubmit={handleFilesSubmit(uploadfile)}
                             method="POST"
                             encType="multipart/form-data"
                             className="space-y-4"
@@ -234,12 +273,17 @@ export default function WorkerHome() {
                                     Selecciona fotos o documentos
                                 </label>
                                 <input 
+                                    {...filesRegister("files")}
                                     type="file" 
-                                    name="incidentPhotos" 
                                     multiple 
                                     accept="image/jpeg,image/png,image/webp,image/svg+xml,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,application/zip,application/x-rar-compressed,application/gzip"
                                     className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                                 />
+                                {filesErrors.files && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {filesErrors.files.message}
+                                    </p>
+                                )}
                                 <p className="text-xs text-gray-500 mt-1">
                                     Formatos permitidos: JPG, PNG, PDF, DOC, XLS, ZIP, RAR
                                 </p>

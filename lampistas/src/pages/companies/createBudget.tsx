@@ -45,7 +45,7 @@ function CreateBudget() {
     window.URL.revokeObjectURL(url);
   };
   const uploadFile = async (file: File) => {
-    console.log("Uploading file:", file);
+  
     const formData = new FormData();
     
     // ✅ VERIFICAR: ¿El backend espera "file" o "files"?
@@ -53,7 +53,7 @@ function CreateBudget() {
     
     // ✅ AGREGAR: companyID y userID si son necesarios
     const companyID = localStorage.getItem("companyID");
-    console.log("Using companyID for upload:", companyID);
+    
     if (companyID) {
       formData.append("companyID", companyID);
     }
@@ -66,7 +66,7 @@ function CreateBudget() {
         },
       });
       
-      console.log("Upload successful:", response.data);
+     
       toast.success("PDF subido al servidor exitosamente");
       return response.data;
       
@@ -110,11 +110,11 @@ function CreateBudget() {
 
   // ✅ SOLUCIÓN: Usar watch directamente en lugar de useMemo intermedio
   const watchedItems = watch("items") || [];
-  console.log("Watched items:", watchedItems);
+   
 
   // ✅ SOLUCIÓN: Calcular totales directamente con watchedItems
   const calculatedTotals = useMemo(() => {
-    console.log("Calculating totals for items:", watchedItems);
+    
     
     const itemsWithTotal = watchedItems.map((item) => ({
       ...item,
@@ -130,7 +130,7 @@ function CreateBudget() {
     const tax = subtotal * 0.21;
     const total = subtotal + tax;
 
-    console.log("Calculated totals:", { subtotal, tax, total, itemsWithTotal });
+  
 
     return { itemsWithTotal, subtotal, tax, total };
   }, [watchedItems]); // ✅ Dependencia directa de watchedItems
@@ -139,13 +139,11 @@ function CreateBudget() {
 
   // ✅ MEJORAR: onSubmit con una sola llamada API
   const onSubmit = async (data: BudgetFormData) => {
-    console.log("Form data on submit:", data);
-    console.log("Items with total on submit:", itemsWithTotal);
-    console.log("Calculated totals on submit:", { subtotal, tax, total });
+    
     
     // ✅ VERIFICAR companyID
     const companyID = token["companyID"] ? parseInt(token["companyID"]) : 0;
-    console.log("Using companyID:", companyID);
+  
     
     
     // ✅ OBTENER datos del cliente seleccionado
@@ -183,13 +181,13 @@ function CreateBudget() {
         clientAddress: selectedClientData.address || '',
       };
       
-      console.log("Request data being sent:", requestData);
+
       
       const response = await api.post('/company/createBudget', requestData, {
         responseType: 'blob' 
       });
 
-      console.log("Budget created successfully!");
+      
       
       // ✅ DESCARGAR el PDF automáticamente
       const filename = `presupuesto_${data.budgetNumber || 'nuevo'}.pdf`;
@@ -233,14 +231,13 @@ function CreateBudget() {
   // ✅ MEJORAR: handleAddItem más simple
   function handleAddItem() {
     const currentItems = watchedItems;
-    console.log("Current items before add:", currentItems);
+   
     
     const newItems = [
       ...currentItems,
       { description: "", quantity: 1, unitPrice: 0, total: 0 },
     ];
     
-    console.log("Setting new items:", newItems);
     setValue("items", newItems, { 
       shouldValidate: true, 
       shouldDirty: true, 
@@ -252,7 +249,6 @@ function CreateBudget() {
   function handleRemoveItem(index: number) {
     const currentItems = watchedItems;
     const newItems = currentItems.filter((_, i) => i !== index);
-    console.log("Removing item at index:", index, "New items:", newItems);
     
     setValue("items", newItems, { 
       shouldValidate: true, 
