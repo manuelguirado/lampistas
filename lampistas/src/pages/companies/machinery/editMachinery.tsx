@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
 import Header from "../components/header";
-import { Settings, Tag, Factory, Hash, MapPin, FileText, Edit, Wrench } from 'lucide-react';
+import { Settings, Tag, Factory, Hash, MapPin, FileText, Edit, Wrench, Loader2 } from 'lucide-react';
+import api from "../../../api/intercepttors";
 export default function EditMachinery() {
+  const { machineryID } = useParams<{ machineryID: string }>();
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     machineType: "",
@@ -14,6 +17,39 @@ export default function EditMachinery() {
     description: "",
   });
   const navigate = useNavigate();
+
+  // Cargar datos de la maquinaria al montar el componente
+  useEffect(() => {
+    const token = localStorage.getItem("companyToken");
+    api.get(`/company/listMachinery`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => {
+      const machinery = response.data.machinery?.find(
+        (m: any) => m.id === Number(machineryID)
+      );
+      if (machinery) {
+        setFormData({
+          name: machinery.name || "",
+          machineType: machinery.machineType || "",
+          brand: machinery.brand || "",
+          model: machinery.model || "",
+          serialNumber: machinery.serialNumber || "",
+          installedAt: machinery.installedAt ? machinery.installedAt.split('T')[0] : "",
+          description: machinery.description || "",
+        });
+      }
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error("Error al cargar la maquinaria:", error);
+      toast.error("Error al cargar los datos de la maquinaria");
+      setLoading(false);
+    });
+  }, [machineryID]);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -22,28 +58,28 @@ export default function EditMachinery() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  
 
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const token = localStorage.getItem("companyToken");
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/editMachinery`, {
-      method: "PATCH",
+    e.preventDefault();
+    api.patch(`/company/editMachinery/${machineryID}`,
+       formData, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(formData),
     })
-      .then((response) => response.json())
-      .then(() => {
-       
-        toast.success("Machinery updated successfully!");
-        navigate("/company/maquinaria/listarMaquinaria");
-        
-      })
-      .catch((error) => {
-        toast.error("Error updating machinery: " + error.message);
-      });
+    .then((response) => {
+      console.log("Maquinaria actualizada:", response.data);
+      toast.success("Maquinaria actualizada con éxito");
+      navigate("/company/maquinaria/listarMaquinaria");
+    })
+    .catch((error) => {
+      console.error("Error al actualizar la maquinaria:", error);
+      toast.error("Error al actualizar la maquinaria");
+    });
   };
 
   return (
@@ -62,6 +98,13 @@ export default function EditMachinery() {
 
         {/* Formulario moderno */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 border border-blue-100">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
+              <p className="text-gray-600">Cargando datos de la maquinaria...</p>
+            </div>
+          ) : (
+          <>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Información básica */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -231,6 +274,8 @@ export default function EditMachinery() {
               </div>
             </div>
           </div>
+          </>
+          )}
         </div>
       </div>
     </div>

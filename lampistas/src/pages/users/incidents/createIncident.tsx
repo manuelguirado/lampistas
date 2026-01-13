@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router";
-import Header from "./components/header";
+import Header from "../components/header";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   incidentSchema,
   type typeIncidentSchema,
-} from "./schemas/incidentSchema";
+} from "../schemas/incidentSchema";
 import { useState } from "react";
 import {
   AlertTriangle,
@@ -19,7 +19,7 @@ import {
   Image,
   Upload,
 } from "lucide-react";
-import { boolean } from "zod";
+
 
 export default function CreateIncident() {
   const token = localStorage.getItem("userToken");

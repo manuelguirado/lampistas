@@ -6,6 +6,7 @@ import { registerSchema, type RegisterSchema } from "../schemas/workerSchema";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { HardHat, User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
+import api from "../../../api/intercepttors";
 export default function RegisterWorker() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -24,30 +25,20 @@ export default function RegisterWorker() {
   function handleSubmit(data: RegisterSchema) {
     const token = localStorage.getItem("companyToken");
 
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/RegisterWorker`, {
-      method: "POST",
+    api.post(`/company/RegisterWorker`, data, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+   
+    }).then(() => {
+      toast.success("¡Trabajador registrado con éxito!");
+      navigate("/company/trabajadores/misTrabajadores");
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token && data.workerid) {
-          toast.success("¡Trabajador registrado exitosamente!");
-
-          navigate("/company/trabajadores/misTrabajadores");
-        } else {
-          toast.error(
-            "Error registering worker: " +
-              (data.message || "No se pudo registrar")
-          );
-        }
-      })
-      .catch((error) => {
-        alert("Error registering worker: " + error.message);
-      });
+    .catch((error) => {
+      toast.error("Error registering worker: " + (error as Error).message);
+    });
+      
   }
   const token = localStorage.getItem("companyToken");
   if (!token) {

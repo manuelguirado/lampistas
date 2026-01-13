@@ -3,13 +3,17 @@ import { useState, useEffect } from "react";
 import { X,ChevronRight,ChevronLeft } from "lucide-react";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
+import {  useNavigate } from "react-router";
 export default function WorkerHome() {
   const [myIncidents, setMyIncidents] = useState<IncidentType[]>([]);
+  const [closed, setClosed] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate  = useNavigate();
   const [selectedIncident, setSelectedIncident] = useState<{
     incidentID: number;
     name: string;
+    status?: string;
     files: Array<{
       bucketName?: string;
       key: string;
@@ -49,6 +53,38 @@ export default function WorkerHome() {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1); // Resetear a la primera página cuando cambie el número de elementos
   };
+  function handleCloseIncident(incidentID: number) {
+      console.log("Closing incident with ID:", incidentID);
+      
+      // Después añadir al historial
+      fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/incidentHistory`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          incidentsID: incidentID,
+          changeType: "Status",
+          oldValue: "OPEN",
+          newValue: "CLOSED",
+          description: `Incidencia cerrada por el usuario`,
+          closedAt: new Date(),
+        }),
+      })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Incident closed and history recorded:", data);
+      toast.success("Incidencia cerrada y añadida al historial");
+      setClosed(true);
+      
+    
+    })
+    .catch((error) => {
+      console.error("Error closing incident:", error);
+      toast.error("Error al cerrar la incidencia");
+    });
+  }
   function handleOpenIncidentModal(incident: {
     incidentID: number;
     name: string;
@@ -76,7 +112,7 @@ export default function WorkerHome() {
     setSelectedIncident(null);
   }
   useEffect(() => {
-    setIsLoading(true);
+
     fetch(
       `${
         import.meta.env.VITE_API_URL || "http://localhost:3000"
@@ -93,6 +129,7 @@ export default function WorkerHome() {
       .then((data) => {
         if (Array.isArray(data.incidents)) {
           setMyIncidents(data.incidents);
+          handleCloseIncident(data.incidents.IncidentsID);
         }
       })
       .catch((error) => {
@@ -246,8 +283,20 @@ export default function WorkerHome() {
                   </td>
                   <td className="py-2 px-4 border border-gray-300">
                     {incident.dateReported instanceof Date
-                      ? incident.dateReported.toLocaleString("")
-                      : incident.dateReported}
+                      ? incident.dateReported.toLocaleDateString("es-ES", {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })
+                      : new Date(incident.dateReported).toLocaleDateString("es-ES", {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
                   </td>
 
                   <td className="py-2 px-4 border border-gray-300">
@@ -389,7 +438,14 @@ export default function WorkerHome() {
               </p>
               <p className="text-sm text-gray-600 mt-2">Fecha de reporte:</p>
               <p className="font-semibold text-gray-800">
-                {new Date(selectedIncident.dateReported).toLocaleString()}
+                {new Date(selectedIncident.dateReported).toLocaleDateString("es-ES", {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
               </p>
               <div className="mt-4">
                 <h4 className="font-semibold text-gray-800 mb-2">Archivos:</h4>

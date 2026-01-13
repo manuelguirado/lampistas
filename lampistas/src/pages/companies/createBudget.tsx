@@ -1,4 +1,3 @@
-import BudgetPDFButton from "./components/budgetPDFButton";
 import AsyncSelect from "react-select/async";
 import Header from "../companies/components/header";
 import {
@@ -7,7 +6,7 @@ import {
 } from "../companies/schemas/budgetSchema";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import api from "../../api/intercepttors"; // ✅ Importar
@@ -48,10 +47,10 @@ function CreateBudget() {
   
     const formData = new FormData();
     
-    // ✅ VERIFICAR: ¿El backend espera "file" o "files"?
+  
     formData.append("files", file); // Cambiar a "files" si el backend lo espera así
     
-    // ✅ AGREGAR: companyID y userID si son necesarios
+    
     const companyID = localStorage.getItem("companyID");
     
     if (companyID) {
@@ -62,7 +61,7 @@ function CreateBudget() {
       const response = await api.post("/company/uploadFile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // ✅ ASEGURAR que el token está incluido
+          Authorization: `Bearer ${token}`, 
         },
       });
       
@@ -90,7 +89,7 @@ function CreateBudget() {
   const {
     register,
     handleSubmit: handleFormSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors },
   } = useForm<BudgetFormData>({
@@ -108,11 +107,16 @@ function CreateBudget() {
     },
   });
 
-  // ✅ SOLUCIÓN: Usar watch directamente en lugar de useMemo intermedio
-  const watchedItems = watch("items") || [];
+
+  // ✅ useWatch para reactividad en tiempo real
+  const watchedItems = useWatch({ 
+    control, 
+    name: "items",
+    defaultValue: []
+  }) || [];
    
 
-  // ✅ SOLUCIÓN: Calcular totales directamente con watchedItems
+  
   const calculatedTotals = useMemo(() => {
     
     
@@ -126,11 +130,11 @@ function CreateBudget() {
       (sum, item) => sum + item.total, // ✅ Cambiar a item.total
       0
     );
+    console.log("Calculated subtotal:", subtotal);
     
     const tax = subtotal * 0.21;
     const total = subtotal + tax;
-
-  
+    
 
     return { itemsWithTotal, subtotal, tax, total };
   }, [watchedItems]); // ✅ Dependencia directa de watchedItems
@@ -141,7 +145,6 @@ function CreateBudget() {
   const onSubmit = async (data: BudgetFormData) => {
     
     
-    // ✅ VERIFICAR companyID
     const companyID = token["companyID"] ? parseInt(token["companyID"]) : 0;
   
     
@@ -214,19 +217,22 @@ function CreateBudget() {
   };
     useEffect(() => {
       try {
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listClients`, {
+         api.get("/company/listClients", {
+          params: {
+            search: "",
+            limit: 100,
+            offset: 0,
+          },
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setClients(data.clients || []);
-          });
+        }).then((res) => {
+          setClients(res.data.clients || []);
+        });
       } catch (error) {
         console.error("Error fetching clients:", error);
       }
-    }, [token]);
+    }, [token]); 
 
   // ✅ MEJORAR: handleAddItem más simple
   function handleAddItem() {
@@ -262,16 +268,20 @@ function CreateBudget() {
   const loadIncidents = async (inputValue: string) => {
     setIncidentLoading(true);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listIncidents?search=${inputValue}&limit=20`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
+      const response = await api.get(`/company/listIncidents`, {
+        params: {
+          search: inputValue,
+          limit: 20,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       setIncidentLoading(false);
+      const data = response.data;
+      setIncidents(data.incidents || []);
+      
       return data.incidents?.map((inc: any) => ({
         value: inc.IncidentsID,
         label: inc.title,
@@ -382,17 +392,30 @@ function CreateBudget() {
           </div>
 
           <div>
-            <select
-              {...register("clientID", { valueAsNumber: true })}
+            <AsyncSelect
               className="border p-2 rounded w-full"
-            >
-              <option value="">Select Client</option>
-              {client.map((cl) => (
-                <option key={cl.userID} value={cl.userID}>
-                  {cl.name}
-                </option>
-              ))}
-            </select>
+              isLoading={false}
+              cacheOptions
+              defaultOptions={client.map((cl) => ({
+                value: cl.userID,
+                label: cl.name,
+              }))}
+              loadOptions={async (inputValue: string) => {
+                return client
+                  .filter((cl) =>
+                    cl.name.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                  .map((cl) => ({
+                    value: cl.userID,
+                    label: cl.name,
+                  }));
+              }}
+              placeholder="Select Client"
+              noOptionsMessage={() => "No clients found"}
+              onChange={(selectedOption: { value: number; label: string } | null) => {
+                setValue("clientID", selectedOption?.value || undefined);
+              }}
+            />
             {errors.clientID && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.clientID.message}
@@ -489,7 +512,7 @@ function CreateBudget() {
                 <span>{total.toFixed(2)}€</span>
               </div>
             </div>
-          </div>
+          </div> 
 
           <button
             type="submit"

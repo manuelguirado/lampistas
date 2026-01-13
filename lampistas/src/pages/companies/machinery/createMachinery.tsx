@@ -2,21 +2,13 @@
 import { useEffect, useState } from "react";
 import Header from "../components/header";
 import { useNavigate } from "react-router-dom";
+import AsyncSelect from "react-select/async";
 import toast from "react-hot-toast";
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { CreateMachinerySchema, type CreateMachineryType } from "../schemas/CreateMachinerySchema";
-import { 
-  Settings, 
-  FileText, 
-  Tag, 
-  Calendar, 
-  User, 
-  MapPin, 
-  Send,
-  Wrench
-} from 'lucide-react';
 
+import api from "../../../api/intercepttors";
 export default function CreateMachinery() {
     const token = localStorage.getItem("companyToken");
     const [clients, setClients] = useState<Array<{ userID: number; name: string }>>([]); // ✅ Cambiar clientID a userID
@@ -24,7 +16,8 @@ export default function CreateMachinery() {
     const {
         register,
         handleSubmit: handleSubmitForm,
-        formState: { errors },
+        setValue,
+        formState: { errors }
     } = useForm<CreateMachineryType>({
         resolver: zodResolver(CreateMachinerySchema),
         mode: "onChange",
@@ -32,48 +25,50 @@ export default function CreateMachinery() {
     
   
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listClients?limit=100&offset=0`, {
-            method: "GET",
+        api.get("/company/listClients", {
+            params : {
+                search: "",
+                limit: 100,
+                offset: 0,
+            },
             headers: {
-                "Content-Type": "application/json",
-                authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
         })
-            .then((res) => res.json())
-            .then((data) => {
-                setClients(data.clients || []);
-            })
-            .catch((err) => toast.error("Error fetching clients: " + err.message));
+        .then((response) => {
+            setClients(response.data.clients); // ✅ Ajustar según la estructura de la respuesta
+        })
+        .catch((error) => {
+            toast.error("Error fetching clients: " + error.message);
+        });
     }, [token]);
 
-    function handleSubmit(data: CreateMachineryType) {
-        // Convertir la fecha a ISO string para el backend
+    async function handleSubmit(data: CreateMachineryType) {
+        console.log("Submitting data:", data);
         const payload = {
             ...data,
             installedAt: new Date(data.installedAt).toISOString(),
             clientID: data.clientID ? Number(data.clientID) : undefined,
         };
         
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/createMachinery`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.token) {
-                    toast.success("Maquinaria creada exitosamente!");
-                    navigate("/company/maquinaria/listarMaquinaria");
-                } else {
-                    toast.error('Error al crear maquinaria.');
-                }
-            })
-            .catch((error) => {
-                toast.error("Error creating machinery: " + error.message);
+        console.log("Payload to be sent:", payload);
+        try {
+            const response = await api.post("/company/createMachinery", payload, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
             });
+            
+            if (response.data.token || response.status === 200 || response.status === 201) {
+                toast.success("Maquinaria creada exitosamente!");
+                navigate("/company/maquinaria/listarMaquinaria");
+            } else {
+                toast.error('Error al crear maquinaria.');
+            }
+        } catch (error :any ) {
+            toast.error("Error creating machinery: " + (error.response?.data?.message || error.message));
+        }
     }
 
     return (
@@ -144,18 +139,83 @@ export default function CreateMachinery() {
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
                                     Cliente
                                 </label>
-                                <select
-                                    {...register("clientID")}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                                >
-                                    <option value="">Seleccionar cliente (opcional)</option>
-                                    {clients.map((client) => (
-                                        <option key={client.userID} value={client.userID}>
-                                            {client.name}
-                                        </option>
-                                    ))}
-                                </select>
+                              <AsyncSelect
+                                          className="border p-2 rounded w-full"
+                                          isLoading={false}
+                                          cacheOptions
+                                          defaultOptions={clients.map((cl) => ({
+                                            value: cl.userID,
+                                            label: cl.name,
+                                          }))}
+                                          loadOptions={async (inputValue: string) => {
+                                            return clients
+                                              .filter((cl) =>
+                                                cl.name.toLowerCase().includes(inputValue.toLowerCase())
+                                              )
+                                              .map((cl) => ({
+                                                value: cl.userID,
+                                                label: cl.name,
+                                              }));
+                                          }}
+                                          placeholder="Select Client"
+                                          noOptionsMessage={() => "No clients found"}
+                                          onChange={(selectedOption: { value: number; label: string } | null) => {
+                                            setValue("clientID", selectedOption?.value?.toString() || "");
+                                          }}
+                                        />
+
                                 {errors.clientID && (<p className="text-red-500 text-sm mt-1">{errors.clientID.message}</p>)}
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                    Número de Serie
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Número de serie"
+                                    {...register("serialNumber")}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                {errors.serialNumber && (<p className="text-red-500 text-sm mt-1">{errors.serialNumber.message}</p>)}
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                    Tipo de Maquinaria
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Tipo de maquinaria"
+                                    {...register("machineType")}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                {errors.machineType && (<p className="text-red-500 text-sm mt-1">{errors.machineType.message}</p>)}
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                    Fecha de Instalación
+                                </label>
+                                <input
+                                    type="date"
+                                    {...register("installedAt")}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                {errors.installedAt && (<p className="text-red-500 text-sm mt-1">{errors.installedAt.message}</p>)}
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                    Nombre de Empresa
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Nombre de la empresa"
+                                    {...register("companyName")}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                />
+                                {errors.companyName && (<p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>)}
                             </div>
             
                             <button

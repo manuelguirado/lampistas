@@ -16,7 +16,7 @@ function App() {
   }, []);
 
   return (
-    <div className=" flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -36,7 +36,7 @@ function App() {
           },
         }}
       />
-      <main className="flex-grow container mx-auto px-4  pt-16 ">
+      <main className="flex-grow w-full min-h-screen pt-16">
         <Outlet />
       </main>
       <Footer />

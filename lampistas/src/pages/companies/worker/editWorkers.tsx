@@ -7,9 +7,12 @@ import {editSchema } from '../schemas/editSchema';
 import type {EditSchema} from '../schemas/editSchema';
 import { useState } from 'react';
 import { HardHat, User, Mail, Lock, Eye, EyeOff, Edit, Hash } from 'lucide-react';
+import api from "../../../api/intercepttors";
+
 
 export default function EditWorkers() {
     const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
     
     const togglePassword = () => {
@@ -33,25 +36,18 @@ export default function EditWorkers() {
         );
   
 
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/editWorker/${workerid}`, {
-            method: 'PATCH',
+        api.patch(`/company/editWorker/${workerid}`, { data: filteredData }, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
-            
-            body: JSON.stringify({
-                data: filteredData // Solo campos con valor
-            }),
+        }).then(() => {
+            toast.success('¡Trabajador actualizado con éxito!');
+            navigate('/company/trabajadores/misTrabajadores');
         })
-            .then((response) => response.json())
-            .then(() => {
-                toast.success('Worker modified successfully!');
-                navigate('/company/trabajadores/misTrabajadores');
-            })
-            .catch((error) => {
-                toast.error('Error modifying worker: ' + error.message);
-            });
+        .catch((error) => {
+            toast.error('Error updating worker: ' + (error as Error).message);
+        });
     }
     return (
         <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-orange-50 to-yellow-100 items-center pt-20 md:pt-24 px-4 pb-8">

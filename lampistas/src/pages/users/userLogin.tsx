@@ -77,7 +77,7 @@ export default function UserLogin() {
       });
   };
   return (
-    <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-orange-100 items-center pt-20 md:pt-24 px-4 pb-8">
+    <div className="w-full  min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-orange-100 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
       
       <div className="w-full max-w-md">

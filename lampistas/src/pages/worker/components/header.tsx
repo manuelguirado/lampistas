@@ -43,7 +43,7 @@ export default function Header() {
                             Mis guardias
                         </button>
                     </Link>
-                    <Link to="/worker/historialIncidencias">
+                    <Link to="/worker/incidentHistory">
                         <button className="rounded-md bg-yellow-500 px-3 py-2 hover:bg-yellow-600 transition-colors text-black text-sm whitespace-nowrap">
                             Historial de incidencias
                         </button>
@@ -77,7 +77,7 @@ export default function Header() {
                             <Link to="/worker/misGuardias" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
                                Mis guardias 
                             </Link>
-                            <Link to="/worker/historialIncidencias" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
+                            <Link to="/worker/incidentHistory" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
                                Historial de incidencias 
                             </Link>
                            

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronRight, ChevronLeft, Edit, Trash } from "lucide-react";
+import api from "../../../api/intercepttors";
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 export default function ListMachinery() {
@@ -21,14 +22,8 @@ export default function ListMachinery() {
   const offset = (currentPage - 1) * itemsPerPage;
   const token = localStorage.getItem("companyToken");
   function eliminateMachinery(machineryID: number) {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/eliminateMachinery/${machineryID}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
+    api
+      .delete(`/company/eliminateMachinery/${machineryID}`)
       .then(() => {
         toast.success('Machinery eliminated successfully!');
         // Refresh the machinery list after deletion
@@ -37,31 +32,25 @@ export default function ListMachinery() {
             (machinery) => machinery.machineryID !== machineryID
           )
         );
-        window.location.reload();
-      }).catch((error) => {
+      })
+      .catch((error) => {
         toast.error('Error eliminating machinery.' + (error as Error).message);
       });
   }
 
     useEffect(() => {
-      fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listMachinery?limit=${itemsPerPage}&offset=${offset}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setMachine(data.machinery || []);
+      api
+        .get(`/company/listMachinery?limit=${itemsPerPage}&offset=${offset}`)
+        .then((response) => {
+          setMachine(response.data.machinery || []);
         })
         .catch((error) => {
           toast.error('Error fetching machinery.' + (error as Error).message);
         });
-    }, [currentPage, offset, token]);
+    }, [currentPage, offset]);
+          
+        
+    
     function handleNextPage() {
       setCurrentPage((prevPage) => prevPage + 1);
     }

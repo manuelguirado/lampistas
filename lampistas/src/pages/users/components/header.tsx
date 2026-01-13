@@ -53,9 +53,9 @@ export default function Header() {
                             Mi maquinaria
                         </button>
                     </Link>
-                    <Link to="/user/createIncident">
+                    <Link to="/user/MisInciendencias">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Crear Incidencia
+                           Mis incidencias
                         </button>
                     </Link>
                     <Link to="/user/myBudgets">

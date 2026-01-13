@@ -6,7 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import { registerUserSchema, type RegisterUserSchema } from "../schemas/registerUser";
 import { useState } from 'react';
 import { Users, User, Mail, Lock, Eye, EyeOff, FileText, UserPlus } from 'lucide-react';
-
+import api from "../../../api/intercepttors";
 export default function RegisterUser() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
@@ -26,16 +26,14 @@ export default function RegisterUser() {
 
         try {
             // PASO 1: Crear el usuario primero
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/companyCreateUser`, {
-                method: 'POST',
+            const userResponse = await api.post(`/company/companyCreateUser`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(data),
+                }
             });
 
-            const userData = await userResponse.json();
+            const userData = await userResponse.data;
 
             if (!userData.userID) {
                 toast.error('Error al registrar usuario.');
@@ -43,20 +41,17 @@ export default function RegisterUser() {
             }
 
             // PASO 2: Crear el contrato con el userID obtenido
-            const contractResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/createContract`, {
-                method: 'POST',
+            const contractResponse = await api.post(`/company/createContract`, {
+                userID: userData.userID, // ✅ Ahora sí tenemos el userID
+                contractType: data.contractType,
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    userID: userData.userID, // ✅ Ahora sí tenemos el userID
-                    contractType: data.contractType,
-                }),
+                }
             });
-
-            const contractData = await contractResponse.json();
-
+                   
+            const contractData = await contractResponse.data;
             if (contractData.token || contractData.id) {
                 toast.success('¡Usuario y contrato creados exitosamente!');
                 navigate('/company/clientes/mis-clientes');

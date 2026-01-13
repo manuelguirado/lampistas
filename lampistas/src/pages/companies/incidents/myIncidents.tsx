@@ -2,6 +2,8 @@ import Header from "../components/header";
 import { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft, UserPlus, X } from "lucide-react";
 import toast from 'react-hot-toast';
+import api from "../../../api/intercepttors";
+
 export default function MyIncidents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -55,37 +57,21 @@ function handleOpenIncidentModal(incident: {
     files: []
   });
   setIsModalOpen(true);
+  
   // Cargar archivos del trabajador para la incidencia seleccionada
-  fetch(
-    `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listFiles?incidentID=${incident.incidentID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  api.get("/company/listFiles", {
+    params: { incidentID: incident.incidentID },
+    headers: { Authorization: `Bearer ${token}` }
+  })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log('Fetched incident files:', data);
-      // Verificar la estructura de la respuesta
+      const data = response.data;
       const files = Array.isArray(data) ? data : data.files || [];
       setSelectedIncident((prev) => prev ? { ...prev, files: files } : null);
     })
     .catch((error) => {
-      console.error("Error fetching incident files:", error);
       toast.error("Error al cargar archivos: " + error.message);
-      // Establecer archivos vacíos en caso de error
       setSelectedIncident((prev) => prev ? { ...prev, files: [] } : null);
     });
-  
-
 }
 
     function handleCloseModal() {
@@ -94,36 +80,25 @@ function handleOpenIncidentModal(incident: {
     }
   // Cargar trabajadores
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listWorkers?limit=100&offset=0`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
+    api.get("/company/listWorkers", {
+      params: { limit: 100, offset: 0 },
+      headers: { Authorization: `Bearer ${token}` }
     })
-      .then((res) => res.json())
-      .then((data) => {
-        setWorkers(data.workers || []);
+      .then((response) => {
+        setWorkers(response.data.workers || []);
       })
       .catch((err) => toast.error("Error fetching workers: " + (err as Error).message));
   }, [token]);
 
   // Cargar incidencias
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listIncidents?limit=${pageSize}&offset=${offset}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setIncidents(data.incidents);
-        setTotalIncidents(data.total);
+    api.get("/company/listIncidents", {
+      params: { limit: pageSize, offset },
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((response) => {
+        setIncidents(response.data.incidents);
+        setTotalIncidents(response.data.total);
       })
       .catch((error) => {
         toast.error("Error fetching incidents: " + (error as Error).message);
@@ -135,40 +110,22 @@ function handleOpenIncidentModal(incident: {
     if (!workerID) return;
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignIncident`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            incidentID,
-            workerID,
-          }),
-        }
+      const response = await api.post("/company/assignIncident", 
+        { incidentID, workerID },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const data = await response.json();
-     
-
-      if (response.ok) {
-        toast.success('¡Trabajador asignado exitosamente!');
-        // Actualizar la lista para reflejar el cambio
-        setIncidents((prev) =>
-          prev.map((inc) =>
-            inc.IncidentsID === incidentID
-              ? { ...inc, assignedWorkerID: workerID }
-              : inc
-          )
-        );
-      } else {
-        toast.error('Error: ' + (data.message || 'No se pudo asignar'));
-      }
-    } catch (error) {
-      toast.error('Error al asignar trabajador: ' + (error as Error).message);
-     
+      toast.success('¡Trabajador asignado exitosamente!');
+      // Actualizar la lista para reflejar el cambio
+      setIncidents((prev) =>
+        prev.map((inc) =>
+          inc.IncidentsID === incidentID
+            ? { ...inc, assignedWorkerID: workerID }
+            : inc
+        )
+      );
+    } catch (error: any) {
+      toast.error('Error al asignar trabajador: ' + (error.response?.data?.message || error.message));
     }
   }
 

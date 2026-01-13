@@ -24,6 +24,12 @@ export const API_ENDPOINTS = {
   COMPANY_LIST_CLIENTS: `${API_BASE_URL}/company/listClients`,
   COMPANY_EDIT_MACHINERY: `${API_BASE_URL}/company/editMachinery`,
   COMPANY_ELIMINATE_MACHINERY: `${API_BASE_URL}/company/eliminateMachinery`,
+  COMPANY_LIST_MACHINERY: `${API_BASE_URL}/company/listMachinery`,
+  COMPANY_CREATE_MACHINERY: `${API_BASE_URL}/company/createMachinery`,
+  COMPANY_UPDATE_MAINTENCE_DATE: `${API_BASE_URL}/company/updateMaintenceDate`,
+  COMPANY_CREATE_BUDGET: `${API_BASE_URL}/company/createBudget`,
+  COMPANY_GET_CLIENT_CONTRACTS: `${API_BASE_URL}/company/getClientContracts`,
+  COMPANY_GET_INCIDENT_HISTORY: `${API_BASE_URL}/company/getIncidentHistory`,
   
   // User endpoints
   USER_MY_INCIDENTS: `${API_BASE_URL}/user/myIncidents`,

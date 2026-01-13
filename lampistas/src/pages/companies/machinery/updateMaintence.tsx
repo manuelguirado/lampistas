@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import Header from "../components/header";
 import { Settings, Calendar, CheckCircle, Wrench } from 'lucide-react';
+import api from "../../../api/intercepttors";
 
 export default function EditMachinery() {
     const [formData, setFormData] = useState({
@@ -24,21 +25,18 @@ export default function EditMachinery() {
     };
     useEffect(() => {
  
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listMachinery?limit=${limit}&offset=${offset}`, {
-            method: "GET",
+        api.get(`/company/listMachinery?limit=${limit}&offset=${offset}`, {
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': `Bearer ${token}`,
             },
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            setMachineryList(data.machinery);
-           
-        })
-        .catch((error) => {
+        }).then((response) => {
+            setMachineryList(response.data.machinery || []);
+        }).catch((error) => {
             toast.error("Error fetching machinery list: " + (error as Error).message);
         });
+        
+       
     }, [token]);
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

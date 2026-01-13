@@ -82,7 +82,8 @@ export default function WorkerHome() {
       },
       body: JSON.stringify({
         incidentID: incidentID,
-        status: status
+        status: status,
+
       }),
     })
       .then((response) => response.json())
