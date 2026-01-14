@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import type { MachineryType } from "../../types/machineryType";
 import Header from "../users/components/header";
 import toast from "react-hot-toast";
+import api from '../../api/intercepttors'
 export default function MyMachinery() {
   const [machinery, setMachinery] = useState<MachineryType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -10,14 +11,13 @@ export default function MyMachinery() {
     const token = localStorage.getItem("userToken");
     if (!token) return;
 
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userMachinery`, {
-      method: "GET",
+    api.get('/user/userMachinery', {   
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json())
+      .then((response) => response.data)
       .then((data) => {
         if (Array.isArray(data.machinery)) {
           toast.success("Maquinarias cargadas correctamente");

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "./components/header";
 import type { IncidentHistoryItem } from "../../types/incidentHistory";
+import api from '../../api/intercepttors'
 
 export default function IncidentHistory() {
     const [history, setHistory] = useState<IncidentHistoryItem[]>([]);
@@ -14,14 +15,13 @@ export default function IncidentHistory() {
     const offset = (currentPage - 1) * pageSize;
     
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/getIncidentHistory`, {
-            method: "GET",
+        api.get('/worker/getIncidentHistory', {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             }
         })
-        .then(response => response.json())
+        .then(response => response.data)
         .then(data => {
             console.log("Fetched incident history data:", data);
     

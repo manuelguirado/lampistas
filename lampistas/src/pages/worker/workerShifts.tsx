@@ -4,6 +4,7 @@ import Calendar from './components/calendar';
 import type { EventInput } from '@fullcalendar/core';
 import toast from 'react-hot-toast';
 import type { Shift } from '../../types/shitfts';
+import api from '../../api/intercepttors'
 export default function WorkerShifts() {
   const [shifts, setShifts] = useState<EventInput[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,14 +14,12 @@ export default function WorkerShifts() {
     if (!token) return;
 
     // Fetch guardias del trabajador
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/myShifts`, {
-        method: 'GET',
+    api.get('/worker/myShifts', {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
-      .then(res => res.json())
+      .then(res => res.data)
       .then(data => {
        
         

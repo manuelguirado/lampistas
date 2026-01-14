@@ -3,6 +3,7 @@ import {useState} from 'react';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import { Building2, Hash, Phone, Mail, Edit, Shield } from 'lucide-react';
+import api from '../../api/intercepttors';
 export default function EditCompany() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ companyID: "" , name:"", phone:"", email:""});
@@ -27,18 +28,17 @@ function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     if (formData.phone) data.phone = formData.phone;
     if (formData.email) data.email = formData.email;
     
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/editCompany/${formData.companyID}`, {
-      method: "PATCH",
+    api.patch(`/admin/editCompany/${formData.companyID}`, {
+      adminID: adminID,
+      data: data
+    }, {
       headers: {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        adminID: adminID,
-        data: data
-      }),
+      }
     })
-      .then((response) => response.json())
+  
+      .then((response) => response.data)
       .then(() => {
         toast.success('Company updated successfully!');
         navigate('/admin/listCompany');

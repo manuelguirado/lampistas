@@ -4,7 +4,12 @@ import { X,ChevronRight,ChevronLeft } from "lucide-react";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
 import {  useNavigate } from "react-router";
+import api from '../../api/intercepttors'
+import axios from 'axios';
+import { useParams } from "react-router";
+
 export default function WorkerHome() {
+  const params = useParams<{ incidentID: string }>();
   const [myIncidents, setMyIncidents] = useState<IncidentType[]>([]);
   const [closed, setClosed] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -28,8 +33,6 @@ export default function WorkerHome() {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(5); // Cambiado para permitir modificación
-   
-  const token = localStorage.getItem("userToken");
  
   // Pagination logic
   const totalPages = Math.ceil(myIncidents.length / itemsPerPage);
@@ -54,36 +57,16 @@ export default function WorkerHome() {
     setCurrentPage(1); // Resetear a la primera página cuando cambie el número de elementos
   };
   function handleCloseIncident(incidentID: number) {
-      console.log("Closing incident with ID:", incidentID);
-      
-      // Después añadir al historial
-      fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/incidentHistory`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          incidentsID: incidentID,
-          changeType: "Status",
-          oldValue: "OPEN",
-          newValue: "CLOSED",
-          description: `Incidencia cerrada por el usuario`,
-          closedAt: new Date(),
-        }),
-      })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Incident closed and history recorded:", data);
-      toast.success("Incidencia cerrada y añadida al historial");
-      setClosed(true);
-      
-    
-    })
-    .catch((error) => {
-      console.error("Error closing incident:", error);
-      toast.error("Error al cerrar la incidencia");
-    });
+      // Cerrar incidencia
+      api.post('/user/closeIncident', { incidentID })
+      .then((response) => {
+        if (response.data.success) {
+          toast.success("¡Incidencia cerrada correctamente!");
+          setClosed(true);
+        } else {
+          toast.error("No se pudo cerrar la incidencia");
+        }
+      });
   }
   function handleOpenIncidentModal(incident: {
     incidentID: number;
@@ -113,33 +96,18 @@ export default function WorkerHome() {
   }
   useEffect(() => {
 
-    fetch(
-      `${
-        import.meta.env.VITE_API_URL || "http://localhost:3000"
-      }/user/myIncidents`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data.incidents)) {
-          setMyIncidents(data.incidents);
-          handleCloseIncident(data.incidents.IncidentsID);
-        }
+   api.get('/user/myIncidents')
+      .then((response) => { 
+        
+        setMyIncidents(response.data.incidents || []);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching incidents:", error);
-        toast.error("Error al cargar las incidencias");
-      })
-      .finally(() => {
+        toast.error("Error fetching incidents: " + (error?.response?.data?.message || error.message));
         setIsLoading(false);
       });
-  }, [token]);
+  }, []);
 
   // Resetear página cuando no hay suficientes elementos
   useEffect(() => {
@@ -148,56 +116,46 @@ export default function WorkerHome() {
     }
   }, [currentPage, totalPages]);
   function fetchIncidentFiles(incidentID: number): void {
-    try {
-      fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/listFiles/${incidentID}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+    api.get(`/user/listFiles/${incidentID}`)
+      .then((response) =>
+        {
+        console.log("Files fetched:", response.data);
+        // El backend devuelve directamente el array de archivos
+        const files = Array.isArray(response.data) ? response.data : response.data.files;
+        if (files && Array.isArray(files) && files.length > 0) {
+          setSelectedIncident((prevIncident) => {
+            if (prevIncident) {
+              return {
+                ...prevIncident,
+                files: files,
+              };
+            }
+            return prevIncident;
+          });
+        } else {
+          // No mostrar error si simplemente no hay archivos
+          console.log("No se encontraron archivos para esta incidencia");
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-       
-          if (data && Array.isArray(data)) {
-            setSelectedIncident((prevIncident) =>
-              prevIncident
-                ? { ...prevIncident, files: data }
-                : prevIncident
-            );
-         
-          } else {
-            setSelectedIncident((prevIncident) =>
-              prevIncident
-                ? { ...prevIncident, files: [] }
-                : prevIncident
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching files:", error);
-          toast.error("Error al cargar archivos");
-        });
-    } catch (error) {
-      toast.error("Error fetching files: " + (error as Error).message);
-    }
+      .catch((error) => {
+        console.error("Error fetching files:", error);
+        // Solo mostrar error si no es un 404 o similar
+        if (error?.response?.status !== 404) {
+          toast.error("Error al cargar archivos: " + (error?.response?.data?.message || error.message));
+        }
+      });
   }
 
   // Función para descargar archivos
   async function downloadFile(file: { bucketName?: string; key: string; signedUrl: string; token?: string }, fileName: string) {
     try {
-      const response = await fetch(file.signedUrl, {
-        method: 'GET',
-        headers: {
-          ...(file.token && { 'Authorization': `Bearer ${file.token}` })
-        }
+      // Usar axios directamente (sin interceptor) para URLs externas firmadas
+      const response = await axios.get(file.signedUrl, {
+        responseType: 'blob',
+        // No enviar headers de autorización a URLs externas
       });
       
-      if (!response.ok) {
-        throw new Error('Error al descargar el archivo');
-      }
-      
-      const blob = await response.blob();
+      const blob = new Blob([response.data]);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;

@@ -3,8 +3,9 @@ import type { BudgetType } from "../../types/budgetType";
 import toast from "react-hot-toast";
 import Header from "./components/header";
 import { ChevronRight,ChevronLeft } from "lucide-react";
+import api from '../../api/intercepttors'
+
 export default function UserBudgets() {
-  const token = localStorage.getItem("userToken");
   const [budgets, setBudgets] = useState<BudgetType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalBudgets, setTotalBudgets] = useState(0);
@@ -12,40 +13,33 @@ export default function UserBudgets() {
   const offset = (currentPage - 1) * pageSize;
   const totalPages = Math.ceil(totalBudgets / pageSize);
 
-function handleDownloadPDF(budgetID: number) {
-   fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/downloadFile/${budgetID}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        console.log("response:", response);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        // Para archivos PDF, usar .blob() en lugar de .json()
-        return response.blob();
-      })
-      .then((blob) => {
-       
-        
-        // Crear un enlace temporal para descargar el archivo
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `budget_${budgetID}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-
-        // Limpiar
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      })
-      .catch((error) => {
-        toast.error("Error downloading PDF: " + (error as Error).message);
+  async function handleDownloadPDF(budgetID: number) {
+    try {
+      const response = await api.get(`/user/downloadFile/${budgetID}`, {
+        responseType: 'blob',
       });
-}
+
+      // Crear blob del PDF
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      
+      // Crear enlace temporal para descargar
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `presupuesto_${budgetID}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpiar
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('PDF descargado exitosamente');
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast.error("Error al descargar el PDF");
+    }
+  }
   function handleNextPage() {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -59,22 +53,16 @@ function handleDownloadPDF(budgetID: number) {
   }
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/recievedBudgets?limit=${pageSize}&offset=${offset}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setBudgets(data.budgets);
-        setTotalBudgets(data.totalBudgets || data.budgets.length);
+    api.get(`/user/recievedBudgets?limit=${pageSize}&offset=${offset}`)
+      .then((response) => {
+        setBudgets(response.data.budgets || []);
+        setTotalBudgets(response.data.totalBudgets || response.data.budgets?.length || 0);
       })
       .catch((error) => {
-        toast.error("Error fetching budgets: " + (error as Error).message);
+        console.error("Error fetching budgets:", error);
+        toast.error("Error al cargar presupuestos");
       });
-  }, [token, currentPage, offset]);
+  }, [currentPage, offset]);
   return (
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />

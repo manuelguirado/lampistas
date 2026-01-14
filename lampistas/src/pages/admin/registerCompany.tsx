@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {registerCompanySchema, type RegisterCompanySchema } from './schemas/registerCompanySchema';
 import Header from '../admin/components/header';
 import { useState } from 'react';
+import api from '../../api/intercepttors'   
 import { 
   Building2, 
   Mail, 
@@ -34,23 +35,26 @@ export default function RegisterCompany() {
             mode: "onChange", // ✅ Valida mientras escribes
         });
         
-    
-    
-
-        const token = localStorage.getItem('adminToken');
    async function handleSubmit(data : RegisterCompanySchema) {
-        // Obtener el adminID del token almacenado
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/registerCompany`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(data),
-            });
+            // Crear FormData para enviar archivos
+            const formData = new FormData();
+            formData.append('name', data.name);
+            formData.append('email', data.email);
+            formData.append('password', data.password);
+            formData.append('phone', data.phone);
+            
+            // Enviar directions como JSON string (el backend lo parseará)
+            formData.append('directions', JSON.stringify(data.directions));
+            
+            // Añadir el logo si existe
+            if (data.companyLogo && data.companyLogo.length > 0) {
+                formData.append('logo', data.companyLogo[0]);
+            }
+
+            const response = await api.post('/admin/registerCompany', formData);
              
-            const result = await response.json();
+            const result = response.data;
         
             
             if (result.token){
@@ -62,8 +66,8 @@ export default function RegisterCompany() {
                 toast.error(errorMsg);
             }
         } catch (error) {
-         
-            toast.error('Error de conexión con el servidor' + (error as Error).message);
+            console.error('Error registering company:', error);
+            toast.error('Error de conexión con el servidor');
         }
     }
     return (

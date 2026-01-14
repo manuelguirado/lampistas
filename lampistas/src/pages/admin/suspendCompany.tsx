@@ -6,10 +6,10 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router';
 import { suspendCompanySchema, type SuspendCompanySchema } from './schemas/suspendCompanySchema';
 import { Building2, Hash, Calendar, Shield, Pause, AlertTriangle } from 'lucide-react';
-
+import api from '../../api/intercepttors';
 export default function SuspendCompany() {
     const navigate = useNavigate();
-    
+    const token = localStorage.getItem('adminToken');
     const {
         register: registerSuspend,
         handleSubmit: handleSubmitSuspend,
@@ -21,18 +21,17 @@ export default function SuspendCompany() {
 
     async function handleSubmit(data: SuspendCompanySchema) {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/suspendCompany/${data.companyId}`, {
-                method: "PATCH",
+            const response = await api.patch(`/admin/suspendCompany/${data.companyId}`, {
+                until: new Date(data.until), // Convertir string a Date
+            }, {
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    until: new Date(data.until), // Convertir string a Date
-                }),
             });
+                 
             
-            const result = await response.json();
+            const result = await response.data;
           
             
             if (result.company || result.success !== false) {

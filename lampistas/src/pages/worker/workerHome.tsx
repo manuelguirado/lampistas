@@ -7,6 +7,7 @@ import Header from './components/header';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { uploadFilesSchema, type typeUploadFilesSchema } from '../worker/schemas/uploadFilesSchema';
+import api from '../../api/intercepttors'
 export default function WorkerHome() {
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -24,39 +25,33 @@ export default function WorkerHome() {
     mode: "onChange",
   }); 
   function uploadfile(data: typeUploadFilesSchema) {
-    console.log('Uploading files:', data.files);
-    const formData = new FormData();
-    formData.append('incidentID', selectedIncident?.incidentID.toString() || '');
-    
-    if (data.files && data.files.length > 0) {
-      Array.from(data.files).forEach((file) => {
-        formData.append('files', file);
-      });
+    if (!selectedIncident?.incidentID) {
+      toast.error('No se ha seleccionado ninguna incidencia');
+      return;
     }
 
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/uploadFile/${selectedIncident?.incidentID}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then(errorData => {
-            throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
-          });
-        }
-        return response.json();
-      })
+    if (!data.files || data.files.length === 0) {
+      toast.error('Por favor selecciona al menos un archivo');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('incidentID', selectedIncident.incidentID.toString());
+    
+    // Añadir cada archivo al FormData con el campo 'files'
+    Array.from(data.files).forEach((file) => {
+      formData.append('files', file);
+    });
+
+    api.post('/worker/uploadFile', formData)
       .then(() => {
-        toast.success('¡Fotos subidas exitosamente!');
+        toast.success('¡Archivos subidos exitosamente!');
         filesReset();
         handleCloseModal();
       })
       .catch((error) => {
         console.error('Error uploading files:', error);
-        toast.error('Error al subir las fotos: ' + error.message);
+        toast.error('Error al subir los archivos: ' + (error?.response?.data?.message || error.message));
       });
   }
   
@@ -74,19 +69,10 @@ export default function WorkerHome() {
         filesReset();
     }
   function handleupdateStatusIncident(incidentID: number, status: incidentStatus) {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/updateIncidentStatus`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        incidentID: incidentID,
-        status: status,
-
-      }),
+    api.patch('/worker/updateIncidentStatus', {
+      incidentID,
+      status,
     })
-      .then((response) => response.json())
       .then(() => {
         toast.success('¡Estado de incidencia actualizado exitosamente!');
         setActiveIncidents((prevIncidents) =>
@@ -109,18 +95,16 @@ export default function WorkerHome() {
       return;
     }
     setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/assignedIncidents`, { 
-      method: 'GET',
+    api.get(`/worker/assignedIncidents`, {
       headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then(res => {
-        if (!res.ok) {
+        if (!res.status) {
           throw new Error(`Error ${res.status}: ${res.statusText}`);
         }
-        return res.json();
+        return res.data;
       })
       .then(data => {
         setActiveIncidents(data.assignedIncidents || []); 

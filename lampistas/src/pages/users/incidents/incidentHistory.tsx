@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "../components/header";
+import api from '../../../api/intercepttors'
 import type { IncidentHistoryItem } from "../../../types/incidentHistory";
 
 export default function IncidentHistory() {
@@ -8,44 +9,32 @@ export default function IncidentHistory() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalHistory, setTotalHistory] = useState(0);
     const pageSize = 10;
-    const token = localStorage.getItem("userToken");
     const [loading, setLoading] = useState(true);
     const totalPages = Math.ceil(totalHistory / pageSize);
-    const offset = (currentPage - 1) * pageSize;
     
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/getIncidentHistory?limit=${pageSize}&offset=${offset}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Fetched incident history data:", data);
-    
-            // Manejar la respuesta que viene como objeto numerado
-            if (data.mappedIncidentHistory) {
-                // Si es un array directo, úsalo
-                if (Array.isArray(data.mappedIncidentHistory)) {
-                    setHistory(data.mappedIncidentHistory);
-                } else {
-                    // Si es un objeto numerado, conviértelo a array
-                    const arrayData = Object.values(data.mappedIncidentHistory) as IncidentHistoryItem[];
-                    setHistory(arrayData);
-                }
+       api.get('/user/getIncidentHistory')
+        .then(response => {
+            console.log("Fetched incident history data:", response.data);
+            
+            // La respuesta viene como { token, 0: {...}, 1: {...}, ... }
+            // Necesitamos extraer solo los objetos numerados
+            const data = response.data;
+            
+            if (data.mappedIncidentHistory && Array.isArray(data.mappedIncidentHistory)) {
+                // Si viene como array directo
+                setHistory(data.mappedIncidentHistory);
+                setTotalHistory(data.mappedIncidentHistory.length);
             } else {
-                // Si la estructura es diferente y los datos están directamente en data
+                // Si los datos están expandidos como propiedades numéricas
                 const entries = Object.entries(data)
-                    .filter(([key]) => !isNaN(Number(key))) // Solo las claves numéricas
-                    .map(([_, value]) => value as IncidentHistoryItem);
+                    .filter(([key]) => !isNaN(Number(key)))
+                    .map(([, value]) => value as IncidentHistoryItem);
                 
-                setHistory(entries.length > 0 ? entries : []);
+                setHistory(entries);
+                setTotalHistory(entries.length);
             }
             
-            // Set total count if available
-            setTotalHistory(data.totalHistory || data.total || history.length);
             setLoading(false);
         })
         .catch(error => {
@@ -53,7 +42,7 @@ export default function IncidentHistory() {
             setHistory([]);
             setLoading(false);
         });
-    }, [token, currentPage, offset]);
+    }, [currentPage]);
     
     if (loading) {
         return (

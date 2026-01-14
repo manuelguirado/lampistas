@@ -7,6 +7,7 @@ import type { RegisterSchema } from "./schemas/registerSchema";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Shield, Mail, Lock, UserPlus, LogIn } from "lucide-react";
+import api from '../../api/intercepttors'
 
 export default function AdminAuth() {
   const navigate = useNavigate();
@@ -44,21 +45,17 @@ export default function AdminAuth() {
   // ✅ FUNCIÓN DE REGISTRO - Recibe data validada por Zod
   const onRegisterSubmit = async (data: RegisterSchema) => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/adminRegister`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data), // ✅ data ya está validada por Zod
-        }
-      );
+      const response = await api.post('/admin/adminRegister', data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.token) {
         localStorage.setItem("adminToken", result.token);
+        localStorage.setItem("userType", "admin");
         toast.success("¡Administrador registrado exitosamente!");
         navigate("/admin/adminDashboard");
       } else {
@@ -76,18 +73,17 @@ export default function AdminAuth() {
   // ✅ FUNCIÓN DE LOGIN - Recibe data validada por Zod
   const onLoginSubmit = async (data: RegisterSchema) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/adminLogin`, {
-        method: "POST",
+      const response =api.post('/admin/adminLogin', data, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data), // ✅ data ya está validada por Zod
       });
 
-      const result = await response.json();
+      const result = (await response).data;
 
       if (result.token) {
         localStorage.setItem("adminToken", result.token);
+        localStorage.setItem("userType", "admin");
         toast.success("¡Login exitoso!");
         navigate("/admin/adminDashboard");
       } else {

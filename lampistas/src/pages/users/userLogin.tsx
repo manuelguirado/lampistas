@@ -9,6 +9,7 @@ import {
   userloginSchema,
   type UserLoginSchema,
 } from "./schemas/userLoginSchema";
+import api from '../../api/intercepttors'
 export default function UserLogin() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -27,55 +28,47 @@ export default function UserLogin() {
   };
 
   const handleValidateCode = (data: UserLoginSchema) => {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/validateCode`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userType: "user",
-        code: data.code,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Guardar el token en localStorage
+    api.post('/user/validateCompanyCode', { code: data.code })
+      .then((response) => {
+        if (response.data.valid) {
+          toast.success("¡Código de empresa válido!");
+          // Redirigir o realizar alguna acción adicional
+          navigate("/user/userDashboard");
+        } else {
+          toast.error("Código de empresa inválido");
+        }
+      })
+      .catch(() => {
+        toast.error("Error al validar el código de empresa");
+      });
+  };
+  const handleSubmit = async (data: UserLoginSchema) => {
+    api.post('/user/userLogin', data)
+      .then((response) => {
+        if (response.data.token) {
+          toast.success("¡Inicio de sesión exitoso!");
+          // Guardar el token y userType en localStorage
+          localStorage.setItem("userToken", response.data.token);
+          localStorage.setItem("userType", "user");
+          if (response.data.refreshToken) {
+            localStorage.setItem("userRefreshToken", response.data.refreshToken);
+          }
+          if (response.data.userID) {
+            localStorage.setItem("userID", response.data.userID.toString());
+          }
 
-        if (data.token) {
-          toast.success("✅ Código válido! Inicio de sesión exitoso.");
-          localStorage.setItem("userToken", data.token);
-
-          // Redirigir al dashboard del usuario
           navigate("/user/userdashboard");
         } else {
           toast.error("No se recibió token en la respuesta");
         }
       })
-      .catch((error) => {
-        toast.error("Error en login: " + (error as Error).message);
+      .catch(() => {
+        toast.error("Error al iniciar sesión");
       });
   };
-  const handleSubmit = async (data: UserLoginSchema) => {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userLogin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
-          toast.success("¡Inicio de sesión exitoso!");
-          // Guardar el token en localStorage
-          localStorage.setItem("userToken", data.token);
 
-          navigate("/user/userdashboard");
-        } else {
-          toast.error("No se recibió token en la respuesta");
-        }
-      });
-  };
+     
+  
   return (
     <div className="w-full  min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-orange-100 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />

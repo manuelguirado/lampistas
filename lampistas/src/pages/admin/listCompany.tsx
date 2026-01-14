@@ -11,21 +11,24 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import api from "../../api/intercepttors"
+import { useParams } from "react-router-dom";
+
 
 export default function ListCompany() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
-
+  const token = localStorage.getItem("adminToken") || "";
+  const params = useParams<{companyID : string}>();
   function handleGenerateCode(companyId: string) {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/assignCode/${companyId}`, {
-      method: "GET",
+    api.get( '/admin/assignCode/' + companyId, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json())
+      .then((response) => response.data)
       .then((data) => {
         navigator.clipboard.writeText(data.code);
         toast.success("Code generated and copied to clipboard! " + data.code);
@@ -35,15 +38,15 @@ export default function ListCompany() {
       });
   }
   function handleActivateCompany(companyId: string) {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/activateCompany/${companyId}`, {
-      method: "PATCH",
+    api.patch(`/admin/activateCompany/${companyId}`, {
+      companyID: Number(companyId)
+    }, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ companyID: Number(companyId) }),
     })
-      .then((response) => response.json())
+      .then((response) => response.data)
       .then(() => {
         toast.success("Company activated successfully");
         window.location.reload();
@@ -54,14 +57,13 @@ export default function ListCompany() {
   }
 
   function handleDeleteCompany(companyId: string) {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/eliminateCompany/${companyId}`, {
-      method: "POST",
+    api.post( '/admin/eliminateCompany/' + companyId, {}, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json())
+      .then((response) => response.data)
       .then(() => {
         toast.success("Company deleted successfully");
         window.location.reload();
@@ -86,17 +88,13 @@ export default function ListCompany() {
   useEffect(() => {
     const limit = pageSize;
     const offset = (currentPage - 1) * pageSize;
-    fetch(
-      `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/admin/listCompany?limit=${limit}&offset=${offset}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
-      }
-    )
-      .then((response) => response.json())
+    api.get( `/admin/listCompany?limit=${limit}&offset=${offset}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.data)
       .then((data) => {
         setCompanies(data.companies || []);
         setTotalCompanies(data.total || 0);

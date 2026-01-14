@@ -7,6 +7,7 @@ import {
   incidentSchema,
   type typeIncidentSchema,
 } from "../schemas/incidentSchema";
+import api from '../../../api/intercepttors'
 import { useState } from "react";
 import {
   AlertTriangle,
@@ -35,7 +36,6 @@ export default function CreateIncident() {
     resolver: zodResolver(incidentSchema),
     mode: "onChange",
   });
-
   // Función principal que maneja todo el flujo
   async function handleSubmit(data: typeIncidentSchema) {
     setIsSubmitting(true);
@@ -60,21 +60,14 @@ export default function CreateIncident() {
 
       toast.loading("Creando incidencia...", { id: "incident" });
 
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_URL || "http://localhost:3000"
-        }/user/createIncident`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // NO incluir Content-Type para multipart/form-data
-          },
-          body: formData,
-        }
-      );
+      const response = await api.post('/user/createIncident', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      if (!response.ok) {
+      if (!response.status ) {
         throw new Error("Error al crear la incidencia");
       }
 

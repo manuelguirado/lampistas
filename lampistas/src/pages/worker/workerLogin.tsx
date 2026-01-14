@@ -6,6 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {workerLoginSchema, type WorkerLoginSchema} from '../worker/schemas/workerLogin';
 import { useState } from 'react';
 import { Eye, EyeOff, Wrench, Mail, Lock, HardHat } from 'lucide-react';
+import api from '../../api/intercepttors'
 export default function WorkerLogin() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -24,16 +25,12 @@ export default function WorkerLogin() {
     });
   function handleValidateCode(data : WorkerLoginSchema) {
 
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/validateCode`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userType: "worker",
-        code: data.code,
-      }),
+    api.post('/worker/validateCode', {
+      userType: "worker",
+      code: data.code,
     })
+      .then((response) => response.data)
+      
       .then((response) => response.json())
       .then((data) => {
 
@@ -52,18 +49,23 @@ export default function WorkerLogin() {
   }
   function handleLogin(data : WorkerLoginSchema) {
  
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/worker/workerLogin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+    api.post('/worker/workerLogin' , {
+      userType: "worker",
+      ...data
     })
-      .then((res) => res.json())
+      .then((res) => res.data)
       .then((data) => {
         if (data.token) {
           toast.success('¡Inicio de sesión exitoso!');
+          // Guardar token y userType en localStorage
           localStorage.setItem("workerToken", data.token);
+          localStorage.setItem("userType", "worker");
+          if (data.refreshToken) {
+            localStorage.setItem("workerRefreshToken", data.refreshToken);
+          }
+          if (data.workerID) {
+            localStorage.setItem("workerID", data.workerID.toString());
+          }
           navigate("/worker/workerDashboard");
         } else {
           toast.error('Credenciales incorrectas');

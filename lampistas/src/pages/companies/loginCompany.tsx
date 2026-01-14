@@ -6,8 +6,11 @@ import {loginSchema } from './schemas/loginSchema';
 import type {LoginSchema} from './schemas/loginSchema';
 import { useState } from 'react';
 import { Eye, EyeOff, Building2, Mail, Lock } from 'lucide-react';
+import api from '../../api/intercepttors'
+import  {useNavigate} from 'react-router-dom';
 
 export default function LoginCompany() {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     
     const togglePassword = () => {
@@ -35,66 +38,36 @@ export default function LoginCompany() {
     });
     function handleSubmitCompanyCode(data : LoginSchema) {
         
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/validateCode`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                "userType": "company",
-                "code": data.code
-            }),
+        api.post('/company/companyLoginCode', data)
+        .then((response) => {
+            const responseData = response.data
+            if (responseData.token) {
+                toast.success('¡Inicio de sesión exitoso!');
+                localStorage.setItem('companyToken', responseData.token);
+            }
         })
-            .then((response) => response.json()
-        )
-            .then((data) => {
-                // Guardar el token en localStorage
-               
-                if (data.token) {
-                    toast.success('¡Código válido! Inicio de sesión exitoso.');
-                    localStorage.setItem('companyToken', data.token);
-                 
-                    // Redirigir al dashboard de la empresa
-                        window.location.href = "/company/companyDashboard";
-                } else {
-                    toast.error('No se recibió token en la respuesta');
-                }
-              
-            
-            })
-            .catch((error) => {
-                toast.error('Error en login: ' + (error as Error).message);
-            });
+        .catch((error) => {
+            toast.error('Error en login: ' + (error as Error).message);
+        });
     }
     function handleSubmitEmail(data : LoginSchema) {
         
-        // Aquí puedes manejar el envío del formulario
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/companyLogin`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-                data
-        )
+       
+        api.post('/company/companyLogin', data)
+        .then((response) => {
+            const responseData = response.data
+            if (responseData.token) {
+                toast.success('¡Inicio de sesión exitoso!');
+                navigate("/company/companyDashboard");
+                localStorage.setItem('companyToken', responseData.token);
+            }
         })
-            .then((response) => response.json())
-            .then((data) => {
-               
-                // Guardar el token en localStorage
-                if (data.token) {
-                    toast.success('¡Inicio de sesión exitoso!');
-                    localStorage.setItem('companyToken', data.token);
-                    // Redirigir al dashboard de la empresa
-                    window.location.href = "/company/companyDashboard";
-                } else {
-                    toast.error('No se recibió token en la respuesta');
-                }
-            })
-            .catch((error) => {
-                toast.error('Error en login: ' + (error as Error).message);
-            });
+        .catch((error) => {
+            toast.error('Error en login: ' + (error as Error).message);
+        });
     }
+              
+    
     return (
         <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-orange-100 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
