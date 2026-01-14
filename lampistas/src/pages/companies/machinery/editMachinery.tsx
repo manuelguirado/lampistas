@@ -71,8 +71,8 @@ export default function EditMachinery() {
         Authorization: `Bearer ${token}`,
       },
     })
-    .then((response) => {
-      console.log("Maquinaria actualizada:", response.data);
+    .then(() => {
+    
       toast.success("Maquinaria actualizada con éxito");
       navigate("/company/maquinaria/listarMaquinaria");
     })

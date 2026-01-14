@@ -110,7 +110,7 @@ function handleOpenIncidentModal(incident: {
     if (!workerID) return;
 
     try {
-      const response = await api.post("/company/assignIncident", 
+       api.post("/company/assignIncident", 
         { incidentID, workerID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -303,7 +303,7 @@ function handleOpenIncidentModal(incident: {
             {/* Files Section */}
             <div className="mb-4">
               <h4 className="font-semibold text-gray-800 mb-2">Archivos del Trabajador:</h4>
-              {console.log('Rendering files:', selectedIncident.files)}
+              
               {selectedIncident.files && selectedIncident.files.length > 0 ? (
                 <div className="space-y-3 max-h-60 overflow-y-auto">
                   {selectedIncident.files.map((file, index) => {
@@ -341,9 +341,7 @@ function handleOpenIncidentModal(incident: {
                                 errorDiv.innerHTML = '<span class="text-red-600 text-sm">⚠️ No se pudo cargar la imagen</span>';
                                 e.currentTarget.parentNode?.appendChild(errorDiv);
                               }}
-                              onLoad={() => {
-                                console.log('Image loaded successfully:', file.signedUrl);
-                              }}
+                             
                             />
                           </div>
                         )}

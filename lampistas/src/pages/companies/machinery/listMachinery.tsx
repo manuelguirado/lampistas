@@ -20,7 +20,7 @@ export default function ListMachinery() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const offset = (currentPage - 1) * itemsPerPage;
-  const token = localStorage.getItem("companyToken");
+ 
   function eliminateMachinery(machineryID: number) {
     api
       .delete(`/company/eliminateMachinery/${machineryID}`)
