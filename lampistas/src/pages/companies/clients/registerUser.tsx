@@ -4,9 +4,16 @@ import Header from "../components/header";
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { registerUserSchema, type RegisterUserSchema } from "../schemas/registerUser";
-
+import { useState } from 'react';
+import { Users, User, Mail, Lock, Eye, EyeOff, FileText, UserPlus } from 'lucide-react';
+import api from "../../../api/intercepttors";
 export default function RegisterUser() {
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    
+    const togglePassword = () => {
+        setShowPassword(!showPassword);
+    };
   
     const { register, handleSubmit:handleSubmitRegister, formState: { errors } } = useForm<RegisterUserSchema>({
         resolver: zodResolver(registerUserSchema),
@@ -19,16 +26,14 @@ export default function RegisterUser() {
 
         try {
             // PASO 1: Crear el usuario primero
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/companyCreateUser`, {
-                method: 'POST',
+            const userResponse = await api.post(`/company/companyCreateUser`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(data),
+                }
             });
 
-            const userData = await userResponse.json();
+            const userData = await userResponse.data;
 
             if (!userData.userID) {
                 toast.error('Error al registrar usuario.');
@@ -36,20 +41,17 @@ export default function RegisterUser() {
             }
 
             // PASO 2: Crear el contrato con el userID obtenido
-            const contractResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/createContract`, {
-                method: 'POST',
+            const contractResponse = await api.post(`/company/createContract`, {
+                userID: userData.userID, // ✅ Ahora sí tenemos el userID
+                contractType: data.contractType,
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    userID: userData.userID, // ✅ Ahora sí tenemos el userID
-                    contractType: data.contractType,
-                }),
+                }
             });
-
-            const contractData = await contractResponse.json();
-
+                   
+            const contractData = await contractResponse.data;
             if (contractData.token || contractData.id) {
                 toast.success('¡Usuario y contrato creados exitosamente!');
                 navigate('/company/clientes/mis-clientes');
@@ -63,65 +65,161 @@ export default function RegisterUser() {
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
+        <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-cyan-50 to-blue-100 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">Registrar Usuario</h2>
-            <form onSubmit={handleSubmitRegister(handleSubmit)} className='flex flex-col space-y-4'>
-                <div className="mb-4">
-                <input
-                    type="text"
-                  
-                    placeholder="Name"
-                    {...register("name")}
-                    className="border p-2 mb-4"
-                    required
-                    
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
-            </div>
-            <div className="mb-6">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    {...register("email")}
-                    className="border p-2 mb-4"
-                    required
-                    inputMode="email"
-                    
-                />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-            </div>
-            <div className="mb-4">
-                <input
-                    type="password"
-                  
-                    placeholder="Password"
-                    {...register("password")}
-                 
-                    className="border p-2 mb-4"
-                    required
-                />  
-                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
-            </div>
+            
+            <div className="w-full max-w-md">
+                {/* Título */}
+                <div className="text-center mb-8">
+                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-cyan-600 to-blue-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
+                        <Users className="w-8 h-8 text-white" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Nuevo Cliente</h2>
+                    <p className="text-gray-600">Registrar cliente y crear contrato</p>
+                </div>
 
-            <div className="mb-4">        
-                <select 
-                    className="border p-2 mb-4"
-                    {...register("contractType")}
-                  
-                    required
-                >
-                    <option value="" disabled>Select Contract Type</option>
-                    <option value="contract">Contract</option>
-                    <option value="freeChoice">Free Choice</option>
-                </select>
-                {errors.contractType && <p className="text-red-500 text-sm mt-1">{errors.contractType.message}</p>}
-            </div>
+                {/* Formulario moderno */}
+                <div className="bg-white rounded-2xl shadow-2xl p-8 border border-cyan-100">
+                    <form onSubmit={handleSubmitRegister(handleSubmit)} className="space-y-6">
+                        {/* Nombre */}
+                        <div className="space-y-2">
+                            <label className="block text-gray-700 text-sm font-semibold">
+                                Nombre Completo
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <User className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Nombre del cliente"
+                                    {...register("name")}
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                    required
+                                />
+                            </div>
+                            {errors.name && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {errors.name.message}
+                                </p>
+                            )}
+                        </div>
 
-                <button type="submit" className="bg-amber-500 text-white px-4 py-2 rounded">
-                    Register User
-                </button>
-            </form>
+                        {/* Email */}
+                        <div className="space-y-2">
+                            <label className="block text-gray-700 text-sm font-semibold">
+                                Correo Electrónico
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Mail className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="email"
+                                    placeholder="cliente@email.com"
+                                    {...register("email")}
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                    required
+                                    inputMode="email"
+                                />
+                            </div>
+                            {errors.email && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {errors.email.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Contraseña */}
+                        <div className="space-y-2">
+                            <label className="block text-gray-700 text-sm font-semibold">
+                                Contraseña Temporal
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Contraseña temporal"
+                                    {...register("password")}
+                                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePassword}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-5 w-5 text-gray-400 hover:text-cyan-600 transition-colors" />
+                                    ) : (
+                                        <Eye className="h-5 w-5 text-gray-400 hover:text-cyan-600 transition-colors" />
+                                    )}
+                                </button>
+                            </div>
+                            {errors.password && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {errors.password.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Tipo de contrato */}
+                        <div className="space-y-2">
+                            <label className="block text-gray-700 text-sm font-semibold">
+                                Tipo de Contrato
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <FileText className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <select
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                    {...register("contractType")}
+                                    required
+                                >
+                                    <option value="" disabled>Selecciona tipo de contrato</option>
+                                    <option value="contract">📄 Contrato Fijo</option>
+                                    <option value="freeChoice">🔄 Libre Elección</option>
+                                </select>
+                            </div>
+                            {errors.contractType && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {errors.contractType.message}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Botón de registro */}
+                        <button
+                            type="submit"
+                            className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-3 px-4 rounded-xl hover:from-cyan-700 hover:to-blue-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                        >
+                            <UserPlus className="w-5 h-5" />
+                            Registrar Cliente
+                        </button>
+                    </form>
+                    
+                    {/* Información adicional */}
+                    <div className="mt-6 p-4 bg-cyan-50 border border-cyan-200 rounded-xl">
+                        <div className="flex items-start gap-2">
+                            <Users className="w-5 h-5 text-cyan-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                                <h4 className="text-cyan-800 font-semibold text-sm">Proceso automático:</h4>
+                                <p className="text-cyan-700 text-xs mt-1">
+                                    Se creará el usuario y automáticamente se generará el contrato asociado. 
+                                    El cliente recibirá las credenciales por email.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

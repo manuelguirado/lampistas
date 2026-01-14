@@ -7,6 +7,7 @@ import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {shiftSchema } from '../schemas/shiftSchema';
 import type {ShiftSchema} from '../schemas/shiftSchema';
+import api from "../../../api/intercepttors";
 
 export default function ListWorkers() {
     const navigate = useNavigate();
@@ -39,21 +40,16 @@ export default function ListWorkers() {
     function handleGenerateCode(workerID: number) {
        
 
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignWorkerCode/${workerID}`, {
-            method: 'GET',
+        api.get(`/company/assignWorkerCode/${workerID}`,  {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.code) {
-                   toast.success('¡Código generado y copiado al portapapeles! ' + data.code);
-                    window.navigator.clipboard.writeText(data.code);
-                } else {
-                    toast.error('Error generating code.');
-                }
+            .then((response) => {
+                const { code } = response.data;
+                navigator.clipboard.writeText(code);
+                toast.success(`Código generado: ${code}`);
             })
             .catch((error) => {
                 toast.error('Error generating code: ' + (error as Error).message);
@@ -62,17 +58,20 @@ export default function ListWorkers() {
 
     function handleEliminarWorker(workerID: number) {
 
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/deleteWorker/${workerID}`, {
-            method: 'DELETE',
+        api.delete(`/company/deleteWorker/${workerID}`, {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then((response) => response.json())
             .then(() => {
-                toast.success('¡Trabajador eliminado exitosamente!');
+                toast.success('¡Trabajador eliminado con éxito!');
+                // Refrescar la lista de trabajadores
+                setWorkers((prevWorkers) => prevWorkers.filter((worker) => worker.workerid !== workerID));
                 window.location.reload();
+            })
+            .catch((error) => {
+                toast.error('Error deleting worker: ' + (error as Error).message);
             });
     }
 
@@ -95,23 +94,23 @@ export default function ListWorkers() {
 
     async function handleSubmitShift(data : ShiftSchema) {
   
-        
+     
         if (!selectedWorker) return;
 
     
       
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignShiftWorker`, {
-                method: 'POST',
+            const response = await api.post(`/company/assignShiftWorker`, {
+                workerID: selectedWorker.workerid,
+                data : {
+               ...data
+                }
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    workerID: selectedWorker.workerid,
-                     data
-                })
-            }).then((res) => res.json());
+                }
+            }).then(res => res.data);
 
        
 
@@ -133,18 +132,15 @@ export default function ListWorkers() {
         const offset = (currentPage - 1) * pageSize;
         const token = localStorage.getItem('companyToken');
 
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listWorkers?limit=${limit}&offset=${offset}`, {
-            method: 'GET',
+        api.get(`/company/listWorkers?limit=${limit}&offset=${offset}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then((response) => response.json())
-            .then((data) => {
-              
-                setWorkers(data.workers || []);
-                setTotalWorkers(data.total || 0);
+            .then((response) => {
+                setWorkers(response.data.workers || []);
+                setTotalWorkers(response.data.total || 0);
             })
             .catch((error) => {
                 toast.error('Error fetching workers: ' + (error as Error).message);

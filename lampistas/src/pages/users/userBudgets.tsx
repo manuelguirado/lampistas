@@ -2,26 +2,67 @@ import { useState, useEffect } from "react";
 import type { BudgetType } from "../../types/budgetType";
 import toast from "react-hot-toast";
 import Header from "./components/header";
+import { ChevronRight,ChevronLeft } from "lucide-react";
+import api from '../../api/intercepttors'
+
 export default function UserBudgets() {
-  const token = localStorage.getItem("userToken");
   const [budgets, setBudgets] = useState<BudgetType[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalBudgets, setTotalBudgets] = useState(0);
+  const pageSize = 5;
+  const offset = (currentPage - 1) * pageSize;
+  const totalPages = Math.ceil(totalBudgets / pageSize);
+
+  async function handleDownloadPDF(budgetID: number) {
+    try {
+      const response = await api.get(`/user/downloadFile/${budgetID}`, {
+        responseType: 'blob',
+      });
+
+      // Crear blob del PDF
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      
+      // Crear enlace temporal para descargar
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `presupuesto_${budgetID}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpiar
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('PDF descargado exitosamente');
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast.error("Error al descargar el PDF");
+    }
+  }
+  function handleNextPage() {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
+
+  function handlePreviousPage() {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/recievedBudgets`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setBudgets(data.budgets);
+    api.get(`/user/recievedBudgets?limit=${pageSize}&offset=${offset}`)
+      .then((response) => {
+        setBudgets(response.data.budgets || []);
+        setTotalBudgets(response.data.totalBudgets || response.data.budgets?.length || 0);
       })
       .catch((error) => {
-        toast.error("Error fetching budgets: " + (error as Error).message);
+        console.error("Error fetching budgets:", error);
+        toast.error("Error al cargar presupuestos");
       });
-  }, [token]);
+  }, [currentPage, offset]);
   return (
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
@@ -48,6 +89,9 @@ export default function UserBudgets() {
               </th>
                <th className="py-2 px-4 border border-gray-300 text-left">
                 Monto Total
+              </th>
+              <th className="py-2 px-4 border border-gray-300 text-left">
+               Descargar PDF
               </th>
             </tr>
           </thead>
@@ -82,11 +126,88 @@ export default function UserBudgets() {
                 <td className="py-2 px-4 border border-gray-300">
                   {budget.totalAmount}€
                 </td>
+                <td className="py-2 px-4 border border-gray-300">
+                  <button  onClick={() => budget.budgetID && handleDownloadPDF(budget.budgetID)} className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold">descargar PDF</button>
+                </td>
               </tr>
                
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Controles de paginación */}
+      <div className="w-full max-w-7xl mt-6 flex justify-between items-center">
+        <div className="text-sm text-gray-600">
+          Mostrando {offset + 1} a {Math.min(offset + pageSize, totalBudgets)} de {totalBudgets} presupuestos
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          {/* Botón Anterior */}
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+              currentPage === 1
+                ? 'text-gray-400 cursor-not-allowed bg-gray-100'
+                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+            } transition-colors`}
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Anterior
+          </button>
+
+          {/* Números de página */}
+          <div className="flex items-center space-x-1">
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+              const showPage = 
+                pageNumber === 1 || 
+                pageNumber === totalPages || 
+                (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1);
+              
+              if (!showPage) {
+                // Mostrar "..." para páginas omitidas
+                if (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) {
+                  return (
+                    <span key={pageNumber} className="px-2 py-1 text-gray-500">
+                      ...
+                    </span>
+                  );
+                }
+                return null;
+              }
+
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    currentPage === pageNumber
+                      ? 'bg-amber-500 text-white'
+                      : 'text-gray-700 bg-white border border-gray-300 hover:bg-amber-50'
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Botón Siguiente */}
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+              currentPage === totalPages
+                ? 'text-gray-400 cursor-not-allowed bg-gray-100'
+                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+            } transition-colors`}
+          >
+            Siguiente
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </button>
+        </div>
       </div>
     </div>
   );

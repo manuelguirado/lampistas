@@ -4,6 +4,7 @@ import { Eye,Code } from 'lucide-react';
 import type { Contract } from '../../../types/contract';
 import type { Client } from '../../../types/clientType';
 import toast from 'react-hot-toast';
+import api from '../../../api/intercepttors';
 
 export default function ListClients() {
     const [clients, setClients] = useState<Client[]>([]);
@@ -20,56 +21,52 @@ export default function ListClients() {
     }, [currentPage]);
         async function handleGenerateCode(userID: number) {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignUserCode/${userID}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
+                const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignUserCode/${userID}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
          
+            }).then((res) => res.json()).then((data) => {
+                if (data.code) {
+                    toast.success(`Generated code: ${data.code}`);
+                    window.navigator.clipboard.writeText(data.code);
+                } else {
+                    toast.error('Error generating code.');
+                }
             });
-
-            const data = await response.json();
-            if (data.code) {
-                toast.success(`Code generated successfully: ${data.code}`);
-                window.navigator.clipboard.writeText(data.code);
-            } else {
-                toast.error('Error generating code.');
-            }
         } catch (error) {
             toast.error('Error generating code.' + (error as Error).message);
         }
     }
     function fetchClients() {
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listClients?limit=${pageSize}&offset=${(currentPage - 1) * pageSize}`, {
-            method: 'GET',
+        api.get(`/company/getClients?page=${currentPage}&pageSize=${pageSize}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
+                'Authorization': `Bearer ${token}`,
+            },
         })
-            .then((response) => response.json())
-            .then((data) => {
-                
-                setClients(data.clients);
-                setTotalClient(data.total);
-            })
-            .catch((error) => {
-                toast.error('Error fetching clients.' + (error as Error).message);
-            });
+        .then((response) => {
+            const data = response.data;
+            setClients(data.clients);
+            setTotalClient(data.total);
+        })
+        .catch((error) => {
+            toast.error('Error fetching clients.' + (error as Error).message);
+        });
     }
 
     async function viewClientContracts(userID: number, clientName: string) {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/getClientContracts/${userID}`, {
-                method: 'GET',
+            const response = await api.get(`/company/getClientContracts/${userID}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
 
-            const data = await response.json();
+            const data = await response.data;
          
             if (data.contracts) {
                 setSelectedClientContracts(data.contracts);

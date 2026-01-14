@@ -49,7 +49,7 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
     if (data.token) {
       // Guardar el nuevo token
       localStorage.setItem(config.tokenKey, data.token);
-      console.log(`✅ ${userType} token refrescado exitosamente`);
+    
       return data.token;
     } else {
       console.error(`❌ Error al refrescar ${userType} token:`, data.message);
@@ -85,7 +85,7 @@ export async function fetchWithTokenRefresh(
 
   // Si recibimos 401, intentar refrescar el token y reintentar
   if (response.status === 401) {
-    console.log(`🔄 ${userType} token expirado, intentando refrescar...`);
+    
     const newToken = await refreshToken(userType);
     
     if (newToken) {
@@ -106,7 +106,7 @@ export function setupAutoRefresh(userType: UserType) {
   const intervalId = setInterval(async () => {
     const token = localStorage.getItem(config.tokenKey);
     if (token) {
-      console.log(`⏰ Refrescando ${userType} token automáticamente...`);
+     
       await refreshToken(userType);
     } else {
       // Si no hay token, detener el intervalo

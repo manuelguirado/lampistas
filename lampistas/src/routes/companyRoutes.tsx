@@ -21,9 +21,10 @@ import ClientLayout from "../pages/companies/clients/clientLayout";
 import ClientsIndex from "../pages/companies/clients/clientsIndex";
 import IncidentIndex from "../pages/companies/incidents/incidentIndex";
 import IncidentLayout from "../pages/companies/incidents/incidentsLayout";
+import CompanyHistory from "../pages/companies/incidents/companyHistory";
 export default function CompanyRoutes() {
   return (
-    <Routes >
+    <Routes>
       {/* Ruta pública */}
       <Route path="companyLogin" element={<LoginCompany />} />
 
@@ -44,8 +45,7 @@ export default function CompanyRoutes() {
           </ProtectedRoute>
         }
       />
-     
-      
+
       <Route
         path="crear-presupuesto"
         element={
@@ -54,8 +54,7 @@ export default function CompanyRoutes() {
           </ProtectedRoute>
         }
       />
-     
-      
+
       {/* Nested routes para maquinaria */}
       <Route
         path="maquinaria"
@@ -67,88 +66,102 @@ export default function CompanyRoutes() {
       >
         {/* Ruta index - se muestra cuando estás en /company/maquinaria */}
         <Route index element={<MachineryIndex />} />
-        
+
         {/* Rutas hijas - /company/maquinaria/crear, /company/maquinaria/listar, etc */}
         <Route path="crearMaquinaria" element={<CreateMachinery />} />
         <Route path="listarMaquinaria" element={<ListMachinery />} />
-        <Route path="editarMaquinaria/:machineryID" element={<EditMachinery />} />
+        <Route
+          path="editarMaquinaria/:machineryID"
+          element={<EditMachinery />}
+        />
         <Route path="actualizarMantenimiento" element={<UpdateMaintence />} />
       </Route>
-      <Route path="trabajadores" element={
-        <ProtectedRoute userType="company">
-          <WorkerLayout />
-        </ProtectedRoute>
-      }>
+      <Route
+        path="trabajadores"
+        element={
+          <ProtectedRoute userType="company">
+            <WorkerLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<WorkerIndex />} />
-         <Route
-        path="registrarTrabajador"
-        element={
-          <ProtectedRoute userType="company">
-            <RegisterWorker />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="misTrabajadores"
-        element={
-          <ProtectedRoute userType="company">
-            <ListWorkers />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="editarTrabajador"
-        element={
-          <ProtectedRoute userType="company">
-            <EditWorkers />
-          </ProtectedRoute>
-        }
-      />
-
+        <Route
+          path="registrarTrabajador"
+          element={
+            <ProtectedRoute userType="company">
+              <RegisterWorker />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="misTrabajadores"
+          element={
+            <ProtectedRoute userType="company">
+              <ListWorkers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="editarTrabajador"
+          element={
+            <ProtectedRoute userType="company">
+              <EditWorkers />
+            </ProtectedRoute>
+          }
+        />
       </Route>
-      <Route path="clientes" element={
-        <ProtectedRoute userType="company">
-          <ClientLayout />
-        </ProtectedRoute>
-      }>
+      <Route
+        path="clientes"
+        element={
+          <ProtectedRoute userType="company">
+            <ClientLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<ClientsIndex />} />
         <Route
-        path="registrarCliente"
-        element={
-          <ProtectedRoute userType="company">
-            <RegisterUser />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="mis-Clientes"
-        element={
-          <ProtectedRoute userType="company">
-            <ListClients />
-          </ProtectedRoute>
-        }
-      />
-        
-  
-        </Route>
-        <Route path="incidencias" element={
-        <ProtectedRoute userType="company">
-          <IncidentLayout />
-        </ProtectedRoute>
-      }>
-        <Route index element={<IncidentIndex />} />
-         <Route path="Mis-incidencias" element={
-        <ProtectedRoute userType="company">
-          <MyIncidents />
-        </ProtectedRoute>
-      }> 
-     
-    
+          path="registrarCliente"
+          element={
+            <ProtectedRoute userType="company">
+              <RegisterUser />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="mis-Clientes"
+          element={
+            <ProtectedRoute userType="company">
+              <ListClients />
+            </ProtectedRoute>
+          }
+        />
       </Route>
-        
-  
-        </Route>
+      <Route
+        path="incidencias"
+        element={
+          <ProtectedRoute userType="company">
+            <IncidentLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<IncidentIndex />} />
+        <Route
+          path="incidentHistory"
+          element={
+            <ProtectedRoute userType="company">
+              <CompanyHistory />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="Mis-incidencias"
+          element={
+            <ProtectedRoute userType="company">
+              <MyIncidents />
+            </ProtectedRoute>
+          }
+        ></Route>
+      </Route>
     </Routes>
-    
   );
 }
