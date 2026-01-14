@@ -15,10 +15,7 @@ export default function IncidentHistory() {
     useEffect(() => {
        api.get('/user/getIncidentHistory')
         .then(response => {
-            console.log("Fetched incident history data:", response.data);
-            
-            // La respuesta viene como { token, 0: {...}, 1: {...}, ... }
-            // Necesitamos extraer solo los objetos numerados
+           
             const data = response.data;
             
             if (data.mappedIncidentHistory && Array.isArray(data.mappedIncidentHistory)) {

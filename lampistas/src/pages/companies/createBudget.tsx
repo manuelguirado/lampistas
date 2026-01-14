@@ -14,19 +14,19 @@ import toast from "react-hot-toast";
 function CreateBudget() {
   const navigate = useNavigate();
   const token = localStorage.getItem("companyToken");
-  const [client, setClients] = useState<
-    Array<{ userID: number; name: string }>
-  >([]);
+const [client, setClients] = useState<
+  Array<{
+    email: string;
+    userID: number;
+    name: string;
+    phone: string;
+    address: string;
+  }>
+>([]);
   const [incidents, setIncidents] = useState<
     Array<{ IncidentsID: number; title: string }>
   >([]);
-  const [selectedClient, setSelectedClient] = useState<{
-    userID: number;
-    name: string;
-    email?: string;
-    phone?: string;
-    address?: string;
-  } | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [incidentLoading, setIncidentLoading] = useState(false);
   
@@ -69,19 +69,25 @@ function CreateBudget() {
       toast.success("PDF subido al servidor exitosamente");
       return response.data;
       
-    } catch (error: any) {
-      console.error("Upload error details:", {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message
-      });
-      
-      const errorMsg = error.response?.data?.message || 
-                      error.response?.statusText || 
-                      "Error desconocido al subir archivo";
-      
-      toast.error(`Error subiendo PDF: ${errorMsg}`);
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null) {
+        const err = error as { response?: { status?: number; statusText?: string; data?: { message?: string } }; message?: string };
+        console.error("Upload error details:", {
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          data: err.response?.data,
+          message: err.message
+        });
+
+        const errorMsg = err.response?.data?.message ||
+                        err.response?.statusText ||
+                        "Error desconocido al subir archivo";
+
+        toast.error(`Error subiendo PDF: ${errorMsg}`);
+      } else {
+        toast.error("Error desconocido al subir archivo");
+        console.error("Upload error details:", error);
+      }
       throw error; // Re-throw para manejar en onSubmit
     }
   };
@@ -130,7 +136,6 @@ function CreateBudget() {
       (sum, item) => sum + item.total, // ✅ Cambiar a item.total
       0
     );
-    console.log("Calculated subtotal:", subtotal);
     
     const tax = subtotal * 0.21;
     const total = subtotal + tax;
@@ -141,18 +146,21 @@ function CreateBudget() {
 
   const { itemsWithTotal, subtotal, tax, total } = calculatedTotals;
 
-  // ✅ MEJORAR: onSubmit con una sola llamada API
+
   const onSubmit = async (data: BudgetFormData) => {
     
     
-    const companyID = token["companyID"] ? parseInt(token["companyID"]) : 0;
+    
   
     
     
     // ✅ OBTENER datos del cliente seleccionado
     const selectedClientData = client.find(c => c.userID === data.clientID) || {
       name: 'Cliente no encontrado',
-      userID: data.clientID || 0
+      userID: data.clientID || 0 ,
+      email : '',
+      phone : '',
+      address : '',
     };
     
     
@@ -170,7 +178,7 @@ function CreateBudget() {
         budgetNumber: data.budgetNumber,
         title: data.title,
         userID: data.clientID,
-        companyID, // ✅ Usar variable verificada
+      
         date: data.date,
         incidentID: data.incidentID,
         companyName: data.companyName,
@@ -180,13 +188,17 @@ function CreateBudget() {
         totalAmount: total,
         clientName: selectedClientData.name,
         clientEmail: selectedClientData.email || '',
-        clientPhone: selectedClientData.phone || '',
+        clientPhone: selectedClientData.phone|| '',
         clientAddress: selectedClientData.address || '',
       };
       
 
       
       const response = await api.post('/company/createBudget', requestData, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
         responseType: 'blob' 
       });
 
@@ -413,7 +425,7 @@ function CreateBudget() {
               placeholder="Select Client"
               noOptionsMessage={() => "No clients found"}
               onChange={(selectedOption: { value: number; label: string } | null) => {
-                setValue("clientID", selectedOption?.value || undefined);
+                setValue("clientID", selectedOption?.value || 0 );
               }}
             />
             {errors.clientID && (
@@ -437,12 +449,8 @@ function CreateBudget() {
           <div className="border-t pt-4 mt-4">
             <h3 className="font-bold mb-2">Items</h3>
             
-            {/* Debug temporal */}
-            <div className="mb-4 p-2 bg-gray-100 rounded text-sm">
-              <p>Items count: {watchedItems.length}</p>
-              <p>Subtotal: {subtotal.toFixed(2)}€</p>
-              <p>Items debug: {JSON.stringify(watchedItems.map(i => ({desc: i.description, qty: i.quantity, price: i.unitPrice})))}</p>
-            </div>
+          
+            
             
             {/* Items dinámicos */}
             {watchedItems.map((item, index) => (

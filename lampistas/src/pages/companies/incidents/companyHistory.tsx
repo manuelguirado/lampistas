@@ -28,7 +28,7 @@ export default function IncidentHistory() {
                 });
                 
                 const data = response.data;
-                console.log("Fetched incident history data:", data);
+              
         
                 // Manejar la respuesta que viene como objeto numerado
                 if (data.mappedIncidentHistory) {

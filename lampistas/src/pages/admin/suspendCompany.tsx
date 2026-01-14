@@ -5,7 +5,7 @@ import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router';
 import { suspendCompanySchema, type SuspendCompanySchema } from './schemas/suspendCompanySchema';
-import { Building2, Hash, Calendar, Shield, Pause, AlertTriangle } from 'lucide-react';
+import {  Hash, Calendar, Pause, AlertTriangle } from 'lucide-react';
 import api from '../../api/intercepttors';
 export default function SuspendCompany() {
     const navigate = useNavigate();

@@ -21,14 +21,12 @@ export default function ListClients() {
     }, [currentPage]);
         async function handleGenerateCode(userID: number) {
         try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/assignUserCode/${userID}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+               api.get('/company/assignCode/' + userID, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
-         
-            }).then((res) => res.json()).then((data) => {
+            }).then((res) => res.data).then((data) => {
                 if (data.code) {
                     toast.success(`Generated code: ${data.code}`);
                     window.navigator.clipboard.writeText(data.code);
@@ -41,7 +39,7 @@ export default function ListClients() {
         }
     }
     function fetchClients() {
-        api.get(`/company/getClients?page=${currentPage}&pageSize=${pageSize}`, {
+        api.get(`/company/listClients?page=${currentPage}&pageSize=${pageSize}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,

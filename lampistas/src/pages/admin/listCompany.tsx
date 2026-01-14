@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../api/intercepttors"
-import { useParams } from "react-router-dom";
+
 
 
 export default function ListCompany() {
@@ -20,7 +20,7 @@ export default function ListCompany() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
   const token = localStorage.getItem("adminToken") || "";
-  const params = useParams<{companyID : string}>();
+
   function handleGenerateCode(companyId: string) {
     api.get( '/admin/assignCode/' + companyId, {
       headers: {

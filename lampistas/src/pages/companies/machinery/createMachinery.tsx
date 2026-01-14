@@ -44,14 +44,14 @@ export default function CreateMachinery() {
     }, [token]);
 
     async function handleSubmit(data: CreateMachineryType) {
-        console.log("Submitting data:", data);
+       
         const payload = {
             ...data,
             installedAt: new Date(data.installedAt).toISOString(),
             clientID: data.clientID ? Number(data.clientID) : undefined,
         };
         
-        console.log("Payload to be sent:", payload);
+      
         try {
             const response = await api.post("/company/createMachinery", payload, {
                 headers: {

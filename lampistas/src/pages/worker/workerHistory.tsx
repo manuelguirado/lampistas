@@ -23,7 +23,7 @@ export default function IncidentHistory() {
         })
         .then(response => response.data)
         .then(data => {
-            console.log("Fetched incident history data:", data);
+         
     
             // Manejar la respuesta que viene como objeto numerado
             if (data.mappedIncidentHistory) {

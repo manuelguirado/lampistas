@@ -9,9 +9,9 @@ import axios from 'axios';
 import { useParams } from "react-router";
 
 export default function WorkerHome() {
-  const params = useParams<{ incidentID: string }>();
+
   const [myIncidents, setMyIncidents] = useState<IncidentType[]>([]);
-  const [closed, setClosed] = useState<boolean>(false);
+  const [ setClosed] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate  = useNavigate();
@@ -56,18 +56,7 @@ export default function WorkerHome() {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1); // Resetear a la primera página cuando cambie el número de elementos
   };
-  function handleCloseIncident(incidentID: number) {
-      // Cerrar incidencia
-      api.post('/user/closeIncident', { incidentID })
-      .then((response) => {
-        if (response.data.success) {
-          toast.success("¡Incidencia cerrada correctamente!");
-          setClosed(true);
-        } else {
-          toast.error("No se pudo cerrar la incidencia");
-        }
-      });
-  }
+  
   function handleOpenIncidentModal(incident: {
     incidentID: number;
     name: string;
@@ -119,7 +108,7 @@ export default function WorkerHome() {
     api.get(`/user/listFiles/${incidentID}`)
       .then((response) =>
         {
-        console.log("Files fetched:", response.data);
+        
         // El backend devuelve directamente el array de archivos
         const files = Array.isArray(response.data) ? response.data : response.data.files;
         if (files && Array.isArray(files) && files.length > 0) {
@@ -134,7 +123,7 @@ export default function WorkerHome() {
           });
         } else {
           // No mostrar error si simplemente no hay archivos
-          console.log("No se encontraron archivos para esta incidencia");
+     
         }
       })
       .catch((error) => {
