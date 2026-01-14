@@ -1,20 +1,18 @@
 import Header from "./components/header";
 import { useState, useEffect } from "react";
-import { X,ChevronRight,ChevronLeft } from "lucide-react";
+import { X, ChevronRight, ChevronLeft } from "lucide-react";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
-import {  useNavigate } from "react-router";
-import api from '../../api/intercepttors'
-import axios from 'axios';
-import { useParams } from "react-router";
+
+import api from "../../api/intercepttors";
+import axios from "axios";
 
 export default function WorkerHome() {
-
   const [myIncidents, setMyIncidents] = useState<IncidentType[]>([]);
-  const [ setClosed] = useState<boolean>(false);
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const navigate  = useNavigate();
+
   const [selectedIncident, setSelectedIncident] = useState<{
     incidentID: number;
     name: string;
@@ -33,7 +31,7 @@ export default function WorkerHome() {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(5); // Cambiado para permitir modificación
- 
+
   // Pagination logic
   const totalPages = Math.ceil(myIncidents.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -56,7 +54,7 @@ export default function WorkerHome() {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1); // Resetear a la primera página cuando cambie el número de elementos
   };
-  
+
   function handleOpenIncidentModal(incident: {
     incidentID: number;
     name: string;
@@ -72,10 +70,9 @@ export default function WorkerHome() {
     description: string;
     dateReported: Date;
   }) {
-
     setSelectedIncident(incident);
     setIsModalOpen(true);
-  
+
     fetchIncidentFiles(incident.incidentID);
   }
 
@@ -84,16 +81,18 @@ export default function WorkerHome() {
     setSelectedIncident(null);
   }
   useEffect(() => {
-
-   api.get('/user/myIncidents')
-      .then((response) => { 
-        
+    api
+      .get("/user/myIncidents")
+      .then((response) => {
         setMyIncidents(response.data.incidents || []);
         setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching incidents:", error);
-        toast.error("Error fetching incidents: " + (error?.response?.data?.message || error.message));
+        toast.error(
+          "Error fetching incidents: " +
+            (error?.response?.data?.message || error.message)
+        );
         setIsLoading(false);
       });
   }, []);
@@ -105,12 +104,13 @@ export default function WorkerHome() {
     }
   }, [currentPage, totalPages]);
   function fetchIncidentFiles(incidentID: number): void {
-    api.get(`/user/listFiles/${incidentID}`)
-      .then((response) =>
-        {
-        
+    api
+      .get(`/user/listFiles/${incidentID}`)
+      .then((response) => {
         // El backend devuelve directamente el array de archivos
-        const files = Array.isArray(response.data) ? response.data : response.data.files;
+        const files = Array.isArray(response.data)
+          ? response.data
+          : response.data.files;
         if (files && Array.isArray(files) && files.length > 0) {
           setSelectedIncident((prevIncident) => {
             if (prevIncident) {
@@ -123,43 +123,53 @@ export default function WorkerHome() {
           });
         } else {
           // No mostrar error si simplemente no hay archivos
-     
         }
       })
       .catch((error) => {
         console.error("Error fetching files:", error);
         // Solo mostrar error si no es un 404 o similar
         if (error?.response?.status !== 404) {
-          toast.error("Error al cargar archivos: " + (error?.response?.data?.message || error.message));
+          toast.error(
+            "Error al cargar archivos: " +
+              (error?.response?.data?.message || error.message)
+          );
         }
       });
   }
 
   // Función para descargar archivos
-  async function downloadFile(file: { bucketName?: string; key: string; signedUrl: string; token?: string }, fileName: string) {
+  async function downloadFile(
+    file: {
+      bucketName?: string;
+      key: string;
+      signedUrl: string;
+      token?: string;
+    },
+    fileName: string
+  ) {
     try {
       // Usar axios directamente (sin interceptor) para URLs externas firmadas
       const response = await axios.get(file.signedUrl, {
-        responseType: 'blob',
+        responseType: "blob",
         // No enviar headers de autorización a URLs externas
       });
-      
+
       const blob = new Blob([response.data]);
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
-      toast.success('Archivo descargado exitosamente');
+
+      toast.success("Archivo descargado exitosamente");
     } catch (error) {
-      console.error('Error downloading file:', error);
-      toast.error('Error al descargar el archivo');
+      console.error("Error downloading file:", error);
+      toast.error("Error al descargar el archivo");
       // Fallback: abrir en nueva ventana
-      window.open(file.signedUrl, '_blank');
+      window.open(file.signedUrl, "_blank");
     }
   }
 
@@ -168,7 +178,7 @@ export default function WorkerHome() {
       <Header />
       <div className="w-full max-w-7xl mb-4 flex justify-between items-center">
         <h2 className="text-2xl font-bold">Mis Incidencias</h2>
-        
+
         {/* Selector de elementos por página */}
         <div className="flex items-center space-x-2">
           <label htmlFor="itemsPerPage" className="text-sm text-gray-600">
@@ -198,96 +208,106 @@ export default function WorkerHome() {
           </div>
         ) : (
           <table className="min-w-full bg-white border border-gray-300 shadow-md">
-          <thead>
-            <tr className="bg-amber-200">
-              <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
-                Título
-              </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
-                Fecha de Reporte
-              </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
-                Estado
-              </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
-                Prioridad
-              </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
-                Ver incidencia
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedIncidents.length > 0 ? (
-              paginatedIncidents.map((incident) => (
-                <tr key={incident.IncidentsID} className="hover:bg-amber-50">
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.IncidentsID}
-                  </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.title}
-                  </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.dateReported instanceof Date
-                      ? incident.dateReported.toLocaleDateString("es-ES", {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })
-                      : new Date(incident.dateReported).toLocaleDateString("es-ES", {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                  </td>
+            <thead>
+              <tr className="bg-amber-200">
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  ID
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Título
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Fecha de Reporte
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Estado
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Prioridad
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-left">
+                  Ver incidencia
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedIncidents.length > 0 ? (
+                paginatedIncidents.map((incident) => (
+                  <tr key={incident.IncidentsID} className="hover:bg-amber-50">
+                    <td className="py-2 px-4 border border-gray-300">
+                      {incident.IncidentsID}
+                    </td>
+                    <td className="py-2 px-4 border border-gray-300">
+                      {incident.title}
+                    </td>
+                    <td className="py-2 px-4 border border-gray-300">
+                      {incident.dateReported instanceof Date
+                        ? incident.dateReported.toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : new Date(incident.dateReported).toLocaleDateString(
+                            "es-ES",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                    </td>
 
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.status}
-                  </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.priority}
-                  </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                    <button
-                      onClick={() =>
-                        handleOpenIncidentModal({
-                          incidentID: incident.IncidentsID,
-                          name: incident.title,
-                          files: [],
-                          description: incident.description,
-                          dateReported: incident.dateReported,
-                        })
-                      }
-                      className="text-blue-600 hover:underline"
-                    >
-                      Ver
-                    </button>
+                    <td className="py-2 px-4 border border-gray-300">
+                      {incident.status}
+                    </td>
+                    <td className="py-2 px-4 border border-gray-300">
+                      {incident.priority}
+                    </td>
+                    <td className="py-2 px-4 border border-gray-300">
+                      <button
+                        onClick={() =>
+                          handleOpenIncidentModal({
+                            incidentID: incident.IncidentsID,
+                            name: incident.title,
+                            files: [],
+                            description: incident.description,
+                            dateReported: incident.dateReported,
+                          })
+                        }
+                        className="text-blue-600 hover:underline"
+                      >
+                        Ver
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="py-8 px-4 text-center text-gray-500"
+                  >
+                    No se encontraron incidencias
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="py-8 px-4 text-center text-gray-500">
-                  No se encontraron incidencias
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
         )}
 
         {/* Paginación */}
         {!isLoading && myIncidents.length > itemsPerPage && (
           <div className="flex items-center justify-between mt-4 px-4 py-3 bg-white border border-gray-300 rounded-b-lg">
             <div className="flex items-center text-sm text-gray-500">
-              Mostrando {startIndex + 1} a {Math.min(endIndex, myIncidents.length)} de {myIncidents.length} incidencias
+              Mostrando {startIndex + 1} a{" "}
+              {Math.min(endIndex, myIncidents.length)} de {myIncidents.length}{" "}
+              incidencias
             </div>
-            
+
             <div className="flex items-center space-x-2">
               {/* Botón Anterior */}
               <button
@@ -295,8 +315,8 @@ export default function WorkerHome() {
                 disabled={currentPage === 1}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
                   currentPage === 1
-                    ? 'text-gray-400 cursor-not-allowed bg-gray-100'
-                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                    ? "text-gray-400 cursor-not-allowed bg-gray-100"
+                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
                 } transition-colors`}
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
@@ -307,16 +327,23 @@ export default function WorkerHome() {
               <div className="flex items-center space-x-1">
                 {Array.from({ length: totalPages }, (_, index) => {
                   const pageNumber = index + 1;
-                  const showPage = 
-                    pageNumber === 1 || 
-                    pageNumber === totalPages || 
-                    (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1);
-                  
+                  const showPage =
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    (pageNumber >= currentPage - 1 &&
+                      pageNumber <= currentPage + 1);
+
                   if (!showPage) {
                     // Mostrar "..." para páginas omitidas
-                    if (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) {
+                    if (
+                      pageNumber === currentPage - 2 ||
+                      pageNumber === currentPage + 2
+                    ) {
                       return (
-                        <span key={pageNumber} className="px-2 py-1 text-gray-500">
+                        <span
+                          key={pageNumber}
+                          className="px-2 py-1 text-gray-500"
+                        >
                           ...
                         </span>
                       );
@@ -330,8 +357,8 @@ export default function WorkerHome() {
                       onClick={() => setCurrentPage(pageNumber)}
                       className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                         currentPage === pageNumber
-                          ? 'bg-amber-500 text-white'
-                          : 'text-gray-700 bg-white border border-gray-300 hover:bg-amber-50'
+                          ? "bg-amber-500 text-white"
+                          : "text-gray-700 bg-white border border-gray-300 hover:bg-amber-50"
                       }`}
                     >
                       {pageNumber}
@@ -346,8 +373,8 @@ export default function WorkerHome() {
                 disabled={currentPage === totalPages}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
                   currentPage === totalPages
-                    ? 'text-gray-400 cursor-not-allowed bg-gray-100'
-                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                    ? "text-gray-400 cursor-not-allowed bg-gray-100"
+                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
                 } transition-colors`}
               >
                 Siguiente
@@ -385,27 +412,43 @@ export default function WorkerHome() {
               </p>
               <p className="text-sm text-gray-600 mt-2">Fecha de reporte:</p>
               <p className="font-semibold text-gray-800">
-                {new Date(selectedIncident.dateReported).toLocaleDateString("es-ES", {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                {new Date(selectedIncident.dateReported).toLocaleDateString(
+                  "es-ES",
+                  {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                )}
               </p>
               <div className="mt-4">
                 <h4 className="font-semibold text-gray-800 mb-2">Archivos:</h4>
                 {selectedIncident.files && selectedIncident.files.length > 0 ? (
                   <div className="space-y-3 max-h-60 overflow-y-auto">
                     {selectedIncident.files.map((file, index) => {
-                      const fileName = file.key.split('/').pop() || `Archivo ${index + 1}`;
-                      const fileExtension = fileName.split('.').pop()?.toLowerCase();
-                      const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension || '');
-                      const isPdf = fileExtension === 'pdf';
+                      const fileName =
+                        file.key.split("/").pop() || `Archivo ${index + 1}`;
+                      const fileExtension = fileName
+                        .split(".")
+                        .pop()
+                        ?.toLowerCase();
+                      const isImage = [
+                        "jpg",
+                        "jpeg",
+                        "png",
+                        "gif",
+                        "webp",
+                      ].includes(fileExtension || "");
+                      const isPdf = fileExtension === "pdf";
 
                       return (
-                        <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                        <div
+                          key={index}
+                          className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                        >
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium text-gray-800 truncate">
                               📎 {fileName}
@@ -416,40 +459,51 @@ export default function WorkerHome() {
                               </span>
                             )}
                           </div>
-                          
+
                           {/* Preview para imágenes */}
                           {isImage && (
                             <div className="mb-2">
-                              <img 
-                                src={file.signedUrl} 
+                              <img
+                                src={file.signedUrl}
                                 alt={fileName}
                                 className="max-w-full h-32 object-cover rounded border"
                                 onError={(e) => {
-                                  
-                                  toast.error('Error loading image:' + file.signedUrl);
-                                  e.currentTarget.style.display = 'none';
+                                  toast.error(
+                                    "Error loading image:" + file.signedUrl
+                                  );
+                                  e.currentTarget.style.display = "none";
                                   // Mostrar mensaje de error
-                                  const errorDiv = document.createElement('div');
-                                  errorDiv.className = 'bg-red-100 p-2 rounded text-center';
-                                  errorDiv.innerHTML = '<span class="text-red-600 text-sm">⚠️ No se pudo cargar la imagen</span>';
-                                  e.currentTarget.parentNode?.appendChild(errorDiv);
+                                  const errorDiv =
+                                    document.createElement("div");
+                                  errorDiv.className =
+                                    "bg-red-100 p-2 rounded text-center";
+                                  errorDiv.innerHTML =
+                                    '<span class="text-red-600 text-sm">⚠️ No se pudo cargar la imagen</span>';
+                                  e.currentTarget.parentNode?.appendChild(
+                                    errorDiv
+                                  );
                                 }}
                                 onLoad={() => {
-                                  toast.success('Image loaded successfully:' + file.signedUrl);
+                                  toast.success(
+                                    "Image loaded successfully:" +
+                                      file.signedUrl
+                                  );
                                 }}
                               />
                             </div>
                           )}
-                          
+
                           {/* Preview para PDFs */}
                           {isPdf && (
                             <div className="mb-2">
                               <div className="bg-red-100 p-2 rounded text-center">
-                                <span className="text-red-600 font-medium">📄 PDF</span>
+                                <span className="text-red-600 font-medium">
+                                  📄 PDF
+                                </span>
                               </div>
                             </div>
                           )}
-                          
+
                           <div className="flex gap-2">
                             {file.signedUrl && (
                               <a
@@ -477,7 +531,6 @@ export default function WorkerHome() {
                 )}
               </div>
             </div>
-
 
             {/* Form */}
           </div>
