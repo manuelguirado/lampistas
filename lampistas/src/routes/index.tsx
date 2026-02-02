@@ -3,6 +3,7 @@ import CompanyRoutes from './companyRoutes';
 import WorkerRoutes from './workerRoutes';
 import UserRoutes from './userRoutes';
 import {Routes,Route} from 'react-router-dom';
+import PaymentRoutes from './paymentRoutes';
 import Home from '../pages/home';
 import App from '../App';
 
@@ -15,6 +16,7 @@ export default function AppRouter(){
                 <Route path="company/*" element={<CompanyRoutes />} />
                 <Route path="worker/*" element={<WorkerRoutes />} />
                 <Route path="user/*" element={<UserRoutes />} />
+                <Route path="payment/*" element={<PaymentRoutes />} />
             </Route>
         </Routes>
     );

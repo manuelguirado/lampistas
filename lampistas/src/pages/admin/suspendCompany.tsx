@@ -21,8 +21,10 @@ export default function SuspendCompany() {
 
     async function handleSubmit(data: SuspendCompanySchema) {
         try {
-            const response = await api.patch(`/admin/suspendCompany/${data.companyId}`, {
+            const response = await api.patch(`/admin/suspendCompany`, {
+                companyEmail: data.companyEmail,
                 until: new Date(data.until), // Convertir string a Date
+                
             }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -32,6 +34,7 @@ export default function SuspendCompany() {
                  
             
             const result = await response.data;
+            console.log('Resultado de la suspensión:', result);
           
             
             if (result.company || result.success !== false) {
@@ -65,7 +68,7 @@ export default function SuspendCompany() {
             {/* ID de la empresa */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                ID de la Empresa
+                Email de la empresa a suspender
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,19 +76,19 @@ export default function SuspendCompany() {
                 </div>
                 <input
                   type="text"
-                  placeholder="ID de la empresa a suspender"
-                  {...registerSuspend("companyId")}
+                  placeholder="Email de la empresa a suspender"
+                  {...registerSuspend("companyEmail")}
                   className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-gray-50 focus:bg-white ${
-                    suspendCompanyErrors.companyId
+                    suspendCompanyErrors.companyEmail
                       ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 focus:ring-red-500 focus:border-red-500'
                   }`}
                 />
               </div>
-              {suspendCompanyErrors.companyId && (
+              {suspendCompanyErrors.companyEmail && (
                 <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
                   <span>⚠️</span>
-                  {suspendCompanyErrors.companyId.message}
+                  {suspendCompanyErrors.companyEmail.message}
                 </p>
               )}
             </div>
