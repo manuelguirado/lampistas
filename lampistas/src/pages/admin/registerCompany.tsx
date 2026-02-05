@@ -44,7 +44,6 @@ export default function RegisterCompany() {
             formData.append('password', data.password);
             formData.append('phone', data.phone);
             
-            // Enviar directions como JSON string (el backend lo parseará)
             formData.append('directions', JSON.stringify(data.directions));
             
             // Añadir el logo si existe
