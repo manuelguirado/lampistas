@@ -15,6 +15,7 @@ export default function ListClients() {
     const [totalClient, setTotalClient] = useState(0);
     const pageSize = 5;
     const token = localStorage.getItem('companyToken');
+   
 
     useEffect(() => {
         fetchClients();
@@ -25,6 +26,7 @@ export default function ListClients() {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
+                    "role": 'COMPANY',
                 },
             }).then((res) => res.data).then((data) => {
                 if (data.code) {
@@ -43,6 +45,7 @@ export default function ListClients() {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
+                "role": 'COMPANY',
             },
         })
         .then((response) => {

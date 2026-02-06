@@ -44,6 +44,7 @@ export default function LoginCompany() {
             if (responseData.token) {
                 toast.success('¡Inicio de sesión exitoso!');
                 localStorage.setItem('companyToken', responseData.token);
+
             }
         })
         .catch((error) => {
@@ -60,6 +61,7 @@ export default function LoginCompany() {
                 toast.success('¡Inicio de sesión exitoso!');
                 navigate("/company/companyDashboard");
                 localStorage.setItem('companyToken', responseData.token);
+                localStorage.setItem('userType', 'COMPANY');
             }
         })
         .catch((error) => {

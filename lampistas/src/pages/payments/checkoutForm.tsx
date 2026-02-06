@@ -1,4 +1,3 @@
-
 import Header from "../../components/header";
 import { FormEvent, useState } from "react";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";

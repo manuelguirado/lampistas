@@ -93,7 +93,7 @@ export default function Payments() {
                         <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12, textAlign: 'center', color: '#2563eb' }}>Introduce los datos de tu tarjeta</h2>
                         <p style={{ textAlign: 'center', color: '#64748b', marginBottom: 24 }}>Completa el pago para activar tu suscripción.</p>
                         <Elements stripe={stripePromise } options={options}>
-                            <CheckoutForm />
+                            <CheckoutForm  />
                         </Elements>
                     </div>
                 )}

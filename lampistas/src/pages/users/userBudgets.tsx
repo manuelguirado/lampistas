@@ -1,9 +1,25 @@
 import { useState, useEffect } from "react";
+import UserPayments from "./components/userPayments";
 import type { BudgetType } from "../../types/budgetType";
 import toast from "react-hot-toast";
 import Header from "./components/header";
 import { ChevronRight,ChevronLeft } from "lucide-react";
 import api from '../../api/intercepttors'
+import { jwtDecode } from "jwt-decode";
+const token = localStorage.getItem('userToken');
+interface DecodedToken {
+  userID: number;
+  role: string;
+  email: string;
+  name?: string;        // ✅ Agregar name opcional
+    username?: string;    // ✅ Mantener username opcional
+    companyID?: number;
+  }
+
+ 
+  const decoded = token ? jwtDecode<DecodedToken>(token) : null;
+  const companyID = decoded?.companyID;
+  const userID = decoded?.userID;
 
 export default function UserBudgets() {
   const [budgets, setBudgets] = useState<BudgetType[]>([]);
@@ -12,7 +28,11 @@ export default function UserBudgets() {
   const pageSize = 5;
   const offset = (currentPage - 1) * pageSize;
   const totalPages = Math.ceil(totalBudgets / pageSize);
-
+  
+ 
+  // Estado para mostrar el pago y guardar datos del presupuesto seleccionado
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentData, setPaymentData] = useState<{ userID: number ; ammount: number , companyID: number} | null>(null);
   async function handleDownloadPDF(budgetID: number) {
     try {
       const response = await api.get(`/user/downloadFile/${budgetID}`, {
@@ -93,6 +113,7 @@ export default function UserBudgets() {
               <th className="py-2 px-4 border border-gray-300 text-left">
                Descargar PDF
               </th>
+              <th className="py-2 px-4 border border-gray-300 text-left">pagar</th>
             </tr>
           </thead>
           <tbody>
@@ -128,6 +149,21 @@ export default function UserBudgets() {
                 </td>
                 <td className="py-2 px-4 border border-gray-300">
                   <button  onClick={() => budget.budgetID && handleDownloadPDF(budget.budgetID)} className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold">descargar PDF</button>
+                </td>
+                <td className="py-2 px-4 border border-ay-300">
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors font-semibold"
+                    onClick={() => {
+                      setPaymentData({
+                        userID : userID || 0,
+                        ammount: budget.totalAmount || 0,
+                        companyID: companyID || 0,
+                      });
+                      setShowPayment(true);
+                    }}
+                  >
+                    Pagar
+                  </button>
                 </td>
               </tr>
                
@@ -209,6 +245,21 @@ export default function UserBudgets() {
           </button>
         </div>
       </div>
-    </div>
+    {/* Renderizar UserPayments si showPayment es true */}
+    {showPayment && paymentData && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white rounded-lg shadow-lg p-6 relative max-w-lg w-full">
+          <button
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            onClick={() => setShowPayment(false)}
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+          <UserPayments userID={paymentData.userID} ammount={paymentData.ammount ?? 0} companyID={paymentData.companyID ?? 0} />
+        </div>
+      </div>
+    )}
+  </div>
   );
 }
