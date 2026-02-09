@@ -7,6 +7,7 @@ import ListCompany from '../pages/admin/listCompany';
 import SuspendCompany from '../pages/admin/suspendCompany';
 import EditCompany from '../pages/admin/editCompany';
 import ProtectedRoute from './protectedRoute';
+import AdminHome from '../pages/admin/adminHome';
 
 export default function AdminRoutes() {
     return (
@@ -16,11 +17,17 @@ export default function AdminRoutes() {
        
             
             {/* Rutas protegidas */}
-            <Route path="adminDashboard/*" element={<ProtectedRoute userType="admin"><DashboardAdmin /></ProtectedRoute>} />
+            <Route path="adminDashboard/*" element={<ProtectedRoute userType="admin"><DashboardAdmin /></ProtectedRoute>}
+            >
+                <Route index element={<ProtectedRoute userType="admin"><AdminHome /></ProtectedRoute>} />
+            </Route>
+            
+            
             <Route path="registerCompany" element={<ProtectedRoute userType="admin"><RegisterCompany /></ProtectedRoute>} />
             <Route path="listCompany" element={<ProtectedRoute userType="admin"><ListCompany /></ProtectedRoute>} />
             <Route path="suspendCompany/:companyID" element={<ProtectedRoute userType="admin"><SuspendCompany /></ProtectedRoute>} />
             <Route path="editCompany" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
+            
         </Routes>
     );
 }

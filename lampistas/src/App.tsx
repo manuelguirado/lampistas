@@ -7,8 +7,6 @@ import { Toaster } from 'react-hot-toast';
 import { setupAllAutoRefresh } from './utils/authUtils';
 
 
-
-
 function App() {
   useEffect(() => {
     // Configurar auto-refresh para todos los tipos de usuario logueados

@@ -11,9 +11,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import api from "../../api/intercepttors"; // ✅ Importar
 import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 function CreateBudget() {
   const navigate = useNavigate();
   const token = localStorage.getItem("companyToken");
+  interface DecodedToken {
+  companyID: number;
+  role: string;
+  email: string;
+  name?: string; // ✅ Agregar name opcional
+}
+const [budgetNumber, setBudgetNumber] = useState("");
 const [client, setClients] = useState<
   Array<{
     email: string;
@@ -26,10 +34,16 @@ const [client, setClients] = useState<
   const [incidents, setIncidents] = useState<
     Array<{ IncidentsID: number; title: string }>
   >([]);
-
+  const companyName = jwtDecode<DecodedToken>(token as string).name || "Empresa";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [incidentLoading, setIncidentLoading] = useState(false);
-  
+  function generateBudgetNumber() {
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    return `BUD-${randomNum}`;
+  }
+  useEffect(() => {
+    setBudgetNumber(generateBudgetNumber());
+  }, []);
 
   // ✅ FUNCIÓN para descargar el PDF
   const downloadPDF = (pdfBuffer: ArrayBuffer, filename: string) => {
@@ -103,8 +117,8 @@ const [client, setClients] = useState<
     mode: "onChange",
     defaultValues: {
       items: [],
-      budgetNumber: "",
-      companyName: "",
+      budgetNumber: budgetNumber,
+      companyName: companyName,
       title: "",
       date: "",
       
@@ -342,29 +356,19 @@ const [client, setClients] = useState<
           <div>
             <input
               type="text"
-              placeholder="Budget Number"
-              {...register("budgetNumber")}
-              className="border p-2 rounded w-full"
+              value={budgetNumber}
+              readOnly
+              className="border p-2 rounded w-full bg-gray-100"
             />
-            {errors.budgetNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.budgetNumber.message}
-              </p>
-            )}
           </div>
 
           <div>
             <input
               type="text"
-              placeholder="Company Name"
-              {...register("companyName")}
-              className="border p-2 rounded w-full"
+              value={companyName}
+              readOnly
+              className="border p-2 rounded w-full bg-gray-100"
             />
-            {errors.companyName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.companyName.message}
-              </p>
-            )}
           </div>
 
           <div>
