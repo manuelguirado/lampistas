@@ -8,6 +8,7 @@ import SuspendCompany from '../pages/admin/suspendCompany';
 import EditCompany from '../pages/admin/editCompany';
 import ProtectedRoute from './protectedRoute';
 import AdminHome from '../pages/admin/adminHome';
+import CreateNewsLetter from '../pages/admin/createNewsLetter';
 
 export default function AdminRoutes() {
     return (
@@ -27,6 +28,7 @@ export default function AdminRoutes() {
             <Route path="listCompany" element={<ProtectedRoute userType="admin"><ListCompany /></ProtectedRoute>} />
             <Route path="suspendCompany/:companyID" element={<ProtectedRoute userType="admin"><SuspendCompany /></ProtectedRoute>} />
             <Route path="editCompany" element={<ProtectedRoute userType="admin"><EditCompany /></ProtectedRoute>} />
+            <Route path="createNewsLetter" element={<ProtectedRoute userType="admin"><CreateNewsLetter /></ProtectedRoute>} />
             
         </Routes>
     );

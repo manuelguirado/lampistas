@@ -7,7 +7,7 @@ import {
   incidentSchema,
   type typeIncidentSchema,
 } from "../schemas/incidentSchema";
-import api from '../../../api/intercepttors'
+import api from "../../../api/intercepttors";
 import { useState } from "react";
 import {
   AlertTriangle,
@@ -19,8 +19,8 @@ import {
   Send,
   Image,
   Upload,
+  Map,
 } from "lucide-react";
-
 
 export default function CreateIncident() {
   const token = localStorage.getItem("userToken");
@@ -36,6 +36,7 @@ export default function CreateIncident() {
     resolver: zodResolver(incidentSchema),
     mode: "onChange",
   });
+
   // Función principal que maneja todo el flujo
   async function handleSubmit(data: typeIncidentSchema) {
     setIsSubmitting(true);
@@ -47,7 +48,10 @@ export default function CreateIncident() {
       // Añadir los datos de la incidencia
       formData.append("title", data.title);
       formData.append("description", data.description);
-      formData.append("location", data.location);
+      formData.append("directions[address]", data.directions.address);
+      formData.append("directions[city]", data.directions.city);
+      formData.append("directions[state]", data.directions.state);
+      formData.append("directions[zipCode]", data.directions.zipCode);
       if (data.priority) formData.append("priority", data.priority);
       formData.append("urgency", data.urgency ? "true" : "false");
 
@@ -60,14 +64,14 @@ export default function CreateIncident() {
 
       toast.loading("Creando incidencia...", { id: "incident" });
 
-      const response = await api.post('/user/createIncident', formData, {
+      const response = await api.post("/user/createIncident", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (!response.status ) {
+      if (!response.status) {
         throw new Error("Error al crear la incidencia");
       }
 
@@ -152,25 +156,111 @@ export default function CreateIncident() {
               )}
             </div>
 
-            {/* Ubicación */}
-            <div className="space-y-2">
-              <label className="block text-gray-700 text-sm font-semibold flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-red-500" />
-                Ubicación
-              </label>
-              <input
-                type="text"
-                placeholder="Ej: Planta baja, oficina 201, baño principal"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                {...incidentRegister("location")}
-                required
-              />
-              {incidentErrors.location && (
-                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                  <span>⚠️</span>
-                  {incidentErrors.location.message}
-                </p>
-              )}
+            {/* Dirección */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <Map className="w-5 h-5 text-blue-600" />
+               Ingrese la dirección del incidente
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Dirección */}
+                <div className="md:col-span-2 space-y-2">
+                  <label className="block text-gray-700 text-sm font-semibold">
+                    Dirección
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <MapPin className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Calle, número, edificio..."
+                      {...incidentRegister("directions.address")}
+                      className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                        incidentErrors.directions?.address
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                    />
+                  </div>
+                  {incidentErrors.directions?.address && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <span>⚠️</span>
+                      {incidentErrors.directions.address.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Ciudad */}
+                <div className="space-y-2">
+                  <label className="block text-gray-700 text-sm font-semibold">
+                    Ciudad
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ciudad"
+                    {...incidentRegister("directions.city")}
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                      incidentErrors.directions?.city
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  />
+                  {incidentErrors.directions?.city && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <span>⚠️</span>
+                      {incidentErrors.directions.city.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Estado */}
+                <div className="space-y-2">
+                  <label className="block text-gray-700 text-sm font-semibold">
+                    Estado/Provincia
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Estado"
+                    {...incidentRegister("directions.state")}
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                      incidentErrors.directions?.state
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  />
+                  {incidentErrors.directions?.state && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <span>⚠️</span>
+                      {incidentErrors.directions.state.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Código postal */}
+                <div className="space-y-2">
+                  <label className="block text-gray-700 text-sm font-semibold">
+                    Código Postal
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="C.P."
+                    {...incidentRegister("directions.zipCode")}
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                      incidentErrors.directions?.zipCode
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  />
+                  {incidentErrors.directions?.zipCode && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <span>⚠️</span>
+                      {incidentErrors.directions.zipCode.message}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Fila de prioridad y urgencia */}

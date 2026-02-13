@@ -38,9 +38,12 @@
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.3",
     "jest": "^30.2.0",
+    "leaflet": "^1.9.4",
     "nest.js": "^1.0.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.4",
+    "react-leaflet": "^5.0.0",
+    "react-map-gl": "^8.1.0",
     "supertest": "^7.1.4",
     "zod": "^4.1.12"
   }

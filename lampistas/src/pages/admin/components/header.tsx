@@ -48,7 +48,14 @@ export default function Header() {
                             List Companies
                         </button>
                     </Link>
-                  
+                    <Link to="/admin/createNewsLetter"> 
+                        <button
+                            className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
+                        >
+                            Newsletter
+                        </button>
+                     </Link>
+
                 </nav>
                 {/* Mobile Menu Button */}
                 <button
@@ -83,6 +90,13 @@ export default function Header() {
                                     className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
                                 >
                                     List Companies
+                                </button>
+                            </Link>
+                            <Link to="/admin/createNewsLetter">
+                                <button
+                                    className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
+                                >
+                                    Newsletter
                                 </button>
                             </Link>
                           

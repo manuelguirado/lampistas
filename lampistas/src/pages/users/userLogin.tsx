@@ -147,7 +147,11 @@ export default function UserLogin() {
                   {loginErrors.password.message}
                 </p>
               )}
+              <a href="/forgotPassword" className="text-amber-600 hover:text-amber-700 font-semibold">
+                ¿Olvidaste tu contraseña?
+              </a>
             </div>
+            
 
             {/* Botón Login */}
             <button
@@ -204,15 +208,7 @@ export default function UserLogin() {
           </div>
         </div>
         
-        {/* Footer del login */}
-        <div className="text-center mt-6">
-          <p className="text-gray-600 text-sm">
-            ¿Problemas para acceder?{" "}
-            <a href="#" className="text-amber-600 hover:text-amber-700 font-semibold">
-              Contacta soporte
-            </a>
-          </p>
-        </div>
+       
       </div>
     </div>
   );

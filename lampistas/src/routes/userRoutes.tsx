@@ -12,12 +12,14 @@ import IncidentLayout from "../pages/users/incidents/incidentLayout";
 import IncidentHistory from "../pages/users/incidents/incidentHistory";
 import UserPayments from "../pages/users/components/userPayments";
 import PaymentSuccesfull from "../pages/users/components/paymentSuccesfull";
+
 export default function UserRoutes() {
   return (
     <Routes>
       {/* Ruta pública */}
       <Route path="userRegister" element={<RegisterUser />} />
       <Route path="userLogin" element={<UserLogin />} />
+     
 
       {/* Rutas protegidas */}
       <Route
