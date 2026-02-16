@@ -152,6 +152,9 @@ export default function WorkerLogin() {
                   {loginErrors.password.message}
                 </p>
               )}
+               <a href="/forgotPassword" className="text-amber-600 hover:text-amber-700 font-semibold">
+                ¿Olvidaste tu contraseña?
+              </a>
             </div>
 
             {/* Botón Login */}

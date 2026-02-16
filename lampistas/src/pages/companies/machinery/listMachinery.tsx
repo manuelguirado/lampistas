@@ -20,10 +20,19 @@ export default function ListMachinery() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const offset = (currentPage - 1) * itemsPerPage;
- 
+ const token = localStorage.getItem("companyToken");
+  useEffect(() => {
+    if (!token) {
+      navigate("/company/login");
+    }
+  }, [navigate, token]);
   function eliminateMachinery(machineryID: number) {
     api
-      .delete(`/company/eliminateMachinery/${machineryID}`)
+      .delete(`/company/eliminateMachinery/${machineryID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then(() => {
         toast.success('Machinery eliminated successfully!');
         // Refresh the machinery list after deletion
@@ -40,14 +49,18 @@ export default function ListMachinery() {
 
     useEffect(() => {
       api
-        .get(`/company/listMachinery?limit=${itemsPerPage}&offset=${offset}`)
+        .get(`/company/listMachinery?limit=${itemsPerPage}&offset=${offset}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           setMachine(response.data.machinery || []);
         })
         .catch((error) => {
           toast.error('Error fetching machinery.' + (error as Error).message);
         });
-    }, [currentPage, offset]);
+    }, [currentPage, offset, token]);
           
         
     

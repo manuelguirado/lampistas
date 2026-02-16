@@ -44,7 +44,7 @@ const [client, setClients] = useState<
   useEffect(() => {
     setBudgetNumber(generateBudgetNumber());
   }, []);
-
+console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar generación de número de presupuesto
   // ✅ FUNCIÓN para descargar el PDF
   const downloadPDF = (pdfBuffer: ArrayBuffer, filename: string) => {
     const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
@@ -128,7 +128,6 @@ const [client, setClients] = useState<
   });
 
 
-  // ✅ useWatch para reactividad en tiempo real
   const watchedItems = useWatch({ 
     control, 
     name: "items",
@@ -188,8 +187,9 @@ const [client, setClients] = useState<
     setIsSubmitting(true);
     
     try {
+
       const requestData = {
-        budgetNumber: data.budgetNumber,
+        budgetNumber:data.budgetNumber,
         title: data.title,
         userID: data.clientID,
       
@@ -206,6 +206,7 @@ const [client, setClients] = useState<
         clientAddress: selectedClientData.address || '',
       };
       
+      console.log("Request data:", requestData); // ✅ Log para verificar datos antes de enviar
 
       
       const response = await api.post('/company/createBudget', requestData, {
@@ -357,6 +358,7 @@ const [client, setClients] = useState<
             <input
               type="text"
               value={budgetNumber}
+              {...register("budgetNumber")}
               readOnly
               className="border p-2 rounded w-full bg-gray-100"
             />
@@ -366,6 +368,7 @@ const [client, setClients] = useState<
             <input
               type="text"
               value={companyName}
+              {...register("companyName")}
               readOnly
               className="border p-2 rounded w-full bg-gray-100"
             />
