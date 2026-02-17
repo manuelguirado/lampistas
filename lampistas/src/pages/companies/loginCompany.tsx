@@ -8,9 +8,11 @@ import { useState } from "react";
 import { Eye, EyeOff, Building2, Mail, Lock } from "lucide-react";
 import api from "../../api/intercepttors";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function LoginCompany() {
   const navigate = useNavigate();
+  const { t } = useTranslation("companies.loginCompany");
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => {
@@ -42,12 +44,12 @@ export default function LoginCompany() {
       .then((response) => {
         const responseData = response.data;
         if (responseData.token) {
-          toast.success("¡Inicio de sesión exitoso!");
+          toast.success(t("loginExitoso"));
           localStorage.setItem("companyToken", responseData.token);
         }
       })
       .catch((error) => {
-        toast.error("Error en login: " + (error as Error).message);
+        toast.error(t("errorLogin", { message: (error as Error).message }));
       });
   }
   function handleSubmitEmail(data: LoginSchema) {
@@ -56,14 +58,14 @@ export default function LoginCompany() {
       .then((response) => {
         const responseData = response.data;
         if (responseData.token) {
-          toast.success("¡Inicio de sesión exitoso!");
+          toast.success(t("loginExitoso"));
           navigate("/company/companyDashboard");
           localStorage.setItem("companyToken", responseData.token);
           localStorage.setItem("userType", "COMPANY");
         }
       })
       .catch((error) => {
-        toast.error("Error en login: " + (error as Error).message);
+        toast.error(t("errorLogin", { message: (error as Error).message }));
       });
   }
 
@@ -78,9 +80,9 @@ export default function LoginCompany() {
             <Building2 className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2">
-            Portal Empresas
+            {t("titulo")}
           </h2>
-          <p className="text-gray-600">Accede a tu panel de control</p>
+          <p className="text-gray-600">{t("subtitulo")}</p>
         </div>
 
         {/* Formulario principal */}
@@ -93,7 +95,7 @@ export default function LoginCompany() {
             {/* Email Input */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Correo Electrónico
+                {t("correoLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -103,7 +105,7 @@ export default function LoginCompany() {
                   type="email"
                   id="email"
                   {...registerEmail("email")}
-                  placeholder="empresa@ejemplo.com"
+                  placeholder={t("correoPlaceholder")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
               </div>
@@ -118,7 +120,7 @@ export default function LoginCompany() {
             {/* Password Input */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Contraseña
+                {t("contrasenaLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -128,7 +130,7 @@ export default function LoginCompany() {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   {...registerEmail("password")}
-                  placeholder="Tu contraseña"
+                  placeholder={t("contrasenaPlaceholder")}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
 
@@ -154,7 +156,7 @@ export default function LoginCompany() {
                 href="/forgotPassword"
                 className="text-amber-600 hover:text-amber-700 font-semibold"
               >
-                ¿Olvidaste tu contraseña?
+                {t("olvidasteContrasena")}
               </a>
             </div>
 
@@ -163,14 +165,14 @@ export default function LoginCompany() {
               type="submit"
               className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Acceder con Email
+              {t("accederConEmail")}
             </button>
           </form>
 
           {/* Separador */}
           <div className="flex items-center my-8">
             <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm font-medium">O</span>
+            <span className="px-4 text-gray-500 text-sm font-medium">{t("o")}</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
@@ -183,7 +185,7 @@ export default function LoginCompany() {
               <div className="flex items-center justify-center gap-2 mb-4">
                 <Building2 className="w-5 h-5 text-amber-600" />
                 <h3 className="text-lg font-semibold text-gray-800">
-                  Código de Empresa
+                  {t("codigoEmpresaTitulo")}
                 </h3>
               </div>
             </div>
@@ -197,7 +199,7 @@ export default function LoginCompany() {
                   type="text"
                   id="companyCode"
                   {...registerCode("code")}
-                  placeholder="Código de empresa"
+                  placeholder={t("codigoEmpresaPlaceholder")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
               </div>
@@ -213,7 +215,7 @@ export default function LoginCompany() {
               type="submit"
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Acceder con Código
+              {t("accederConCodigo")}
             </button>
           </form>
         </div>
@@ -221,12 +223,12 @@ export default function LoginCompany() {
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
-            ¿Problemas para acceder?{" "}
+            {t("problemasAcceso")}{" "}
             <a
               href="#"
               className="text-blue-600 hover:text-blue-700 font-semibold"
             >
-              Contacta soporte
+              {t("contactaSoporte")}
             </a>
           </p>
         </div>

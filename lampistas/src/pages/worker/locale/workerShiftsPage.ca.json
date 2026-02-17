@@ -1,0 +1,10 @@
+{
+  "fetchError": "Error en carregar guàrdies: {{message}}",
+  "fallbackShift": "Guàrdia",
+  "loading": "Carregant guàrdies...",
+  "title": "Les meves guàrdies",
+  "morning": "Matí",
+  "afternoon": "Tarda",
+  "night": "Nit",
+  "fullDay": "Dia complet"
+}

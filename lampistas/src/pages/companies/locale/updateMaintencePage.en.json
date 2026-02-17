@@ -1,0 +1,13 @@
+{
+  "title": "Update maintenance",
+  "subtitle": "Register latest machinery inspection",
+  "selectMachinery": "Select machinery",
+  "selectMachineryPh": "-- Select machinery --",
+  "lastInspection": "Last inspection date",
+  "submit": "Update maintenance",
+  "important": "Important:",
+  "importantDesc": "This date will be used to calculate the next scheduled maintenance and generate automatic alerts.",
+  "listError": "Error fetching machinery list: {{message}}",
+  "success": "Maintenance updated successfully!",
+  "updateError": "Error updating maintenance: {{message}}"
+}

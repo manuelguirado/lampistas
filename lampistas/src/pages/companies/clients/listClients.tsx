@@ -5,8 +5,10 @@ import type { Contract } from '../../../types/contract';
 import type { Client } from '../../../types/clientType';
 import toast from 'react-hot-toast';
 import api from '../../../api/intercepttors';
+import { useTranslation } from "react-i18next";
 
 export default function ListClients() {
+    const { t, i18n } = useTranslation("companies.listClientsPage");
     const [clients, setClients] = useState<Client[]>([]);
     const [selectedClientContracts, setSelectedClientContracts] = useState<Contract[] | null>(null);
     const [selectedClientName, setSelectedClientName] = useState<string>('');
@@ -30,14 +32,14 @@ export default function ListClients() {
                 },
             }).then((res) => res.data).then((data) => {
                 if (data.code) {
-                    toast.success(`Generated code: ${data.code}`);
+                    toast.success(t("codeGenerated", { code: data.code }));
                     window.navigator.clipboard.writeText(data.code);
                 } else {
-                    toast.error('Error generating code.');
+                    toast.error(t("codeError"));
                 }
             });
         } catch (error) {
-            toast.error('Error generating code.' + (error as Error).message);
+            toast.error(t("codeError") + " " + (error as Error).message);
         }
     }
     function fetchClients() {
@@ -54,7 +56,7 @@ export default function ListClients() {
             setTotalClient(data.total);
         })
         .catch((error) => {
-            toast.error('Error fetching clients.' + (error as Error).message);
+            toast.error(t("fetchClientsError", { message: (error as Error).message }));
         });
     }
 
@@ -75,29 +77,29 @@ export default function ListClients() {
                 setShowContractsModal(true);
             }
         } catch (error) {
-            toast.error('Error fetching client contracts.' + (error as Error).message);
+            toast.error(t("fetchContractsError", { message: (error as Error).message }));
         }
     }
 
     function formatDate(dateString: string | null) {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleDateString('es-ES');
+        if (!dateString) return t("na");
+        return new Date(dateString).toLocaleDateString(i18n.language === "ca" ? "ca-ES" : i18n.language === "en" ? "en-US" : "es-ES");
     }
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">Lista de Clientes</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
             
             <div className="w-full max-w-7xl overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-300 shadow-md">
                     <thead>
                         <tr className="bg-amber-200">
-                            <th className="py-2 px-4 border border-gray-300 text-left">ID Cliente</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Nombre</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Email</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Tipo de Contrato</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Acciones</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">{t("thId")}</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">{t("thNombre")}</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">{t("thEmail")}</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">{t("thContrato")}</th>
+                            <th className="py-2 px-4 border border-gray-300 text-left">{t("thAcciones")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,22 +114,22 @@ export default function ListClients() {
                                             ? 'bg-blue-100 text-blue-800' 
                                             : 'bg-green-100 text-green-800'
                                     }`}>
-                                        {client.contract === ' CONTRACT' ? 'Contract' : 'Free Choice'}
+                                        {client.contract === ' CONTRACT' ? t("contract") : t("freeChoice")}
                                     </span>
                                 </td>
                                 <td className="py-2 px-4 border border-gray-300">
                                     <button
                                         onClick={() => viewClientContracts(client.userID, client.name)}
                                         className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 px-3 py-1 rounded hover:bg-blue-50"
-                                        title="View Contracts"
+                                        title={t("viewContracts")}
                                     >
                                         <Eye className="h-4 w-4" />
-                                        <span className="text-sm">View Contracts</span>
+                                        <span className="text-sm">{t("viewContracts")}</span>
                                     
                                     </button>
                                         <button 
                                             className="p-2 hover:bg-amber-200 rounded transition-colors"
-                                            title="Generate code"
+                                            title={t("generateCode")}
                                             onClick={() => handleGenerateCode(client.userID)}
                                         >
                                             <Code size={18} className="text-purple-600" />
@@ -144,15 +146,15 @@ export default function ListClients() {
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
                     >
-                        Previous
+                        {t("previous")}
                     </button>
-                    <span className="font-medium">Page {currentPage} of {Math.ceil(totalClient / pageSize)}</span>
+                    <span className="font-medium">{t("page", { current: currentPage, total: Math.ceil(totalClient / pageSize) })}</span>
                     <button
                         className="bg-amber-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
                         onClick={() => setCurrentPage((prev) => prev + 1)}
                         disabled={currentPage * pageSize >= totalClient}
                     >
-                        Next
+                        {t("next")}
                     </button>
                 </div>
             </div>
@@ -162,7 +164,7 @@ export default function ListClients() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto">
                         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-                            <h3 className="text-xl font-bold">Contracts for {selectedClientName}</h3>
+                            <h3 className="text-xl font-bold">{t("contractsFor", { name: selectedClientName })}</h3>
                             <button
                                 onClick={() => {
                                     setShowContractsModal(false);
@@ -176,15 +178,15 @@ export default function ListClients() {
                         
                         <div className="p-6">
                             {selectedClientContracts.length === 0 ? (
-                                <p className="text-center text-gray-500 py-8">No contracts found</p>
+                                <p className="text-center text-gray-500 py-8">{t("noContracts")}</p>
                             ) : (
                                 <table className="min-w-full">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contract Type</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t("contractType")}</th>
+                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t("startDate")}</th>
+                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t("endDate")}</th>
+                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t("status")}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200">
@@ -196,7 +198,7 @@ export default function ListClients() {
                                                             ? 'bg-blue-100 text-blue-800'
                                                             : 'bg-green-100 text-green-800'
                                                     }`}>
-                                                        {contract.contractType === " CONTRACT" ? 'Contract' : 'Free Choice'}
+                                                        {contract.contractType === " CONTRACT" ? t("contract") : t("freeChoice")}
                                                     </span>
                                                 </td>
                                                 <td className="px-4 py-3 text-sm text-gray-900">
@@ -211,7 +213,7 @@ export default function ListClients() {
                                                             ? 'bg-green-100 text-green-800' 
                                                             : 'bg-red-100 text-red-800'
                                                     }`}>
-                                                        {contract.isActive ? 'Active' : 'Inactive'}
+                                                        {contract.isActive ? t("active") : t("inactive")}
                                                     </span>
                                                 </td>
                                             </tr>

@@ -1,0 +1,18 @@
+{
+  "title": "Edit worker",
+  "subtitle": "Update employee information",
+  "workerId": "Worker ID",
+  "workerIdPlaceholder": "Enter worker ID",
+  "fullNameOptional": "Full name",
+  "emailOptional": "Email",
+  "passwordOptional": "New password",
+  "optional": "(Optional)",
+  "namePlaceholder": "New name (leave empty if no change)",
+  "emailPlaceholder": "New email (leave empty if no change)",
+  "passwordPlaceholder": "New password (leave empty if no change)",
+  "submit": "Update worker",
+  "important": "Important:",
+  "importantDesc": "Only fields with values will be updated. Empty fields will remain unchanged.",
+  "success": "Worker updated successfully!",
+  "error": "Error updating worker: {{message}}"
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Editar trabajador",
+  "subtitle": "Actualizar informacion del empleado",
+  "workerIdLabel": "ID del trabajador",
+  "workerIdPlaceholder": "Ingrese el ID del trabajador",
+  "fullNameLabel": "Nombre completo",
+  "fullNamePlaceholder": "Nuevo nombre (dejar vacio si no desea cambiarlo)",
+  "emailLabel": "Correo electronico",
+  "emailPlaceholder": "Nuevo email (dejar vacio si no desea cambiarlo)",
+  "passwordLabel": "Nueva contrasena",
+  "passwordPlaceholder": "Nueva contrasena (dejar vacio si no desea cambiarla)",
+  "optional": "(Opcional)",
+  "submit": "Actualizar trabajador",
+  "infoTitle": "Importante:",
+  "infoText": "Solo se actualizaran los campos que tengan un valor. Los campos vacios se mantendran sin cambios.",
+  "toast": {
+    "success": "Trabajador actualizado con exito!",
+    "error": "Error al actualizar trabajador: {{message}}"
+  }
+}

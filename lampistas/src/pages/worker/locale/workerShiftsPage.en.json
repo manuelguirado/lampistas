@@ -1,0 +1,10 @@
+{
+  "fetchError": "Error fetching shifts: {{message}}",
+  "fallbackShift": "Shift",
+  "loading": "Loading shifts...",
+  "title": "My shifts",
+  "morning": "Morning",
+  "afternoon": "Afternoon",
+  "night": "Night",
+  "fullDay": "Full day"
+}

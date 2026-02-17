@@ -4,6 +4,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import api from "../../../api/intercepttors";
 import { loadStripe } from '@stripe/stripe-js';
 import  UserCheckoutForm from "./userChekcout";
+import { useTranslation } from "react-i18next";
 
 
 type UserPaymentsProps = {
@@ -13,6 +14,7 @@ type UserPaymentsProps = {
 };
 
 export default function UserPayments({ userID, ammount , companyID }: UserPaymentsProps) {
+    const { t } = useTranslation("users.paymentsPage");
     const [stripePromise, setStripePromise] = useState<any>(null);
     const [clientSecret, setClientSecret] = useState<string>("");
     const [loading, setLoading] = useState(false);
@@ -42,7 +44,7 @@ export default function UserPayments({ userID, ammount , companyID }: UserPaymen
             setClientSecret(subscription.clientSecret);
             setFormSubmitted(true);
         } catch (error) {
-            alert('Error creando la suscripción' + (error as Error).message);
+            alert(`${t("subscriptionError")}: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }
@@ -54,11 +56,11 @@ export default function UserPayments({ userID, ammount , companyID }: UserPaymen
     };
     console.log("clientSecret in UserPayments:", clientSecret);
 
-    if (loading) return <div>Cargando...</div>;
+    if (loading) return <div>{t("loading")}</div>;
 
     return (
         <div style={{ maxWidth: 400, margin: '0 auto', padding: '20px' }}>
-            <h1 style={{ textAlign: 'center', color: '#1e40af', marginBottom: 24 }}>Realiza el pago rellenando los datos de la tarjeta</h1>
+            <h1 style={{ textAlign: 'center', color: '#1e40af', marginBottom: 24 }}>{t("title")}</h1>
            
             {/* Botón para crear el PaymentIntent y mostrar el formulario de Stripe */}
             {!formSubmitted && (
@@ -78,14 +80,14 @@ export default function UserPayments({ userID, ammount , companyID }: UserPaymen
                     }}
                     onClick={handleSubmit}
                 >
-                    Pagar ahora
+                    {t("payNow")}
                 </button>
             )}
             {/* Mostrar el formulario de Stripe solo si ya tenemos clientSecret y formSubmitted */}
             {stripePromise && clientSecret && formSubmitted && (
                 <div style={{ marginTop: 16 }}>
-                    <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12, textAlign: 'center', color: '#2563eb' }}>Introduce los datos de tu tarjeta</h2>
-                    <p style={{ textAlign: 'center', color: '#64748b', marginBottom: 24 }}>Completa el pago para activar tu suscripción.</p>
+                    <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12, textAlign: 'center', color: '#2563eb' }}>{t("cardTitle")}</h2>
+                    <p style={{ textAlign: 'center', color: '#64748b', marginBottom: 24 }}>{t("cardSubtitle")}</p>
                     <Elements stripe={stripePromise} options={options}>
                         <UserCheckoutForm companyID={companyID} ammount={ammount} userID={userID} />
                     </Elements>

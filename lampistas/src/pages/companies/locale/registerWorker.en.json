@@ -1,0 +1,18 @@
+{
+  "title": "New worker",
+  "subtitle": "Add a team member",
+  "fullNameLabel": "Full name",
+  "fullNamePlaceholder": "Worker name",
+  "emailLabel": "Email",
+  "emailPlaceholder": "worker@email.com",
+  "passwordLabel": "Temporary password",
+  "passwordPlaceholder": "Temporary password",
+  "passwordHint": "The worker can change this password after the first login",
+  "submit": "Register worker",
+  "infoTitle": "Important information:",
+  "infoText": "A worker code will be generated automatically and sent to the new employee's email.",
+  "toast": {
+    "success": "Worker registered successfully!",
+    "error": "Error registering worker: {{message}}"
+  }
+}

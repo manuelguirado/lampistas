@@ -1,0 +1,7 @@
+{
+  "title": "Crear cuenta de pagos",
+  "email": "Email",
+  "emailPh": "Ingrese su email de empresa para vincular",
+  "submit": "Crear cuenta",
+  "error": "Error creando cuenta: {{message}}"
+}

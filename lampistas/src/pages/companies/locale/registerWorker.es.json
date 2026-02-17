@@ -1,0 +1,18 @@
+{
+  "title": "Nuevo trabajador",
+  "subtitle": "Agregar miembro al equipo",
+  "fullNameLabel": "Nombre completo",
+  "fullNamePlaceholder": "Nombre del trabajador",
+  "emailLabel": "Correo electronico",
+  "emailPlaceholder": "trabajador@email.com",
+  "passwordLabel": "Contrasena temporal",
+  "passwordPlaceholder": "Contrasena temporal",
+  "passwordHint": "El trabajador podra cambiar esta contrasena despues del primer acceso",
+  "submit": "Registrar trabajador",
+  "infoTitle": "Informacion importante:",
+  "infoText": "Se generara automaticamente un codigo de trabajador que sera enviado al email del nuevo empleado.",
+  "toast": {
+    "success": "Trabajador registrado con exito!",
+    "error": "Error al registrar trabajador: {{message}}"
+  }
+}

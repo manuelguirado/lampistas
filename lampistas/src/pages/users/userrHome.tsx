@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { X, ChevronRight, ChevronLeft } from "lucide-react";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import api from "../../api/intercepttors";
 import axios from "axios";
 
 export default function WorkerHome() {
+  const { t } = useTranslation("users.homePage");
   const [myIncidents, setMyIncidents] = useState<IncidentType[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -90,12 +92,13 @@ export default function WorkerHome() {
       .catch((error) => {
         console.error("Error fetching incidents:", error);
         toast.error(
-          "Error fetching incidents: " +
-            (error?.response?.data?.message || error.message)
+          t("fetchIncidentsError", {
+            message: error?.response?.data?.message || error.message,
+          })
         );
         setIsLoading(false);
       });
-  }, []);
+  }, [t]);
 
   // Resetear página cuando no hay suficientes elementos
   useEffect(() => {
@@ -130,8 +133,9 @@ export default function WorkerHome() {
         // Solo mostrar error si no es un 404 o similar
         if (error?.response?.status !== 404) {
           toast.error(
-            "Error al cargar archivos: " +
-              (error?.response?.data?.message || error.message)
+            t("fetchFilesError", {
+              message: error?.response?.data?.message || error.message,
+            })
           );
         }
       });
@@ -164,10 +168,10 @@ export default function WorkerHome() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      toast.success("Archivo descargado exitosamente");
+      toast.success(t("downloadSuccess"));
     } catch (error) {
       console.error("Error downloading file:", error);
-      toast.error("Error al descargar el archivo");
+      toast.error(t("downloadError"));
       // Fallback: abrir en nueva ventana
       window.open(file.signedUrl, "_blank");
     }
@@ -177,12 +181,12 @@ export default function WorkerHome() {
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
       <div className="w-full max-w-7xl mb-4 flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Mis Incidencias</h2>
+        <h2 className="text-2xl font-bold">{t("title")}</h2>
 
         {/* Selector de elementos por página */}
         <div className="flex items-center space-x-2">
           <label htmlFor="itemsPerPage" className="text-sm text-gray-600">
-            Mostrar:
+            {t("show")}
           </label>
           <select
             id="itemsPerPage"
@@ -196,7 +200,7 @@ export default function WorkerHome() {
             <option value={20}>20</option>
             <option value={50}>50</option>
           </select>
-          <span className="text-sm text-gray-600">por página</span>
+          <span className="text-sm text-gray-600">{t("perPage")}</span>
         </div>
       </div>
 
@@ -204,7 +208,7 @@ export default function WorkerHome() {
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
-            <span className="ml-2 text-gray-600">Cargando incidencias...</span>
+            <span className="ml-2 text-gray-600">{t("loading")}</span>
           </div>
         ) : (
           <table className="min-w-full bg-white border border-gray-300 shadow-md">
@@ -214,19 +218,19 @@ export default function WorkerHome() {
                   ID
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Título
+                  {t("incidentTitle")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Fecha de Reporte
+                  {t("reportDate")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Estado
+                  {t("status")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Prioridad
+                  {t("priority")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Ver incidencia
+                  {t("viewIncident")}
                 </th>
               </tr>
             </thead>
@@ -280,7 +284,7 @@ export default function WorkerHome() {
                         }
                         className="text-blue-600 hover:underline"
                       >
-                        Ver
+                        {t("view")}
                       </button>
                     </td>
                   </tr>
@@ -291,7 +295,7 @@ export default function WorkerHome() {
                     colSpan={6}
                     className="py-8 px-4 text-center text-gray-500"
                   >
-                    No se encontraron incidencias
+                    {t("noIncidents")}
                   </td>
                 </tr>
               )}
@@ -303,9 +307,11 @@ export default function WorkerHome() {
         {!isLoading && myIncidents.length > itemsPerPage && (
           <div className="flex items-center justify-between mt-4 px-4 py-3 bg-white border border-gray-300 rounded-b-lg">
             <div className="flex items-center text-sm text-gray-500">
-              Mostrando {startIndex + 1} a{" "}
-              {Math.min(endIndex, myIncidents.length)} de {myIncidents.length}{" "}
-              incidencias
+              {t("showing", {
+                from: startIndex + 1,
+                to: Math.min(endIndex, myIncidents.length),
+                total: myIncidents.length,
+              })}
             </div>
 
             <div className="flex items-center space-x-2">
@@ -320,7 +326,7 @@ export default function WorkerHome() {
                 } transition-colors`}
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
-                Anterior
+                {t("previous")}
               </button>
 
               {/* Números de página */}
@@ -377,7 +383,7 @@ export default function WorkerHome() {
                     : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
                 } transition-colors`}
               >
-                Siguiente
+                {t("next")}
                 <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
@@ -390,7 +396,7 @@ export default function WorkerHome() {
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-gray-800">
-                Detalles de la Incidencia
+                {t("modalTitle")}
               </h3>
               <button
                 onClick={handleCloseModal}
@@ -402,15 +408,15 @@ export default function WorkerHome() {
 
             {/* Worker Info */}
             <div className="mb-4 p-3 bg-amber-50 rounded">
-              <p className="text-sm text-gray-600">Incidencia:</p>
+              <p className="text-sm text-gray-600">{t("incident")}</p>
               <p className="font-semibold text-gray-800">
                 {selectedIncident.name}
               </p>
-              <p className="text-sm text-gray-600 mt-2">Descripción:</p>
+              <p className="text-sm text-gray-600 mt-2">{t("description")}</p>
               <p className="font-semibold text-gray-800">
                 {selectedIncident.description}
               </p>
-              <p className="text-sm text-gray-600 mt-2">Fecha de reporte:</p>
+              <p className="text-sm text-gray-600 mt-2">{t("reportDateLabel")}</p>
               <p className="font-semibold text-gray-800">
                 {new Date(selectedIncident.dateReported).toLocaleDateString(
                   "es-ES",
@@ -425,12 +431,12 @@ export default function WorkerHome() {
                 )}
               </p>
               <div className="mt-4">
-                <h4 className="font-semibold text-gray-800 mb-2">Archivos:</h4>
+                <h4 className="font-semibold text-gray-800 mb-2">{t("files")}</h4>
                 {selectedIncident.files && selectedIncident.files.length > 0 ? (
                   <div className="space-y-3 max-h-60 overflow-y-auto">
                     {selectedIncident.files.map((file, index) => {
                       const fileName =
-                        file.key.split("/").pop() || `Archivo ${index + 1}`;
+                        file.key.split("/").pop() || t("file", { index: index + 1 });
                       const fileExtension = fileName
                         .split(".")
                         .pop()
@@ -469,7 +475,7 @@ export default function WorkerHome() {
                                 className="max-w-full h-32 object-cover rounded border"
                                 onError={(e) => {
                                   toast.error(
-                                    "Error loading image:" + file.signedUrl
+                                    `${t("imageLoadError")}: ${file.signedUrl}`
                                   );
                                   e.currentTarget.style.display = "none";
                                   // Mostrar mensaje de error
@@ -478,15 +484,14 @@ export default function WorkerHome() {
                                   errorDiv.className =
                                     "bg-red-100 p-2 rounded text-center";
                                   errorDiv.innerHTML =
-                                    '<span class="text-red-600 text-sm">⚠️ No se pudo cargar la imagen</span>';
+                                    `<span class="text-red-600 text-sm">⚠️ ${t("imageLoadError")}</span>`;
                                   e.currentTarget.parentNode?.appendChild(
                                     errorDiv
                                   );
                                 }}
                                 onLoad={() => {
                                   toast.success(
-                                    "Image loaded successfully:" +
-                                      file.signedUrl
+                                    `${t("imageLoaded")}: ${file.signedUrl}`
                                   );
                                 }}
                               />
@@ -498,7 +503,7 @@ export default function WorkerHome() {
                             <div className="mb-2">
                               <div className="bg-red-100 p-2 rounded text-center">
                                 <span className="text-red-600 font-medium">
-                                  📄 PDF
+                                  📄 {t("pdf")}
                                 </span>
                               </div>
                             </div>
@@ -512,14 +517,14 @@ export default function WorkerHome() {
                                 rel="noopener noreferrer"
                                 className="text-blue-600 hover:bg-blue-100 text-sm flex-1 text-center py-1 px-2 bg-blue-50 rounded border-none cursor-pointer"
                               >
-                                🔍 Ver
+                                🔍 {t("open")}
                               </a>
                             )}
                             <button
                               onClick={() => downloadFile(file, fileName)}
                               className="text-green-600 hover:bg-green-100 text-sm flex-1 text-center py-1 px-2 bg-green-50 rounded border-none cursor-pointer"
                             >
-                              💾 Descargar
+                              💾 {t("download")}
                             </button>
                           </div>
                         </div>
@@ -527,7 +532,7 @@ export default function WorkerHome() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-gray-600">No hay archivos adjuntos.</p>
+                  <p className="text-gray-600">{t("noAttachments")}</p>
                 )}
               </div>
             </div>

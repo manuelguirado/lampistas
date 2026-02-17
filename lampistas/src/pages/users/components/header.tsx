@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { jwtDecode } from 'jwt-decode';
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface DecodedToken {
     userID: number;
@@ -15,6 +16,7 @@ interface DecodedToken {
 }
 
 export default function Header() {
+    const { t } = useTranslation("users.header");
     const [isOpen, setIsOpen] = useState(false);
     const [userName, setUserName] = useState<string>('');
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -32,17 +34,17 @@ export default function Header() {
                 
               
             } catch (error) {
-                toast.error('Error decoding token: ' + (error as Error).message);
+                toast.error(t('decodeError', { message: (error as Error).message }));
             }
         }
-    }, [token]);
+    }, [token, t]);
     
     return (
         <header className="w-full bg-amber-100 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
             <div className="flex items-center justify-between p-4 gap-4">
                 <Link to="/">
                     <h1 className="text-xl md:text-2xl text-amber-800 font-bold flex-shrink-0">
-                       {userName || "Cargando..."}
+                              {userName || t("loading")}
                     </h1>
                 </Link>
                 
@@ -50,17 +52,17 @@ export default function Header() {
                 <nav className="hidden md:flex gap-2 flex-wrap justify-end flex-1 overflow-x-auto md:overflow-visible">
                     <Link to="/user/myMachinery">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Mi maquinaria
+                            {t("myMachinery")}
                         </button>
                     </Link>
                     <Link to="/user/MisInciendencias">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                           Mis incidencias
+                           {t("myIncidents")}
                         </button>
                     </Link>
                     <Link to="/user/myBudgets">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Mis presupuestos
+                            {t("myBudgets")}
                         </button>
                     </Link>
                 </nav>
@@ -86,13 +88,13 @@ export default function Header() {
                     >
                         <nav className="flex flex-col p-4 space-y-2">
                             <Link to="/user/myMachinery" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                                Mi maquinaria
+                                {t("myMachinery")}
                             </Link>
                             <Link to="/user/createIncident" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                                Crear incidencias
+                                {t("createIncidents")}
                             </Link>
                             <Link to="/user/myBudgets" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                                Mis presupuestos
+                                {t("myBudgets")}
                             </Link>
                         </nav>
                     </motion.div>

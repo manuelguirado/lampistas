@@ -4,7 +4,9 @@ import Header from "./components/header";
 
 import Editor from "./components/Editor";
 import api from "../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 export default function CreateNewsLetter() {
+    const { t } = useTranslation("admin.createNewsLetterPage");
     const quillRef = useRef<Quill | null>(null);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -14,22 +16,21 @@ export default function CreateNewsLetter() {
 
         const editorText = quillRef.current?.getText().trim() ?? "";
         if (!title.trim() || !editorText) {
-            alert("Completa el titulo y el contenido.");
+            alert(t("validation"));
             return;
         }
 
         api
             .post("/mailing/sendNewsletter", { title, content })
             .then(response => {
-                alert("Newsletter creada con exito");
+                alert(t("success"));
                 setTitle("");
                 setContent("");
                 quillRef.current?.setText("");
             })
             .catch(error => {
                 alert(
-                    "Error al crear la newsletter: " +
-                        (error.response?.data?.message || error.message),
+                    t("error", { message: (error.response?.data?.message || error.message) }),
                 );
             });
     }
@@ -37,11 +38,11 @@ export default function CreateNewsLetter() {
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="container mx-auto px-4 py-8 flex-1">
-                <h1 className="text-3xl font-bold mb-6">Crear Newsletter</h1>
+                <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                            Título
+                            {t("labelTitle")}
                         </label>
                         <input
                             id="title"
@@ -53,7 +54,7 @@ export default function CreateNewsLetter() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Contenido</label>
+                        <label className="block text-sm font-medium text-gray-700">{t("labelContent")}</label>
                         <Editor
                             ref={quillRef}
                             onTextChange={() => {
@@ -66,7 +67,7 @@ export default function CreateNewsLetter() {
                         type="submit"
                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Crear Actualización 
+                        {t("submit")}
                     </button>
                 </form>
             </main>

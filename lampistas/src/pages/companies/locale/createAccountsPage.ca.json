@@ -1,0 +1,7 @@
+{
+  "title": "Crear compte de pagaments",
+  "email": "Correu",
+  "emailPh": "Introdueix el teu correu d'empresa per vincular",
+  "submit": "Crear compte",
+  "error": "Error creant compte: {{message}}"
+}

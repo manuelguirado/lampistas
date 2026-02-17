@@ -21,8 +21,10 @@ import {
   Upload,
   Map,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function CreateIncident() {
+  const { t } = useTranslation("users.createIncidentPage");
   const token = localStorage.getItem("userToken");
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileList | null>(null);
@@ -62,7 +64,7 @@ export default function CreateIncident() {
         });
       }
 
-      toast.loading("Creando incidencia...", { id: "incident" });
+      toast.loading(t("creating"), { id: "incident" });
 
       const response = await api.post("/user/createIncident", formData, {
         headers: {
@@ -72,13 +74,13 @@ export default function CreateIncident() {
       });
 
       if (!response.status) {
-        throw new Error("Error al crear la incidencia");
+        throw new Error(t("createError"));
       }
 
-      toast.success("Incidencia creada correctamente!", { id: "incident" });
+      toast.success(t("createSuccess"), { id: "incident" });
       navigate("/user/userDashboard");
     } catch (error) {
-      toast.error("Error: " + (error as Error).message);
+      toast.error(`${t("errorPrefix")}: ${(error as Error).message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -101,10 +103,10 @@ export default function CreateIncident() {
             <AlertTriangle className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2">
-            Reportar Incidencia
+            {t("title")}
           </h2>
           <p className="text-gray-600">
-            Describe el problema que necesita atención
+            {t("subtitle")}
           </p>
         </div>
 
@@ -116,13 +118,13 @@ export default function CreateIncident() {
           >
             {/* Título */}
             <div className="space-y-2">
-              <label className="block text-gray-700 text-sm font-semibold flex items-center gap-2">
+              <label className="text-gray-700 text-sm font-semibold flex items-center gap-2">
                 <FileText className="w-4 h-4 text-red-500" />
-                Título de la Incidencia
+                {t("incidentTitle")}
               </label>
               <input
                 type="text"
-                placeholder="Ej: Fuga de agua en tubería principal"
+                placeholder={t("incidentTitlePh")}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 {...incidentRegister("title")}
                 required
@@ -137,12 +139,12 @@ export default function CreateIncident() {
 
             {/* Descripción */}
             <div className="space-y-2">
-              <label className="block text-gray-700 text-sm font-semibold flex items-center gap-2">
+              <label className="text-gray-700 text-sm font-semibold flex items-center gap-2">
                 <FileText className="w-4 h-4 text-red-500" />
-                Descripción Detallada
+                {t("description")}
               </label>
               <textarea
-                placeholder="Describe el problema con el mayor detalle posible..."
+                placeholder={t("descriptionPh")}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 bg-gray-50 focus:bg-white resize-none"
                 rows={4}
                 {...incidentRegister("description")}
@@ -160,14 +162,14 @@ export default function CreateIncident() {
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <Map className="w-5 h-5 text-blue-600" />
-               Ingrese la dirección del incidente
+               {t("addressSection")}
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Dirección */}
                 <div className="md:col-span-2 space-y-2">
                   <label className="block text-gray-700 text-sm font-semibold">
-                    Dirección
+                    {t("address")}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -175,7 +177,7 @@ export default function CreateIncident() {
                     </div>
                     <input
                       type="text"
-                      placeholder="Calle, número, edificio..."
+                      placeholder={t("addressPh")}
                       {...incidentRegister("directions.address")}
                       className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                         incidentErrors.directions?.address
@@ -195,11 +197,11 @@ export default function CreateIncident() {
                 {/* Ciudad */}
                 <div className="space-y-2">
                   <label className="block text-gray-700 text-sm font-semibold">
-                    Ciudad
+                    {t("city")}
                   </label>
                   <input
                     type="text"
-                    placeholder="Ciudad"
+                    placeholder={t("city")}
                     {...incidentRegister("directions.city")}
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                       incidentErrors.directions?.city
@@ -218,11 +220,11 @@ export default function CreateIncident() {
                 {/* Estado */}
                 <div className="space-y-2">
                   <label className="block text-gray-700 text-sm font-semibold">
-                    Estado/Provincia
+                    {t("state")}
                   </label>
                   <input
                     type="text"
-                    placeholder="Estado"
+                    placeholder={t("state")}
                     {...incidentRegister("directions.state")}
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                       incidentErrors.directions?.state
@@ -241,11 +243,11 @@ export default function CreateIncident() {
                 {/* Código postal */}
                 <div className="space-y-2">
                   <label className="block text-gray-700 text-sm font-semibold">
-                    Código Postal
+                    {t("zipCode")}
                   </label>
                   <input
                     type="text"
-                    placeholder="C.P."
+                    placeholder={t("zipCode")}
                     {...incidentRegister("directions.zipCode")}
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                       incidentErrors.directions?.zipCode
@@ -267,19 +269,19 @@ export default function CreateIncident() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Prioridad */}
               <div className="space-y-2">
-                <label className="block text-gray-700 text-sm font-semibold flex items-center gap-2">
+                <label className="text-gray-700 text-sm font-semibold flex items-center gap-2">
                   <Flag className="w-4 h-4 text-red-500" />
-                  Nivel de Prioridad
+                  {t("priority")}
                 </label>
                 <select
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                   {...incidentRegister("priority")}
                   required
                 >
-                  <option value="">Selecciona el nivel</option>
-                  <option value="LOW">🟢 Baja - No urgente</option>
-                  <option value="MEDIUM">🟡 Media - Moderada</option>
-                  <option value="HIGH">🔴 Alta - Crítica</option>
+                  <option value="">{t("prioritySelect")}</option>
+                  <option value="LOW">{t("priorityLow")}</option>
+                  <option value="MEDIUM">{t("priorityMedium")}</option>
+                  <option value="HIGH">{t("priorityHigh")}</option>
                 </select>
                 {incidentErrors.priority && (
                   <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
@@ -291,9 +293,9 @@ export default function CreateIncident() {
 
               {/* Checkbox de urgencia */}
               <div className="space-y-2">
-                <label className="block text-gray-700 text-sm font-semibold flex items-center gap-2">
+                <label className="text-gray-700 text-sm font-semibold flex items-center gap-2">
                   <Zap className="w-4 h-4 text-yellow-500" />
-                  Estado Especial
+                  {t("specialStatus")}
                 </label>
                 <div className="flex items-center gap-3 px-4 py-3 border border-gray-300 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50">
                   <input
@@ -308,7 +310,7 @@ export default function CreateIncident() {
                     className="text-gray-700 text-sm font-medium flex items-center gap-2 cursor-pointer"
                   >
                     <Zap className="w-4 h-4 text-yellow-500" />
-                    Marcar como URGENTE
+                    {t("markUrgent")}
                   </label>
                 </div>
               </div>
@@ -316,9 +318,9 @@ export default function CreateIncident() {
 
             {/* Archivos adjuntos */}
             <div className="space-y-3">
-              <label className="block text-gray-700 text-sm font-semibold flex items-center gap-2">
+              <label className="text-gray-700 text-sm font-semibold flex items-center gap-2">
                 <Image className="w-4 h-4 text-red-500" />
-                Evidencias (Fotos, documentos)
+                {t("evidence")}
               </label>
               <div className="relative">
                 <input
@@ -337,13 +339,15 @@ export default function CreateIncident() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-xl">
                   <Paperclip className="w-4 h-4 text-green-600" />
                   <span className="text-sm text-green-700 font-medium">
-                    {files.length} archivo{files.length > 1 ? "s" : ""}{" "}
-                    seleccionado{files.length > 1 ? "s" : ""}
+                    {t("selectedFiles", {
+                      count: files.length,
+                      plural: files.length > 1 ? "s" : "",
+                    })}
                   </span>
                 </div>
               )}
               <p className="text-xs text-gray-500">
-                Formatos soportados: Imágenes, PDF, Word, Excel, ZIP, etc.
+                {t("supportedFormats")}
               </p>
             </div>
 
@@ -357,12 +361,12 @@ export default function CreateIncident() {
                 {isSubmitting ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Procesando incidencia...
+                    {t("processing")}
                   </>
                 ) : (
                   <>
                     <Send className="w-5 h-5" />
-                    Enviar Reporte
+                    {t("submit")}
                   </>
                 )}
               </button>
@@ -375,11 +379,10 @@ export default function CreateIncident() {
               <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
                 <h4 className="text-blue-800 font-semibold text-sm">
-                  Información importante:
+                  {t("important")}
                 </h4>
                 <p className="text-blue-700 text-xs mt-1">
-                  Tu reporte será revisado y asignado a un técnico
-                  especializado. Recibirás notificaciones sobre el progreso.
+                  {t("importantDesc")}
                 </p>
               </div>
             </div>

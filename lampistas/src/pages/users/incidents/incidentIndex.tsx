@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function MachineryIndex() {
+  const { t } = useTranslation("users.incidentIndexPage");
   return (
     <div className="w-full min-h-screen flex flex-col items-center pt-20 md:pt-24 px-4 pb-8">
-      <h2 className="text-2xl font-bold mb-6">Gestión de Incidencias</h2>
+      <h2 className="text-2xl font-bold mb-6">{t("title")}</h2>
       
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-4">
         <Link
@@ -11,10 +13,10 @@ export default function MachineryIndex() {
           className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
         >
           <h3 className="text-xl font-semibold text-amber-600 mb-2">
-             Crear una nueva Incidencia
+             {t("createTitle")}
           </h3>
           <p className="text-gray-600">
-            Reporta una nueva incidencia relacionada con tu maquinaria
+            {t("createDesc")}
           </p>
         </Link>
 
@@ -25,10 +27,10 @@ export default function MachineryIndex() {
           className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
         >
           <h3 className="text-xl font-semibold text-amber-600 mb-2">
-            visualiza el Historial de Incidencias
+            {t("historyTitle")}
           </h3>
           <p className="text-gray-600">
-            Ver todo el historial de incidencias registradas
+            {t("historyDesc")}
           </p>
         </Link>
         

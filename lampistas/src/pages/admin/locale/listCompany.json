@@ -1,0 +1,17 @@
+{
+    "navigation" : {
+         "Registrar Compañia": "Register Company",
+        "Listar Compañias": "List Companies",
+        "Boletin": "Newsletter"
+    },
+    "hero" : {
+        "title": "Company List",
+        "ID": "ID",
+        "Nombre": "Name",
+        "Email": "Email",
+        "Teléfono": "Phone",
+        "status ": "Status",
+        "dirección ": "Address",
+        "acciones ": "Actions"
+    }
+}

@@ -1,0 +1,18 @@
+{
+  "titulo": "Portal d'Empreses",
+  "subtitulo": "Accedeix al teu panell de control",
+  "correoLabel": "Correu electronic",
+  "correoPlaceholder": "empresa@exemple.com",
+  "contrasenaLabel": "Contrasenya",
+  "contrasenaPlaceholder": "La teva contrasenya",
+  "olvidasteContrasena": "Has oblidat la contrasenya?",
+  "accederConEmail": "Accedir amb Email",
+  "o": "O",
+  "codigoEmpresaTitulo": "Codi d'empresa",
+  "codigoEmpresaPlaceholder": "Codi d'empresa",
+  "accederConCodigo": "Accedir amb Codi",
+  "problemasAcceso": "Problemes per accedir?",
+  "contactaSoporte": "Contacta suport",
+  "loginExitoso": "Sessio iniciada correctament!",
+  "errorLogin": "Error d'inici de sessio: {{message}}"
+}

@@ -2,13 +2,16 @@ import Header from './components/header';
 import Chartjs from 'chart.js/auto';
 import api from '../../api/intercepttors';
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from "react-i18next";
 
 export default function CompanyHome() {
+    const { t } = useTranslation("companies.companyHome");
     const [earnings, setEarnings] = useState<number[]>([]);
     const [incidents, setIncidents] = useState<number[]>([]);
     const earningsChartRef = useRef<Chartjs | null>(null);
     const incidentsChartRef = useRef<Chartjs | null>(null);
     const token = localStorage.getItem('companyToken');
+    const months = t("meses", { returnObjects: true }) as string[];
    
 
     useEffect(() => {
@@ -36,9 +39,9 @@ export default function CompanyHome() {
                 earningsChartRef.current = new Chartjs(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        labels: months,
                         datasets: [{
-                            label: 'Mis ganancias',
+                            label: t("etiquetaGanancias"),
                             data: earnings,
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         }]
@@ -47,7 +50,7 @@ export default function CompanyHome() {
                         responsive: true,
                         plugins: {
                             legend: { position: 'top' },
-                            title: { display: true, text: 'Ganancias Mensuales' }
+                            title: { display: true, text: t("tituloGanancias") }
                         }
                     }
                 });
@@ -81,9 +84,9 @@ export default function CompanyHome() {
                 incidentsChartRef.current = new Chartjs(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        labels: months,
                         datasets: [{
-                            label: 'Incidentes cerrados',
+                            label: t("etiquetaIncidencias"),
                             data: incidents,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         }]
@@ -92,7 +95,7 @@ export default function CompanyHome() {
                         responsive: true,
                         plugins: {
                             legend: { position: 'top' },
-                            title: { display: true, text: 'Incidentes Cerrados Mensuales' }
+                            title: { display: true, text: t("tituloIncidencias") }
                         }
                     }
                 });
@@ -109,22 +112,22 @@ export default function CompanyHome() {
     return (
         <div className='w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8'>
             <Header />
-            <h1 className='text-3xl font-bold text-amber-800 mb-6'>Welcome to your Company Dashboard</h1>
+            <h1 className='text-3xl font-bold text-amber-800 mb-6'>{t("titulo")}</h1>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6' id='earnings'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Earnings Overview</h2>
-                <p className='text-gray-700 text-lg'>Total Earnings: <span className='font-bold text-amber-600'>${earnings.reduce((a, b) => a + b, 0).toFixed(2)}</span></p>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("resumenGanancias")}</h2>
+                <p className='text-gray-700 text-lg'>{t("gananciasTotales")}: <span className='font-bold text-amber-600'>${earnings.reduce((a, b) => a + b, 0).toFixed(2)}</span></p>
                 
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Monthly Earnings Chart</h2>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("graficoGanancias")}</h2>
                 <canvas id="earningsChart"></canvas>
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Closed Incidents Overview</h2>
-                <p className='text-gray-700 text-lg'>Total Closed Incidents: <span className='font-bold text-amber-600'>{incidents.reduce((a, b) => a + b, 0)}</span></p>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("resumenIncidencias")}</h2>
+                <p className='text-gray-700 text-lg'>{t("incidenciasTotales")}: <span className='font-bold text-amber-600'>{incidents.reduce((a, b) => a + b, 0)}</span></p>
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Monthly Closed Incidents Chart</h2>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("graficoIncidencias")}</h2>
                 <canvas id="incidentsChart"></canvas>
             </div>  
         </div>

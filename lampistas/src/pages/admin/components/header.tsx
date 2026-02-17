@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from "react-i18next";
 
 interface DecodedToken {
     adminID: number;
@@ -13,6 +14,7 @@ interface DecodedToken {
     
 }
 export default function Header() {
+    const { t } = useTranslation("admin.header");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const token = localStorage.getItem('adminToken');
     const [adminEmail, setAdminEmail] = useState<string>('');
@@ -23,10 +25,10 @@ export default function Header() {
                 const decoded = jwtDecode<DecodedToken>(token);
                 setAdminEmail(decoded.email);
             } catch (error) {
-                toast.error('❌ Error decoding token: ' + (error as Error).message);
+                toast.error(t("decodeError", { message: (error as Error).message }));
             }
         }
-    }, [token]);
+    }, [token, t]);
     return (
     <header className="w-full h-16 bg-amber-100 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
             <div className="flex items-center p-4 gap-4">
@@ -37,7 +39,7 @@ export default function Header() {
                         <button
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
                         >
-                            Register Company
+                            {t("registerCompany")}
                         </button>
                     </Link>
                   
@@ -45,14 +47,14 @@ export default function Header() {
                         <button
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
                         >
-                            List Companies
+                            {t("listCompanies")}
                         </button>
                     </Link>
                     <Link to="/admin/createNewsLetter"> 
                         <button
                             className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white"
                         >
-                            Newsletter
+                            {t("newsletter")}
                         </button>
                      </Link>
 
@@ -81,7 +83,7 @@ export default function Header() {
                                 <button
                                     className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
                                 >
-                                    Register Company
+                                    {t("registerCompany")}
                                 </button>
                             </Link>
                             
@@ -89,14 +91,14 @@ export default function Header() {
                                 <button
                                     className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
                                 >
-                                    List Companies
+                                    {t("listCompanies")}
                                 </button>
                             </Link>
                             <Link to="/admin/createNewsLetter">
                                 <button
                                     className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white"
                                 >
-                                    Newsletter
+                                    {t("newsletter")}
                                 </button>
                             </Link>
                           

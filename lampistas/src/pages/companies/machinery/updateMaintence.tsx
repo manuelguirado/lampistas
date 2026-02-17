@@ -4,8 +4,10 @@ import toast from "react-hot-toast";
 import Header from "../components/header";
 import { Settings, Calendar, CheckCircle, Wrench } from 'lucide-react';
 import api from "../../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 
 export default function EditMachinery() {
+    const { t } = useTranslation("companies.updateMaintencePage");
     const [formData, setFormData] = useState({
         machineryID: 0,
         lastInspectionDate: "",
@@ -33,11 +35,11 @@ export default function EditMachinery() {
         }).then((response) => {
             setMachineryList(response.data.machinery || []);
         }).catch((error) => {
-            toast.error("Error fetching machinery list: " + (error as Error).message);
+            toast.error(t("listError", { message: (error as Error).message }));
         });
         
        
-    }, [token]);
+    }, [token, t]);
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -53,11 +55,11 @@ export default function EditMachinery() {
         .then(() => {
 
   
-            toast.success('¡Mantenimiento actualizado exitosamente!');
+            toast.success(t("success"));
             navigate("/company/machinery/listarMaquinaria");
         })
         .catch((error) => {
-            toast.error("Error updating maintenance: " + (error as Error).message);
+            toast.error(t("updateError", { message: (error as Error).message }));
         });
     };
     return (
@@ -70,8 +72,8 @@ export default function EditMachinery() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-600 to-teal-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
                         <Wrench className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Actualizar Mantenimiento</h2>
-                    <p className="text-gray-600">Registrar última inspección de maquinaria</p>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+                    <p className="text-gray-600">{t("subtitle")}</p>
                 </div>
 
                 {/* Formulario moderno */}
@@ -80,7 +82,7 @@ export default function EditMachinery() {
                         {/* Selección de maquinaria */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Seleccionar Maquinaria
+                                {t("selectMachinery")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -92,7 +94,7 @@ export default function EditMachinery() {
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                                     required
                                 >
-                                    <option value="">-- Seleccione Maquinaria --</option>
+                                    <option value="">{t("selectMachineryPh")}</option>
                                     {machineryList.map((machinery) => (
                                         <option key={machinery.machineryID} value={machinery.machineryID}>
                                             ⚙️ {machinery.name}
@@ -105,7 +107,7 @@ export default function EditMachinery() {
                         {/* Fecha de última inspección */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Fecha de Última Inspección
+                                {t("lastInspection")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -128,7 +130,7 @@ export default function EditMachinery() {
                             className="w-full bg-gradient-to-r from-green-600 to-teal-700 text-white py-3 px-4 rounded-xl hover:from-green-700 hover:to-teal-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                         >
                             <CheckCircle className="w-5 h-5" />
-                            Actualizar Mantenimiento
+                            {t("submit")}
                         </button>
                     </form>
                     
@@ -137,10 +139,9 @@ export default function EditMachinery() {
                         <div className="flex items-start gap-2">
                             <Wrench className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                             <div>
-                                <h4 className="text-green-800 font-semibold text-sm">Importante:</h4>
+                                <h4 className="text-green-800 font-semibold text-sm">{t("important")}</h4>
                                 <p className="text-green-700 text-xs mt-1">
-                                    Esta fecha se utilizará para calcular el próximo mantenimiento 
-                                    programado y generar alertas automáticas.
+                                    {t("importantDesc")}
                                 </p>
                             </div>
                         </div>

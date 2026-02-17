@@ -1,0 +1,18 @@
+{
+  "titulo": "Portal Empresas",
+  "subtitulo": "Accede a tu panel de control",
+  "correoLabel": "Correo Electronico",
+  "correoPlaceholder": "empresa@ejemplo.com",
+  "contrasenaLabel": "Contrasena",
+  "contrasenaPlaceholder": "Tu contrasena",
+  "olvidasteContrasena": "Olvidaste tu contrasena?",
+  "accederConEmail": "Acceder con Email",
+  "o": "O",
+  "codigoEmpresaTitulo": "Codigo de empresa",
+  "codigoEmpresaPlaceholder": "Codigo de empresa",
+  "accederConCodigo": "Acceder con Codigo",
+  "problemasAcceso": "Problemas para acceder?",
+  "contactaSoporte": "Contacta soporte",
+  "loginExitoso": "Inicio de sesion exitoso!",
+  "errorLogin": "Error en login: {{message}}"
+}

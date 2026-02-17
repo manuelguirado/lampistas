@@ -1,0 +1,23 @@
+{
+  "title": "New client",
+  "subtitle": "Register a client and create a contract",
+  "fullNameLabel": "Full name",
+  "fullNamePlaceholder": "Client name",
+  "emailLabel": "Email",
+  "emailPlaceholder": "client@email.com",
+  "passwordLabel": "Temporary password",
+  "passwordPlaceholder": "Temporary password",
+  "contractTypeLabel": "Contract type",
+  "contractTypePlaceholder": "Select contract type",
+  "contractFixedOption": "Fixed contract",
+  "contractFreeOption": "Free choice",
+  "submit": "Register client",
+  "infoTitle": "Automatic process:",
+  "infoText": "The user will be created and the associated contract will be generated automatically. The client will receive credentials by email.",
+  "toast": {
+    "userError": "Error registering user.",
+    "success": "User and contract created successfully!",
+    "contractError": "User created but there was an error creating the contract.",
+    "processError": "Registration process error: {{message}}"
+  }
+}

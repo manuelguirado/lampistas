@@ -1,0 +1,34 @@
+{
+    "navigation": {
+    "Trabajadores": "Workers",
+    "Clientes": "Clients",
+    "Incidencias": "Incidents",
+    "Crear Presupuesto": "Create Budget",
+    "Maquinaria": "Machinery",
+    "Perfil": "Profile",
+    "Vincular Pagos": "Link Payments",
+    "Dashboard": "Dashboard"
+  },
+    "hero" : {
+        "title" : "Workers List",
+          "workerid" : "Worker ID",
+          "nombre" : "Name",
+          "email" : "Email",
+          "Incidencias Activas" : "Active Incidents",
+        "Accciones" : "Actions"
+    },
+    "Acctions" : {
+        "Editar" : "Edit",
+        "Eliminar" : "Delete",
+        "Assignar Códigio" : "Assign Code",
+        "Guardia " : "shift"
+    },
+    "Assign Shift" : {
+        "title" : "Assign Shift" ,
+        "Trabajador" : "Worker",
+         "Fecha de inico" : "Start Date",
+            "Fecha de fin" : "End Date",
+        "tipo de guardia" : "Shift Type",
+        "notas (optcional)" : "Notes (optional)"
+    }
+}

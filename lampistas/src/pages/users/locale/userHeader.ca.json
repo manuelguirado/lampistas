@@ -1,0 +1,8 @@
+{
+  "decodeError": "Error en descodificar el token: {{message}}",
+  "loading": "Carregant...",
+  "myMachinery": "La meva maquinària",
+  "myIncidents": "Les meves incidències",
+  "createIncidents": "Crear incidències",
+  "myBudgets": "Els meus pressupostos"
+}

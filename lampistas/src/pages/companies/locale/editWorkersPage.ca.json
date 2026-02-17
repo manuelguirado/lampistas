@@ -1,0 +1,18 @@
+{
+  "title": "Editar treballador",
+  "subtitle": "Actualitzar informacio de l'empleat",
+  "workerId": "ID del treballador",
+  "workerIdPlaceholder": "Introdueix l'ID del treballador",
+  "fullNameOptional": "Nom complet",
+  "emailOptional": "Correu electronic",
+  "passwordOptional": "Nova contrasenya",
+  "optional": "(Opcional)",
+  "namePlaceholder": "Nou nom (deixa-ho buit si no vols canviar-lo)",
+  "emailPlaceholder": "Nou correu (deixa-ho buit si no vols canviar-lo)",
+  "passwordPlaceholder": "Nova contrasenya (deixa-ho buit si no vols canviar-la)",
+  "submit": "Actualitzar treballador",
+  "important": "Important:",
+  "importantDesc": "Nomes s'actualitzaran els camps amb valor. Els camps buits es mantindran sense canvis.",
+  "success": "Treballador actualitzat correctament!",
+  "error": "Error actualitzant treballador: {{message}}"
+}

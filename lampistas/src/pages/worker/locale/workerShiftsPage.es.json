@@ -1,0 +1,10 @@
+{
+  "fetchError": "Error al cargar guardias: {{message}}",
+  "fallbackShift": "Guardia",
+  "loading": "Cargando guardias...",
+  "title": "Mis guardias",
+  "morning": "Mañana",
+  "afternoon": "Tarde",
+  "night": "Noche",
+  "fullDay": "Día completo"
+}

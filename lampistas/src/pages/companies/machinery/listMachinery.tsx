@@ -3,7 +3,9 @@ import { ChevronRight, ChevronLeft, Edit, Trash } from "lucide-react";
 import api from "../../../api/intercepttors";
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
+import { useTranslation } from "react-i18next";
 export default function ListMachinery() {
+  const { t, i18n } = useTranslation("companies.listMachineryPage");
   const navigate = useNavigate();
   const [machine, setMachine] = useState<
     Array<{
@@ -34,7 +36,7 @@ export default function ListMachinery() {
         },
       })
       .then(() => {
-        toast.success('Machinery eliminated successfully!');
+        toast.success(t("eliminadaOk"));
         // Refresh the machinery list after deletion
         setMachine((prevMachines) =>
           prevMachines.filter(
@@ -43,7 +45,7 @@ export default function ListMachinery() {
         );
       })
       .catch((error) => {
-        toast.error('Error eliminating machinery.' + (error as Error).message);
+        toast.error(t("errorEliminar", { message: (error as Error).message }));
       });
   }
 
@@ -58,9 +60,9 @@ export default function ListMachinery() {
           setMachine(response.data.machinery || []);
         })
         .catch((error) => {
-          toast.error('Error fetching machinery.' + (error as Error).message);
+          toast.error(t("errorCargar", { message: (error as Error).message }));
         });
-    }, [currentPage, offset, token]);
+    }, [currentPage, offset, token, t]);
           
         
     
@@ -72,26 +74,26 @@ export default function ListMachinery() {
     }
     return (
       <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
-        <h2 className="text-2xl font-bold mb-6">Lista de Maquinarias</h2>
+        <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
         <div className="w-full max-w-7xl overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300 shadow-md">
             <thead>
               <tr className="bg-amber-200">
                 <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">Nombre</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">{t("thNombre")}</th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Tipo de Maquinaria
+                  {t("thTipo")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">Marca</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">Modelo</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">{t("thMarca")}</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">{t("thModelo")}</th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Número de Serie
+                  {t("thSerie")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Fecha de Instalación
+                  {t("thFechaInstalacion")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">Cliente</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">Acciones</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">{t("thCliente")}</th>
+                <th className="py-2 px-4 border border-gray-300 text-left">{t("thAcciones")}</th>
               </tr>
             </thead>
             <tbody>
@@ -117,12 +119,12 @@ export default function ListMachinery() {
                   </td>
                   <td className="py-2 px-4 border border-gray-300">
                     {machinery.installedAt 
-                      ? new Date(machinery.installedAt).toLocaleDateString('es-ES')
-                      : <span className="text-gray-400 italic">Sin instalar</span>
+                      ? new Date(machinery.installedAt).toLocaleDateString(i18n.language === "ca" ? "ca-ES" : i18n.language === "en" ? "en-US" : "es-ES")
+                      : <span className="text-gray-400 italic">{t("sinInstalar")}</span>
                     }
                   </td>
                   <td className="py-2 px-4 border border-gray-300">
-                    {machinery.clientID || <span className="text-gray-400 italic">Sin asignar</span>}
+                    {machinery.clientID || <span className="text-gray-400 italic">{t("sinAsignar")}</span>}
                   </td>
                   <td className="py-2 px-4 border border-gray-300">
                     <div className="flex gap-2">
@@ -157,13 +159,13 @@ export default function ListMachinery() {
                 : "text-black hover:bg-gray-200"
             }`}
           >
-            <ChevronLeft size={16} className="mr-1" /> Anterior
+            <ChevronLeft size={16} className="mr-1" /> {t("anterior")}
           </button>
           <button
             onClick={handleNextPage}
             className="flex items-center px-3 py-1 border border-gray-300 rounded text-black hover:bg-gray-200"
           >
-            Siguiente <ChevronRight size={16} className="ml-1" />
+            {t("siguiente")} <ChevronRight size={16} className="ml-1" />
           </button>
         </div>
       </div>

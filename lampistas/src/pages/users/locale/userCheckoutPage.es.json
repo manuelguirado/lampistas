@@ -1,0 +1,8 @@
+{
+  "title": "Realizar el pago",
+  "processing": "Procesando...",
+  "subscribe": "Suscribirse por {{amount}}€",
+  "cardError": "Ha ocurrido un error inesperado.",
+  "success": "Pago realizado correctamente",
+  "unknownError": "Error desconocido"
+}

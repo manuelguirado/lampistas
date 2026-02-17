@@ -1,0 +1,18 @@
+{
+  "titulo": "Company Portal",
+  "subtitulo": "Access your control panel",
+  "correoLabel": "Email",
+  "correoPlaceholder": "company@example.com",
+  "contrasenaLabel": "Password",
+  "contrasenaPlaceholder": "Your password",
+  "olvidasteContrasena": "Forgot your password?",
+  "accederConEmail": "Sign in with Email",
+  "o": "OR",
+  "codigoEmpresaTitulo": "Company code",
+  "codigoEmpresaPlaceholder": "Company code",
+  "accederConCodigo": "Sign in with Code",
+  "problemasAcceso": "Having trouble signing in?",
+  "contactaSoporte": "Contact support",
+  "loginExitoso": "Signed in successfully!",
+  "errorLogin": "Login error: {{message}}"
+}

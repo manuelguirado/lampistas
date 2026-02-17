@@ -14,8 +14,10 @@ import {
   type typeUploadFilesSchema,
 } from "../worker/schemas/uploadFilesSchema";
 import api from "../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 
 export default function WorkerHome() {
+  const { t } = useTranslation("worker.homePage");
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
   const [incidentFiles, setIncidentFiles] = useState<
     { incidentID: number; files: string[] }[]
@@ -86,11 +88,11 @@ export default function WorkerHome() {
       if (result) return result;
       const sanitized = normalizeAddress(address);
       if (sanitized === address) {
-        throw new Error("No se encontraron resultados para la dirección");
+        throw new Error(t("noAddressResults"));
       }
       return fetchGeocode(sanitized).then((fallback) => {
         if (fallback) return fallback;
-        throw new Error("No se encontraron resultados para la dirección");
+        throw new Error(t("noAddressResults"));
       });
     });
   }
@@ -115,7 +117,7 @@ export default function WorkerHome() {
         try {
           const address = data?.fullAddress || data?.fullAddres;
           if (!address || typeof address !== "string") {
-            throw new Error("Dirección inválida para geocodificar");
+            throw new Error(t("invalidAddress"));
           }
           const geocoded = await geocodeAddress(address);
           console.log(`Geocoded coordinates for address "${address}":`, geocoded);
@@ -161,12 +163,12 @@ export default function WorkerHome() {
   }
   function uploadfile(data: typeUploadFilesSchema) {
     if (!selectedIncident?.incidentID) {
-      toast.error("No se ha seleccionado ninguna incidencia");
+      toast.error(t("noIncidentSelected"));
       return;
     }
 
     if (!data.files || data.files.length === 0) {
-      toast.error("Por favor selecciona al menos un archivo");
+      toast.error(t("selectAtLeastOneFile"));
       return;
     }
 
@@ -181,16 +183,15 @@ export default function WorkerHome() {
     api
       .post("/worker/uploadFile", formData)
       .then(() => {
-        toast.success("¡Archivos subidos exitosamente!");
+        toast.success(t("filesUploaded"));
         filesReset();
         handleCloseModal();
       })
       .catch((error) => {
         console.error("Error uploading files:", error);
-        toast.error(
-          "Error al subir los archivos: " +
-            (error?.response?.data?.message || error.message),
-        );
+        toast.error(t("uploadError", {
+          message: error?.response?.data?.message || error.message,
+        }));
       });
   }
 
@@ -217,7 +218,7 @@ export default function WorkerHome() {
         status,
       })
       .then(() => {
-        toast.success("¡Estado de incidencia actualizado exitosamente!");
+        toast.success(t("statusUpdated"));
         setActiveIncidents((prevIncidents) =>
           prevIncidents.map((incident) =>
             incident.IncidentsID === incidentID
@@ -227,13 +228,13 @@ export default function WorkerHome() {
         );
       })
       .catch((error) => {
-        toast.error("Error al actualizar el estado: " + error.message);
+        toast.error(t("statusUpdateError", { message: error.message }));
       });
   }
 
   useEffect(() => {
     if (!token) {
-      setError("No hay token de autenticación");
+      setError(t("noAuthToken"));
       setLoading(false);
       return;
     }
@@ -261,12 +262,12 @@ export default function WorkerHome() {
       .finally(() => {
         setLoading(false);
       });
-  }, [token]);
+  }, [token, t]);
 
   if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
-        <div className="text-xl">Cargando incidencias...</div>
+        <div className="text-xl">{t("loadingIncidents")}</div>
       </div>
     );
   }
@@ -285,12 +286,12 @@ export default function WorkerHome() {
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
       <h1 className="text-3xl font-bold mb-6 text-amber-800">
-        Incidencias Asignadas
+        {t("assignedTitle")}
       </h1>
 
       {activeIncidents.length === 0 ? (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
-          No tienes incidencias asignadas
+          {t("noAssigned")}
         </div>
       ) : (
         <div className="w-full max-w-7xl overflow-x-auto">
@@ -301,25 +302,25 @@ export default function WorkerHome() {
                   ID
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Título
+                  {t("incidentTitle")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Fecha de Reporte
+                  {t("reportDate")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Usuario que Reportó
+                  {t("reportedBy")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Estado
+                  {t("status")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Prioridad
+                  {t("priority")}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Añadir fotos{" "}
+                  {t("addPhotos")}{" "}
                 </th>
                 <th className="py-2 px-4 border border-gray-300 text-left">
-                  Detalles
+                  {t("details")}
                 </th>
               </tr>
             </thead>
@@ -350,10 +351,10 @@ export default function WorkerHome() {
                         defaultValue={incident.status}
                         className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                       >
-                        <option value="open">Abierta</option>
-                        <option value="in_progress">En Progreso</option>
-                        <option value="resolved">Resuelta</option>
-                        <option value="closed">Cerrada</option>
+                        <option value="open">{t("open")}</option>
+                        <option value="in_progress">{t("inProgress")}</option>
+                        <option value="resolved">{t("resolved")}</option>
+                        <option value="closed">{t("closed")}</option>
                       </select>
                       <button
                         onClick={() => {
@@ -367,7 +368,7 @@ export default function WorkerHome() {
                         }}
                         className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-600 transition-colors"
                       >
-                        Actualizar
+                        {t("update")}
                       </button>
                     </div>
                   </td>
@@ -382,10 +383,10 @@ export default function WorkerHome() {
                       }`}
                     >
                       {incident.priority === "high"
-                        ? "Alta"
+                        ? t("priorityHigh")
                         : incident.priority === "medium"
-                          ? "Media"
-                          : "Baja"}
+                          ? t("priorityMedium")
+                          : t("priorityLow")}
                     </span>
                   </td>
                   <td className="py-2 px-4 border border-gray-300">
@@ -398,7 +399,7 @@ export default function WorkerHome() {
                       }
                       className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-600 transition-colors"
                     >
-                      Añadir Fotos
+                      {t("addPhotosButton")}
                     </button>
                   </td>
                   <td className="py-2 px-4 border border-gray-300">
@@ -420,7 +421,7 @@ export default function WorkerHome() {
                       }}
                       className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition-colors"
                     >
-                      Ver Detalles
+                      {t("viewDetails")}
                     </button>
                   </td>
                 </tr>
@@ -437,7 +438,7 @@ export default function WorkerHome() {
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-gray-800">
-                Añadir Fotos a Incidencia
+                {t("addPhotosModal")}
               </h3>
               <button
                 onClick={handleCloseModal}
@@ -449,7 +450,7 @@ export default function WorkerHome() {
 
             {/* Incident Info */}
             <div className="mb-4 p-3 bg-amber-50 rounded">
-              <p className="text-sm text-gray-600">Incidencia:</p>
+              <p className="text-sm text-gray-600">{t("incident")}</p>
               <p className="font-semibold text-gray-800">
                 {selectedIncident.name}
               </p>
@@ -470,7 +471,7 @@ export default function WorkerHome() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Selecciona fotos o documentos
+                  {t("selectFiles")}
                 </label>
                 <input
                   {...filesRegister("files")}
@@ -485,7 +486,7 @@ export default function WorkerHome() {
                   </p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  Formatos permitidos: JPG, PNG, PDF, DOC, XLS, ZIP, RAR
+                  {t("allowedFormats")}
                 </p>
               </div>
 
@@ -496,13 +497,13 @@ export default function WorkerHome() {
                   onClick={handleCloseModal}
                   className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
                 >
-                  Cancelar
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
                 >
-                  Subir Fotos
+                  {t("uploadPhotos")}
                 </button>
               </div>
             </form>
@@ -523,17 +524,21 @@ export default function WorkerHome() {
             </div>
             <div className="flex flex-col gap-2 mb-4">
               <h3 className="text-xl font-bold text-gray-800">
-                Detalles de Incidencia
+                {t("incidentDetails")}
               </h3>
               <div className="flex flex-col gap-1">
-                <span className="font-semibold">Título: {modal.title}</span>
                 <span>
-                  Fecha de reporte: {modal.date.toLocaleDateString("es-ES")}
+                  {t("reportDateLabel", {
+                    date: modal.date.toLocaleDateString("es-ES"),
+                  })}
                 </span>
-                <span>Prioridad: {modal.priority}</span>
+                <span className="font-semibold">
+                  {t("titleLabel", { title: modal.title })}
+                </span>
+                <span>{t("priorityLabel", { priority: modal.priority })}</span>
                 <div className="mt-4">
                   <h4 className="font-semibold text-gray-800 mb-2">
-                    Archivos:
+                    {t("files")}
                   </h4>
                   {console.log("DEBUG modal.photoURL:", modal.photoURL)}
                   {Array.isArray(modal.photoURL) &&
@@ -561,7 +566,7 @@ export default function WorkerHome() {
                             fileName ||
                             fileUrl.split("/").pop() ||
                             file.key ||
-                            `Archivo ${index + 1}`;
+                            t("file", { index: index + 1 });
                           const fileExtension =
                             derivedName.split(".").pop()?.toLowerCase() || "";
                           const isImage = [
@@ -619,7 +624,7 @@ export default function WorkerHome() {
                                     rel="noopener noreferrer"
                                     className="text-blue-600 underline text-sm hover:text-blue-800"
                                   >
-                                    Descargar archivo
+                                    {t("downloadFile")}
                                   </a>
                                 )}
                               </div>
@@ -629,17 +634,17 @@ export default function WorkerHome() {
                     </div>
                   ) : (
                     <p className="text-gray-500 text-sm">
-                      No hay archivos disponibles
+                      {t("noFilesAvailable")}
                     </p>
                   )}
                 </div>
               </div>
             </div>
             <div>
-              <p>Ubicación del Cliente </p>
+              <p>{t("clientLocation")}</p>
               {coordinates.length === 0 && (
                 <div className="text-center text-red-500 mb-2">
-                  No hay ubicaciones para mostrar en el mapa.
+                  {t("noLocations")}
                 </div>
               )}
               {coordinates.length > 0 && (

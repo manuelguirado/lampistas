@@ -1,0 +1,18 @@
+{
+  "title": "Nou treballador",
+  "subtitle": "Afegir membre a l'equip",
+  "fullNameLabel": "Nom complet",
+  "fullNamePlaceholder": "Nom del treballador",
+  "emailLabel": "Correu electronic",
+  "emailPlaceholder": "treballador@email.com",
+  "passwordLabel": "Contrasenya temporal",
+  "passwordPlaceholder": "Contrasenya temporal",
+  "passwordHint": "El treballador podra canviar aquesta contrasenya despres del primer acces",
+  "submit": "Registrar treballador",
+  "infoTitle": "Informacio important:",
+  "infoText": "Es generara automaticament un codi de treballador que sera enviat al correu del nou empleat.",
+  "toast": {
+    "success": "Treballador registrat amb exit!",
+    "error": "Error en registrar treballador: {{message}}"
+  }
+}

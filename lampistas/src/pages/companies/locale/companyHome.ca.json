@@ -1,0 +1,14 @@
+{
+  "titulo": "Benvingut al teu tauler d'empresa",
+  "resumenGanancias": "Resum de guanys",
+  "gananciasTotales": "Guanys totals",
+  "graficoGanancias": "Grafic de guanys mensuals",
+  "resumenIncidencias": "Resum d'incidencies tancades",
+  "incidenciasTotales": "Total d'incidencies tancades",
+  "graficoIncidencias": "Grafic d'incidencies tancades mensuals",
+  "etiquetaGanancias": "Els meus guanys",
+  "etiquetaIncidencias": "Incidencies tancades",
+  "tituloGanancias": "Guanys mensuals",
+  "tituloIncidencias": "Incidencies tancades mensuals",
+  "meses": ["Gen", "Feb", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Des"]
+}

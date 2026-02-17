@@ -1,0 +1,14 @@
+{
+  "titulo": "Bienvenido a tu panel de empresa",
+  "resumenGanancias": "Resumen de ganancias",
+  "gananciasTotales": "Ganancias totales",
+  "graficoGanancias": "Grafico de ganancias mensuales",
+  "resumenIncidencias": "Resumen de incidencias cerradas",
+  "incidenciasTotales": "Total de incidencias cerradas",
+  "graficoIncidencias": "Grafico de incidencias cerradas mensuales",
+  "etiquetaGanancias": "Mis ganancias",
+  "etiquetaIncidencias": "Incidencias cerradas",
+  "tituloGanancias": "Ganancias mensuales",
+  "tituloIncidencias": "Incidencias cerradas mensuales",
+  "meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+}

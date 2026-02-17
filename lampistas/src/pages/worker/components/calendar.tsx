@@ -3,12 +3,14 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import type { EventInput } from '@fullcalendar/core';
+import { useTranslation } from "react-i18next";
 
 interface CalendarProps {
   events: EventInput[];
 }
 
 export default function Calendar({ events }: CalendarProps) {
+  const { i18n } = useTranslation();
   return (
     <div className="w-full max-w-6xl mx-auto p-2 md:p-4">
       <style>{`
@@ -68,7 +70,7 @@ export default function Calendar({ events }: CalendarProps) {
         editable={false}
         selectable={true}
         height="auto"
-        locale="es"
+        locale={i18n.language}
       />
     </div>
   );

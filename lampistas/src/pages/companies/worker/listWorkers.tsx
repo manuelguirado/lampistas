@@ -8,8 +8,10 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {shiftSchema } from '../schemas/shiftSchema';
 import type {ShiftSchema} from '../schemas/shiftSchema';
 import api from "../../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 
 export default function ListWorkers() {
+    const { t } = useTranslation("companies.listWorkersPage");
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalWorkers, setTotalWorkers] = useState(0);
@@ -49,10 +51,10 @@ export default function ListWorkers() {
             .then((response) => {
                 const { code } = response.data;
                 navigator.clipboard.writeText(code);
-                toast.success(`Código generado: ${code}`);
+                toast.success(t("codeGenerated", { code }));
             })
             .catch((error) => {
-                toast.error('Error generating code: ' + (error as Error).message);
+                toast.error(t("codeError", { message: (error as Error).message }));
             });
     }
 
@@ -65,13 +67,13 @@ export default function ListWorkers() {
             }
         })
             .then(() => {
-                toast.success('¡Trabajador eliminado con éxito!');
+                toast.success(t("deleteSuccess"));
                 // Refrescar la lista de trabajadores
                 setWorkers((prevWorkers) => prevWorkers.filter((worker) => worker.workerid !== workerID));
                 window.location.reload();
             })
             .catch((error) => {
-                toast.error('Error deleting worker: ' + (error as Error).message);
+                toast.error(t("deleteError", { message: (error as Error).message }));
             });
     }
 
@@ -116,14 +118,14 @@ export default function ListWorkers() {
 
             // Si el backend devuelve token, significa que se creó correctamente
             if (response.token || response.shiftScheduleID) {
-                toast.success('¡Guardia asignada exitosamente!');
+                toast.success(t("assignSuccess"));
                 handleCloseModal();
             } else {
-                toast.error('Error: ' + (response.message || 'No se pudo asignar la guardia'));
+                toast.error(t("assignApiError", { message: response.message || "-" }));
             }
         } catch (error) {
          
-            toast.error('Error al asignar guardia: ' + (error as Error).message);
+            toast.error(t("assignError", { message: (error as Error).message }));
         }
     }
 
@@ -143,24 +145,24 @@ export default function ListWorkers() {
                 setTotalWorkers(response.data.total || 0);
             })
             .catch((error) => {
-                toast.error('Error fetching workers: ' + (error as Error).message);
+                toast.error(t("listError", { message: (error as Error).message }));
             });
-    }, [currentPage]);
+    }, [currentPage, t]);
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">List Workers Page</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
             
             <div className="w-full max-w-7xl overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-300 shadow-md">
                     <thead>
                         <tr className="bg-amber-200">
-                            <th className="py-2 px-4 border border-gray-300">workerid</th>
-                            <th className="py-2 px-4 border border-gray-300">Name</th>
-                            <th className="py-2 px-4 border border-gray-300">Email</th>
-                            <th className="py-2 px-4 border border-gray-300">Active Incidents</th>
-                            <th className="py-2 px-4 border border-gray-300">Actions</th>
+                            <th className="py-2 px-4 border border-gray-300">{t("thWorkerId")}</th>
+                            <th className="py-2 px-4 border border-gray-300">{t("thName")}</th>
+                            <th className="py-2 px-4 border border-gray-300">{t("thEmail")}</th>
+                            <th className="py-2 px-4 border border-gray-300">{t("thActiveIncidents")}</th>
+                            <th className="py-2 px-4 border border-gray-300">{t("thActions")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,19 +178,19 @@ export default function ListWorkers() {
                                     <div className="flex gap-2 flex-wrap">
                                         <button 
                                             className="text-blue-500 hover:text-blue-700"
-                                            title="Editar"
+                                            title={t("edit")}
                                         >
                                             <Edit size={16} onClick={() => navigate('/company/trabajadores/editarTrabajador')} />
                                         </button>
                                         <button 
                                             className="text-red-500 hover:text-red-700"
-                                            title="Eliminar"
+                                            title={t("delete")}
                                         >
                                             <Trash2 size={16} onClick={() => handleEliminarWorker(worker.workerid)} />
                                         </button>
                                         <button 
                                             className="text-purple-500 hover:text-purple-700"
-                                            title="Generar código"
+                                            title={t("generateCode")}
                                         >
                                             <Code size={16} onClick={() => handleGenerateCode(worker.workerid)} />
                                         </button>
@@ -197,7 +199,7 @@ export default function ListWorkers() {
                                             onClick={() => handleOpenShiftModal(worker)}
                                         >
                                             <Calendar size={14} />
-                                            Guardia
+                                            {t("shift")}
                                         </button>
                                     </div>
                                 </td>
@@ -214,17 +216,17 @@ export default function ListWorkers() {
                     className="flex items-center px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 disabled:opacity-50"
                 >
                     <ChevronLeft size={16} className="mr-2" />
-                    Anterior
+                    {t("previous")}
                 </button>
                 <span className="flex items-center px-4 py-2">
-                    Página {currentPage} de {Math.ceil(totalWorkers / pageSize)}
+                    {t("page", { current: currentPage, total: Math.ceil(totalWorkers / pageSize) })}
                 </span>
                 <button
                     onClick={() => setCurrentPage((prev) => prev + 1)}
                     disabled={currentPage >= Math.ceil(totalWorkers / pageSize)}
                     className="flex items-center px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 disabled:opacity-50"
                 >
-                    Siguiente
+                    {t("next")}
                     <ChevronRight size={16} className="ml-2" />
                 </button>
             </div>
@@ -237,7 +239,7 @@ export default function ListWorkers() {
                         {/* Header */}
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-gray-800">
-                                Asignar Guardia
+                                {t("assignShift")}
                             </h3>
                             <button 
                                 onClick={handleCloseModal}
@@ -249,7 +251,7 @@ export default function ListWorkers() {
 
                         {/* Worker Info */}
                         <div className="mb-4 p-3 bg-amber-50 rounded">
-                            <p className="text-sm text-gray-600">Trabajador:</p>
+                            <p className="text-sm text-gray-600">{t("worker")}</p>
                             <p className="font-semibold text-gray-800">{selectedWorker.name}</p>
                         </div>
 
@@ -257,7 +259,7 @@ export default function ListWorkers() {
                         <form onSubmit={handleSubmit(handleSubmitShift)} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Fecha de Inicio
+                                    {t("startDate")}
                                 </label>
                                 <input
                                     type="date"
@@ -274,7 +276,7 @@ export default function ListWorkers() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Fecha de Fin
+                                    {t("endDate")}
                                 </label>
                                 <input
                                     type="date"
@@ -290,7 +292,7 @@ export default function ListWorkers() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Tipo de Guardia
+                                    {t("shiftType")}
                                 </label>
                                 <select
                                     {...register('shiftType')}
@@ -298,10 +300,10 @@ export default function ListWorkers() {
                                         errors.shiftType ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 >
-                                    <option value="morning">Mañana (8:00 - 16:00)</option>
-                                    <option value="afternoon">Tarde (16:00 - 00:00)</option>
-                                    <option value="night">Noche (00:00 - 8:00)</option>
-                                    <option value="fullday">Día completo (24h)</option>
+                                    <option value="morning">{t("morning")}</option>
+                                    <option value="afternoon">{t("afternoon")}</option>
+                                    <option value="night">{t("night")}</option>
+                                    <option value="fullday">{t("fullday")}</option>
                                 </select>
                                 {errors.shiftType && (
                                     <p className="text-red-500 text-sm mt-1">{errors.shiftType.message}</p>
@@ -310,13 +312,13 @@ export default function ListWorkers() {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Notas (opcional)
+                                    {t("notes")}
                                 </label>
                                 <textarea
                                     {...register('notes')}
                                     className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                                     rows={3}
-                                    placeholder="Ej: Zona sur, urgencias prioritarias..."
+                                    placeholder={t("notesPlaceholder")}
                                 />
                             </div>
 
@@ -327,13 +329,13 @@ export default function ListWorkers() {
                                     onClick={handleCloseModal}
                                     className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
                                 >
-                                    Cancelar
+                                    {t("cancel")}
                                 </button>
                                 <button
                                     type="submit"
                                     className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
                                 >
-                                    Asignar Guardia
+                                    {t("assignShiftBtn")}
                                 </button>
                             </div>
                         </form>

@@ -1,12 +1,36 @@
 import { useState } from "react";
 import api from '../api/intercepttors'
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+    const { t, i18n } = useTranslation();
     const [email, setEmail] = useState("");
+    const languages = [
+    {
+      code: "es",
+      name: t("language.spanish"),
+      flag: "🇪🇸",
+    },
+    {
+      code: "en",
+      name: t("language.english"),
+      flag: "🇬🇧",
+    },
+    {
+                code: "ca",
+        name: t("language.catalan"),
+        
+    }
+  ];
+        const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+                const nextLanguage = event.target.value;
+                i18n.changeLanguage(nextLanguage);
+                localStorage.setItem("i18nLang", nextLanguage);
+        };
     function handleSubscribe(e: React.FormEvent) {
         e.preventDefault();
         api.post('/mailing/subscribeNewsletter', { email })
-            .then(response => {
+            .then(() => {
                 alert('¡Gracias por suscribirte a nuestra newsletter!');
                 setEmail("");
             })
@@ -32,10 +56,16 @@ export default function Footer() {
                 </p>
                 <div className="flex items-center justify-center gap-2 md:justify-start">
                     <span className="text-sm font-medium">Seleccione el idioma:</span>
-                    <select className="rounded bg-amber-500 px-2 py-1 text-sm text-white shadow-sm">
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                        <option value="cat">Català</option>
+                    <select
+                        className="rounded bg-amber-500 px-2 py-1 text-sm text-white shadow-sm"
+                        value={i18n.language}
+                        onChange={handleLanguageChange}
+                    >
+                        {languages.map((language) => (
+                            <option key={language.code} value={language.code}>
+                                {language.flag ? `${language.flag} ` : ""}{language.name}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <form

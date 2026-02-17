@@ -1,0 +1,47 @@
+{
+  "title": "Client List",
+  "table": {
+    "clientId": "Client ID",
+    "name": "Name",
+    "email": "Email",
+    "contractType": "Contract Type",
+    "actions": "Actions"
+  },
+  "contract": {
+    "contract": "Contract",
+    "freeChoice": "Free choice"
+  },
+  "actions": {
+    "viewContracts": "View contracts",
+    "viewContractsTitle": "View contracts",
+    "generateCodeTitle": "Generate code"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "modal": {
+    "title": "Contracts for {{name}}",
+    "noContracts": "No contracts found",
+    "headers": {
+      "contractType": "Contract Type",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "toast": {
+    "codeGenerated": "Generated code: {{code}}",
+    "codeError": "Error generating code.",
+    "fetchClientsError": "Error fetching clients: {{message}}",
+    "fetchContractsError": "Error fetching client contracts: {{message}}"
+  },
+  "date": {
+    "na": "N/A"
+  }
+}

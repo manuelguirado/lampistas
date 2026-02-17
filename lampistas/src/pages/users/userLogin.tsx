@@ -10,8 +10,10 @@ import {
   type UserLoginSchema,
 } from "./schemas/userLoginSchema";
 import api from '../../api/intercepttors'
+import { useTranslation } from "react-i18next";
 export default function UserLogin() {
   const navigate = useNavigate();
+  const { t } = useTranslation("users.loginPage");
   const [showPassword, setShowPassword] = useState(false);
   
   const {
@@ -31,22 +33,22 @@ export default function UserLogin() {
     api.post('/user/validateCompanyCode', { code: data.code })
       .then((response) => {
         if (response.data.valid) {
-          toast.success("¡Código de empresa válido!");
+          toast.success(t("codeValid"));
           // Redirigir o realizar alguna acción adicional
           navigate("/user/userDashboard");
         } else {
-          toast.error("Código de empresa inválido");
+          toast.error(t("codeInvalid"));
         }
       })
       .catch(() => {
-        toast.error("Error al validar el código de empresa");
+        toast.error(t("codeError"));
       });
   };
   const handleSubmit = async (data: UserLoginSchema) => {
     api.post('/user/userLogin', data)
       .then((response) => {
         if (response.data.token) {
-          toast.success("¡Inicio de sesión exitoso!");
+          toast.success(t("loginSuccess"));
           // Guardar el token y userType en localStorage
           localStorage.setItem("userToken", response.data.token);
           localStorage.setItem("userType", "user");
@@ -59,11 +61,11 @@ export default function UserLogin() {
 
           navigate("/user/userdashboard");
         } else {
-          toast.error("No se recibió token en la respuesta");
+          toast.error(t("tokenMissing"));
         }
       })
       .catch(() => {
-        toast.error("Error al iniciar sesión");
+        toast.error(t("loginError"));
       });
   };
 
@@ -79,8 +81,8 @@ export default function UserLogin() {
           <div className="mx-auto w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mb-4 shadow-lg">
             <User className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Bienvenido</h2>
-          <p className="text-gray-600">Inicia sesión en tu cuenta</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+          <p className="text-gray-600">{t("subtitle")}</p>
         </div>
 
         {/* Formulario con diseño moderno */}
@@ -92,7 +94,7 @@ export default function UserLogin() {
             {/* Email Input */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Email
+                {t("email")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -101,7 +103,7 @@ export default function UserLogin() {
                 <input
                   type="email"
                   {...loginRegister("email")}
-                  placeholder="tucorreo@ejemplo.com"
+                  placeholder={t("emailPh")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                   inputMode="email"
                 />
@@ -117,7 +119,7 @@ export default function UserLogin() {
             {/* Password Input */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Contraseña
+                {t("password")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -126,7 +128,7 @@ export default function UserLogin() {
                 <input
                   type={showPassword ? "text" : "password"}
                   {...loginRegister("password")}
-                  placeholder="Tu contraseña"
+                  placeholder={t("passwordPh")}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
                 <button
@@ -148,7 +150,7 @@ export default function UserLogin() {
                 </p>
               )}
               <a href="/forgotPassword" className="text-amber-600 hover:text-amber-700 font-semibold">
-                ¿Olvidaste tu contraseña?
+                {t("forgotPassword")}
               </a>
             </div>
             
@@ -158,14 +160,14 @@ export default function UserLogin() {
               type="submit"
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Iniciar Sesión
+              {t("loginButton")}
             </button>
           </form>
 
           {/* Separador */}
           <div className="flex items-center my-8">
             <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm font-medium">O</span>
+            <span className="px-4 text-gray-500 text-sm font-medium">{t("or")}</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
@@ -174,7 +176,7 @@ export default function UserLogin() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <Building className="w-5 h-5 text-amber-600" />
-                <h3 className="text-lg font-semibold text-gray-800">Código de Empresa</h3>
+                <h3 className="text-lg font-semibold text-gray-800">{t("companyCodeTitle")}</h3>
               </div>
             </div>
             
@@ -186,7 +188,7 @@ export default function UserLogin() {
                 <input
                   type="text"
                   {...loginRegister("code")}
-                  placeholder="Ingresa tu código de empresa"
+                  placeholder={t("companyCodePh")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
               </div>
@@ -203,7 +205,7 @@ export default function UserLogin() {
               onClick={handleLoginSubmit(handleValidateCode)}
               className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Acceder con Código
+              {t("codeLoginButton")}
             </button>
           </div>
         </div>

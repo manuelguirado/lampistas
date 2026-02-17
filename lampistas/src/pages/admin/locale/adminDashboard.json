@@ -1,0 +1,20 @@
+{
+    "navigation" : {
+        "Registrar Compañia": "Register Company",
+        "Listar Compañias": "List Companies",
+        "Boletin": "Newsletter"
+    },
+    "hero" : {
+        "title" : "Admin Dashboard",
+        "description" : "Welcome to your Administration Dashboard",
+        "Empresas " : "Companies Overview",
+        "Empresas totales" : "Total Companies",
+        "Grafico de Compaias Mensuales" : "Monthly Companies Chart",
+        "Incidencias Activas " : "Active Incidents",
+        "Incidencias totales" : "Total Incidents",
+        "Grafico de Incidencias Mensuales" : "Monthly Incidents Chart",
+        "Clientes Activos" : "Active Clients",
+        "Clientes totales" : "Total Clients",
+        "Grafico de Clientes Mensuales" : "Monthly Clients Chart"
+    }
+}

@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft, UserPlus, X } from "lucide-react";
 import toast from 'react-hot-toast';
 import api from "../../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 
 export default function MyIncidents() {
+  const { t, i18n } = useTranslation("companies.myIncidents");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedIncident, setSelectedIncident] = useState<{ 
@@ -69,7 +71,7 @@ function handleOpenIncidentModal(incident: {
       setSelectedIncident((prev) => prev ? { ...prev, files: files } : null);
     })
     .catch((error) => {
-      toast.error("Error al cargar archivos: " + error.message);
+      toast.error(t("toasts.loadFilesError", { message: error.message }));
       setSelectedIncident((prev) => prev ? { ...prev, files: [] } : null);
     });
 }
@@ -87,8 +89,8 @@ function handleOpenIncidentModal(incident: {
       .then((response) => {
         setWorkers(response.data.workers || []);
       })
-      .catch((err) => toast.error("Error fetching workers: " + (err as Error).message));
-  }, [token]);
+      .catch((err) => toast.error(t("toasts.loadWorkersError", { message: (err as Error).message })));
+  }, [token, t]);
 
   // Cargar incidencias
   useEffect(() => {
@@ -101,9 +103,9 @@ function handleOpenIncidentModal(incident: {
         setTotalIncidents(response.data.total);
       })
       .catch((error) => {
-        toast.error("Error fetching incidents: " + (error as Error).message);
+        toast.error(t("toasts.loadIncidentsError", { message: (error as Error).message }));
       });
-  }, [currentPage, token, offset]);
+  }, [currentPage, token, offset, t]);
 
   // Función para asignar trabajador
   async function handleAssignWorker(incidentID: number, workerID: number) {
@@ -115,7 +117,7 @@ function handleOpenIncidentModal(incident: {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success('¡Trabajador asignado exitosamente!');
+      toast.success(t("toasts.assignSuccess"));
       // Actualizar la lista para reflejar el cambio
       setIncidents((prev) =>
         prev.map((inc) =>
@@ -125,7 +127,7 @@ function handleOpenIncidentModal(incident: {
         )
       );
     } catch (error: any) {
-      toast.error('Error al asignar trabajador: ' + (error.response?.data?.message || error.message));
+      toast.error(t("toasts.assignError", { message: error.response?.data?.message || error.message }));
     }
   }
 
@@ -134,20 +136,20 @@ function handleOpenIncidentModal(incident: {
   return (
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
-      <h2 className="text-2xl font-bold mb-6">Mis Incidencias</h2>
+      <h2 className="text-2xl font-bold mb-6">{t("title")}</h2>
 
       <div className="w-full max-w-7xl overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300 shadow-md">
           <thead>
             <tr className="bg-amber-200">
               <th className="py-2 px-4 border border-gray-300">ID</th>
-              <th className="py-2 px-4 border border-gray-300">Título</th>
-              <th className="py-2 px-4 border border-gray-300">Descripción</th>
-              <th className="py-2 px-4 border border-gray-300">Estado</th>
-              <th className="py-2 px-4 border border-gray-300">Prioridad</th>
-              <th className="py-2 px-4 border border-gray-300">Fecha</th>
-              <th className="py-2 px-4 border border-gray-300">Asignar a</th>
-              <th className="py-2 px-4 border border-gray-300">Reportes del trabajador</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.title")}</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.description")}</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.status")}</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.priority")}</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.date")}</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.assignTo")}</th>
+              <th className="py-2 px-4 border border-gray-300">{t("table.workerReports")}</th>
             </tr>
           </thead>
           <tbody>
@@ -172,7 +174,11 @@ function handleOpenIncidentModal(incident: {
                         : "bg-green-200 text-green-800"
                     }`}
                   >
-                    {incident.status}
+                    {incident.status === "OPEN"
+                      ? t("status.open")
+                      : incident.status === "IN_PROGRESS"
+                      ? t("status.inProgress")
+                      : t("status.closed")}
                   </span>
                 </td>
                 <td className="py-2 px-4 border border-gray-300">
@@ -185,11 +191,15 @@ function handleOpenIncidentModal(incident: {
                         : "bg-blue-200 text-blue-800"
                     }`}
                   >
-                    {incident.priority}
+                    {incident.priority === "HIGH"
+                      ? t("priority.high")
+                      : incident.priority === "MEDIUM"
+                      ? t("priority.medium")
+                      : t("priority.low")}
                   </span>
                 </td>
                 <td className="py-2 px-4 border border-gray-300">
-                  {new Date(incident.createdAt).toLocaleDateString()}
+                  {new Date(incident.createdAt).toLocaleDateString(i18n.language === "ca" ? "ca-ES" : i18n.language === "en" ? "en-US" : "es-ES")}
                 </td>
                 <td className="py-2 px-4 border border-gray-300">
                   <div className="flex items-center gap-2">
@@ -203,7 +213,7 @@ function handleOpenIncidentModal(incident: {
                       }
                       className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
-                      <option value="">Sin asignar</option>
+                      <option value="">{t("assign.unassigned")}</option>
                       {workers.map((worker) => (
                         <option key={worker.workerid} value={worker.workerid}>
                           {worker.name}
@@ -226,7 +236,7 @@ function handleOpenIncidentModal(incident: {
                        })} 
                        className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold"
                      >
-                      Ver Reportes del Trabajador
+                      {t("assign.viewReports")}
                      </button>
                   </td>
               </tr>
@@ -242,10 +252,10 @@ function handleOpenIncidentModal(incident: {
           className="flex items-center px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft size={16} className="mr-2" />
-          Anterior
+          {t("pagination.previous")}
         </button>
         <span className="font-semibold">
-          Página {currentPage} de {totalPages}
+          {t("pagination.page", { current: currentPage, total: totalPages })}
         </span>
         <button
           onClick={() =>
@@ -254,7 +264,7 @@ function handleOpenIncidentModal(incident: {
           disabled={currentPage === totalPages}
           className="flex items-center px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Siguiente
+          {t("pagination.next")}
           <ChevronRight size={16} className="ml-2" />
         </button>
       </div>
@@ -266,7 +276,7 @@ function handleOpenIncidentModal(incident: {
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-gray-800">
-                Reportes del Trabajador
+                {t("modal.title")}
               </h3>
               <button
                 onClick={handleCloseModal}
@@ -278,13 +288,13 @@ function handleOpenIncidentModal(incident: {
 
             {/* Incident Info */}
             <div className="mb-4 p-3 bg-amber-50 rounded">
-              <p className="text-sm text-gray-600">Incidencia:</p>
+              <p className="text-sm text-gray-600">{t("modal.incident")}</p>
               <p className="font-semibold text-gray-800">
                 {selectedIncident.name}
               </p>
               {selectedIncident.description && (
                 <>
-                  <p className="text-sm text-gray-600 mt-2">Descripción:</p>
+                  <p className="text-sm text-gray-600 mt-2">{t("modal.description")}</p>
                   <p className="font-semibold text-gray-800">
                     {selectedIncident.description}
                   </p>
@@ -292,7 +302,7 @@ function handleOpenIncidentModal(incident: {
               )}
               {selectedIncident.dateReported && (
                 <>
-                  <p className="text-sm text-gray-600 mt-2">Fecha de reporte:</p>
+                  <p className="text-sm text-gray-600 mt-2">{t("modal.reportDate")}</p>
                   <p className="font-semibold text-gray-800">
                     {new Date(selectedIncident.dateReported).toLocaleString()}
                   </p>
@@ -302,12 +312,12 @@ function handleOpenIncidentModal(incident: {
 
             {/* Files Section */}
             <div className="mb-4">
-              <h4 className="font-semibold text-gray-800 mb-2">Archivos del Trabajador:</h4>
+              <h4 className="font-semibold text-gray-800 mb-2">{t("modal.workerFiles")}</h4>
               
               {selectedIncident.files && selectedIncident.files.length > 0 ? (
                 <div className="space-y-3 max-h-60 overflow-y-auto">
                   {selectedIncident.files.map((file, index) => {
-                    const fileName = file.key.split('/').pop() || `Archivo ${index + 1}`;
+                    const fileName = file.key.split('/').pop() || t("modal.file", { index: index + 1 });
                     const fileExtension = fileName.split('.').pop()?.toLowerCase();
                     const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension || '');
                     const isPdf = fileExtension === 'pdf';
@@ -338,7 +348,7 @@ function handleOpenIncidentModal(incident: {
                                 // Mostrar mensaje de error
                                 const errorDiv = document.createElement('div');
                                 errorDiv.className = 'bg-red-100 p-2 rounded text-center';
-                                errorDiv.innerHTML = '<span class="text-red-600 text-sm">⚠️ No se pudo cargar la imagen</span>';
+                                errorDiv.innerHTML = `<span class="text-red-600 text-sm">⚠️ ${t("modal.imageError")}</span>`;
                                 e.currentTarget.parentNode?.appendChild(errorDiv);
                               }}
                              
@@ -363,7 +373,7 @@ function handleOpenIncidentModal(incident: {
                               rel="noopener noreferrer"
                               className="text-blue-600 hover:bg-blue-100 text-sm flex-1 text-center py-1 px-2 bg-blue-50 rounded border-none cursor-pointer"
                             >
-                              🔍 Ver
+                              🔍 {t("modal.view")}
                             </a>
                           )}
                           {file.signedUrl && (
@@ -374,7 +384,7 @@ function handleOpenIncidentModal(incident: {
                               }}
                               className="text-green-600 hover:bg-green-100 text-sm flex-1 text-center py-1 px-2 bg-green-50 rounded border-none cursor-pointer"
                             >
-                              💾 Descargar
+                              💾 {t("modal.download")}
                             </button>
                           )}
                         </div>
@@ -384,8 +394,8 @@ function handleOpenIncidentModal(incident: {
                 </div>
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  <p>No hay reportes del trabajador para esta incidencia.</p>
-                  <p className="text-sm mt-2">Los archivos aparecerán aquí cuando el trabajador suba reportes.</p>
+                  <p>{t("modal.noReports")}</p>
+                  <p className="text-sm mt-2">{t("modal.noReportsDesc")}</p>
                 </div>
               )}
             </div>
@@ -396,7 +406,7 @@ function handleOpenIncidentModal(incident: {
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
               >
-                Cerrar
+                {t("modal.close")}
               </button>
             </div>
           </div>

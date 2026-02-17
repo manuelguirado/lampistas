@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import Header from "../../components/header";
 import { User, Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 export default function UserRegister() {
     const navigate = useNavigate();
+    const { t } = useTranslation("users.registerPage");
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -30,15 +32,15 @@ export default function UserRegister() {
             const data = await response.json();
           
             if (data ) {
-                toast.success('¡Usuario registrado exitosamente!');
+                toast.success(t("success"));
                 setFormData({ name: '', email: '', password: '' });
                 navigate('/user/userLogin');
             } else {
-                toast.error('Error al registrar usuario.');
+                toast.error(t("registerError"));
             }
         } catch (error) {
     
-            toast.error('Error al registrar usuario: ' + (error as Error).message);
+            toast.error(t("registerErrorDetail", { message: (error as Error).message }));
         }
     }
 
@@ -52,8 +54,8 @@ export default function UserRegister() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
                         <UserPlus className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Crear Cuenta</h2>
-                    <p className="text-gray-600">Únete a nuestra plataforma</p>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+                    <p className="text-gray-600">{t("subtitle")}</p>
                 </div>
 
                 {/* Formulario moderno */}
@@ -62,7 +64,7 @@ export default function UserRegister() {
                         {/* Campo Nombre */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Nombre Completo
+                                {t("name")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -71,7 +73,7 @@ export default function UserRegister() {
                                 <input
                                     type="text"
                                     name="name"
-                                    placeholder="Tu nombre completo"
+                                    placeholder={t("namePh")}
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
@@ -83,7 +85,7 @@ export default function UserRegister() {
                         {/* Campo Email */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Correo Electrónico
+                                {t("email")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -92,7 +94,7 @@ export default function UserRegister() {
                                 <input
                                     type="email"
                                     name="email"
-                                    placeholder="tu@email.com"
+                                    placeholder={t("emailPh")}
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
@@ -104,7 +106,7 @@ export default function UserRegister() {
                         {/* Campo Contraseña */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Contraseña
+                                {t("password")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -113,7 +115,7 @@ export default function UserRegister() {
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     name="password"
-                                    placeholder="Contraseña segura"
+                                    placeholder={t("passwordPh")}
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
@@ -139,19 +141,19 @@ export default function UserRegister() {
                             className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                         >
                             <UserPlus className="w-5 h-5" />
-                            Crear Mi Cuenta
+                            {t("submit")}
                         </button>
                     </form>
                     
                     {/* Link al login */}
                     <div className="text-center mt-6">
                         <p className="text-gray-600 text-sm">
-                            ¿Ya tienes cuenta?{" "}
+                            {t("hasAccount")} {" "}
                             <button
                                 onClick={() => navigate('/user/userLogin')}
                                 className="text-amber-600 hover:text-amber-700 font-semibold transition-colors"
                             >
-                                Inicia sesión aquí
+                                {t("goLogin")}
                             </button>
                         </p>
                     </div>

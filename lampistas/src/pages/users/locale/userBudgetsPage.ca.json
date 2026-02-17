@@ -1,0 +1,21 @@
+{
+  "pdfDownloaded": "PDF descarregat correctament",
+  "pdfDownloadError": "Error en descarregar el PDF",
+  "loadError": "Error en carregar pressupostos",
+  "title": "Pressupostos rebuts",
+  "budgetId": "ID de pressupost",
+  "incidentId": "ID d'incidència",
+  "titleCol": "Títol",
+  "description": "Descripció",
+  "items": "Ítems",
+  "totalAmount": "Import total",
+  "downloadPdf": "Descarregar PDF",
+  "pay": "Pagar",
+  "quantity": "Quantitat",
+  "price": "Preu",
+  "downloadPdfBtn": "Descarregar PDF",
+  "showing": "Mostrant {{from}} a {{to}} de {{total}} pressupostos",
+  "previous": "Anterior",
+  "next": "Següent",
+  "close": "Tancar"
+}

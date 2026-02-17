@@ -2,8 +2,10 @@ import Header from './components/header';
 import Chartjs from 'chart.js/auto';
 import api from '../../api/intercepttors';
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from "react-i18next";
 
 export default function AdminHome() {
+    const { t } = useTranslation("admin.homePage");
     const [companies, setCompanies] = useState<number[]>([]);
     const [clients, setClients] = useState<number[]>([]);
     const [incidents, setIncidents] = useState<number[]>([]);
@@ -22,6 +24,7 @@ export default function AdminHome() {
     const clientsChartRef = useRef<Chartjs | null>(null);
     const incidentsChartRef = useRef<Chartjs | null>(null);
     const token = localStorage.getItem('adminToken');
+    const months = t("months", { returnObjects: true }) as string[];
    
 
     useEffect(() => {
@@ -54,9 +57,9 @@ export default function AdminHome() {
                 companiesChartRef.current = new Chartjs(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        labels: months,
                         datasets: [{
-                            label: 'Mis ganancias',
+                            label: t("datasetCompanies"),
                             data: companies,
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         }]
@@ -65,7 +68,7 @@ export default function AdminHome() {
                         responsive: true,
                         plugins: {
                             legend: { position: 'top' },
-                            title: { display: true, text: 'Ganancias Mensuales' }
+                            title: { display: true, text: t("companiesChart") }
                         }
                     }
                 });
@@ -99,9 +102,9 @@ export default function AdminHome() {
                 incidentsChartRef.current = new Chartjs(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        labels: months,
                         datasets: [{
-                            label: 'Incidentes abiertos',
+                            label: t("datasetIncidents"),
                             data: incidents,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         }]
@@ -110,7 +113,7 @@ export default function AdminHome() {
                         responsive: true,
                         plugins: {
                             legend: { position: 'top' },
-                            title: { display: true, text: 'Incidentes Abiertos Mensuales' }
+                            title: { display: true, text: t("incidentsChart") }
                         }
                     }
                 });
@@ -150,9 +153,9 @@ export default function AdminHome() {
                 clientsChartRef.current = new Chartjs(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        labels: months,
                         datasets: [{
-                            label: 'Clientes activos',
+                            label: t("datasetClients"),
                             data: clients,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         }]
@@ -161,7 +164,7 @@ export default function AdminHome() {
                         responsive: true,
                         plugins: {
                             legend: { position: 'top' },
-                            title: { display: true, text: 'Clientes Activos' }
+                            title: { display: true, text: t("clientsChart") }
                         }
                     }
                 });
@@ -178,29 +181,29 @@ export default function AdminHome() {
     return (
         <><div className='w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8'>
             <Header />
-            <h1 className='text-3xl font-bold text-amber-800 mb-6'>Welcome to your Company Dashboard</h1>
+            <h1 className='text-3xl font-bold text-amber-800 mb-6'>{t("title")}</h1>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6' id='companies'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Companies Overview</h2>
-                <p className='text-gray-700 text-lg'>Total Companies: <span className='font-bold text-amber-600'>{totalCompanies}</span></p>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("companiesOverview")}</h2>
+                <p className='text-gray-700 text-lg'>{t("totalCompanies")}: <span className='font-bold text-amber-600'>{totalCompanies}</span></p>
 
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Monthly Companies Chart</h2>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("companiesChart")}</h2>
                 <canvas id="companiesChart"></canvas>
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Active Incidents Overview</h2>
-                <p className='text-gray-700 text-lg'>Total Active Incidents: <span className='font-bold text-amber-600'>{incidents.reduce((a, b) => a + b, 0)}</span></p>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("incidentsOverview")}</h2>
+                <p className='text-gray-700 text-lg'>{t("totalIncidents")}: <span className='font-bold text-amber-600'>{incidents.reduce((a, b) => a + b, 0)}</span></p>
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Monthly Active Incidents Chart</h2>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("incidentsChart")}</h2>
                 <canvas id="incidentsChart"></canvas>
             </div>
             <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'></div>
-            <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Active Clients Overview</h2>
-            <p className='text-gray-700 text-lg'>Total Active Clients: <span className='font-bold text-amber-600'>{totalClients}</span></p>
+            <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("clientsOverview")}</h2>
+            <p className='text-gray-700 text-lg'>{t("totalClients")}: <span className='font-bold text-amber-600'>{totalClients}</span></p>
         </div><div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>Active Clients Chart</h2>
+                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("clientsChart")}</h2>
                 <canvas id="clientsChart"></canvas>
             </div></>
 

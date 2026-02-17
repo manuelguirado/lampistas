@@ -1,0 +1,53 @@
+{
+  "title": "Mis incidencias",
+  "table": {
+    "id": "ID",
+    "title": "Titulo",
+    "description": "Descripcion",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "date": "Fecha",
+    "assignTo": "Asignar a",
+    "workerReports": "Reportes del trabajador"
+  },
+  "status": {
+    "open": "Abierta",
+    "inProgress": "En progreso",
+    "closed": "Cerrada"
+  },
+  "priority": {
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Baja"
+  },
+  "assign": {
+    "unassigned": "Sin asignar",
+    "viewReports": "Ver reportes del trabajador"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Pagina {{current}} de {{total}}"
+  },
+  "modal": {
+    "title": "Reportes del trabajador",
+    "incident": "Incidencia:",
+    "description": "Descripcion:",
+    "reportDate": "Fecha de reporte:",
+    "workerFiles": "Archivos del trabajador:",
+    "file": "Archivo {{index}}",
+    "view": "Ver",
+    "download": "Descargar",
+    "close": "Cerrar",
+    "noReports": "No hay reportes del trabajador para esta incidencia.",
+    "noReportsDesc": "Los archivos apareceran aqui cuando el trabajador suba reportes.",
+    "imageError": "No se pudo cargar la imagen"
+  },
+  "toasts": {
+    "loadFilesError": "Error al cargar archivos: {{message}}",
+    "loadWorkersError": "Error al cargar trabajadores: {{message}}",
+    "loadIncidentsError": "Error al cargar incidencias: {{message}}",
+    "assignSuccess": "Trabajador asignado exitosamente!",
+    "assignError": "Error al asignar trabajador: {{message}}"
+  }
+}

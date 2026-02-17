@@ -12,7 +12,9 @@ import { useEffect } from "react";
 import api from "../../api/intercepttors"; // ✅ Importar
 import toast from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 function CreateBudget() {
+  const { t } = useTranslation("companies.createBudgetPage");
   const navigate = useNavigate();
   const token = localStorage.getItem("companyToken");
   interface DecodedToken {
@@ -80,7 +82,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
       });
       
      
-      toast.success("PDF subido al servidor exitosamente");
+      toast.success(t("uploadSuccess"));
       return response.data;
       
     } catch (error: unknown) {
@@ -95,11 +97,11 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
 
         const errorMsg = err.response?.data?.message ||
                         err.response?.statusText ||
-                        "Error desconocido al subir archivo";
+                        t("unknownUploadError");
 
-        toast.error(`Error subiendo PDF: ${errorMsg}`);
+        toast.error(`${t("uploadErrorPrefix")}: ${errorMsg}`);
       } else {
-        toast.error("Error desconocido al subir archivo");
+        toast.error(t("unknownUploadError"));
         console.error("Upload error details:", error);
       }
       throw error; // Re-throw para manejar en onSubmit
@@ -180,7 +182,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
     
     // ✅ VERIFICAR que hay items con datos
     if (!itemsWithTotal || itemsWithTotal.length === 0) {
-      toast.error("Debes agregar al menos un item al presupuesto");
+      toast.error(t("noItems"));
       return;
     }
     
@@ -226,16 +228,16 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
       // ✅ MEJORAR: Subir PDF con manejo de errores
       try {
         await uploadFile(new File([response.data], filename, { type: 'application/pdf', }));
-        toast.success("Presupuesto creado, PDF descargado y subido al servidor!");
+        toast.success(t("budgetCreatedAll"));
       } catch (uploadError) {
         console.error("Error uploading PDF:", uploadError);
-        toast.success("Presupuesto creado y PDF descargado (error al subir al servidor)");
+        toast.success(t("budgetCreatedDownloadOnly"));
       }
       
       navigate("/company/companyDashboard");
       
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error creating budget";
+      const errorMessage = error.response?.data?.message || t("createError");
       toast.error(errorMessage);
       console.error("Error:", error);
     } finally {
@@ -340,14 +342,14 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
   return (
     <div className="w-full h-full flex flex-col bg-white/80 justify-center items-center p-4">
       <Header />
-      <h2 className="text-2xl font-bold p-4">Create Budget</h2>
+      <h2 className="text-2xl font-bold p-4">{t("title")}</h2>
 
       <div className="w-full max-w-4xl">
         <form
           className="flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-md"
           onSubmit={handleFormSubmit(onSubmit, (errors) => {
             toast.error(
-              "Por favor completa todos los campos requeridos" +
+              t("validationError") +
                 Object.values(errors)
                   .map((err) => `\n- ${err.message}`)
                   .join("")
@@ -377,7 +379,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
           <div>
             <input
               type="text"
-              placeholder="budget title"
+              placeholder={t("budgetTitlePh")}
               {...register("title")}
               className="border p-2 rounded w-full"
             />
@@ -397,8 +399,8 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
                 value: inc.IncidentsID,
                 label: inc.title,
               }))}
-              placeholder="Select Incident"
-              noOptionsMessage={() => "No incidents found"}
+              placeholder={t("incidentSelectPh")}
+              noOptionsMessage={() => t("noIncidents")}
               onChange={(selectedOption: { value: number; label: string } | null) => {
                 setValue("incidentID", selectedOption?.value || undefined);
               }}
@@ -429,8 +431,8 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
                     label: cl.name,
                   }));
               }}
-              placeholder="Select Client"
-              noOptionsMessage={() => "No clients found"}
+              placeholder={t("clientSelectPh")}
+              noOptionsMessage={() => t("noClients")}
               onChange={(selectedOption: { value: number; label: string } | null) => {
                 setValue("clientID", selectedOption?.value || 0 );
               }}
@@ -454,7 +456,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
           </div>
 
           <div className="border-t pt-4 mt-4">
-            <h3 className="font-bold mb-2">Items</h3>
+            <h3 className="font-bold mb-2">{t("itemsTitle")}</h3>
             
           
             
@@ -464,13 +466,13 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
               <div key={index} className="flex gap-2 mb-2 p-4 border rounded-lg">
                 <input
                   type="text"
-                  placeholder="Descripción"
+                  placeholder={t("itemDescriptionPh")}
                   {...register(`items.${index}.description`)}
                   className="border p-2 rounded flex-1"
                 />
                 <input
                   type="number"
-                  placeholder="Cantidad"
+                  placeholder={t("itemQtyPh")}
                   {...register(`items.${index}.quantity`, { 
                     valueAsNumber: true,
                   })}
@@ -479,7 +481,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
                 <input
                   type="number"
                   step="0.01"
-                  placeholder="Precio Unit."
+                  placeholder={t("itemUnitPricePh")}
                   {...register(`items.${index}.unitPrice`, { 
                     valueAsNumber: true,
                   })}
@@ -507,7 +509,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
               onClick={handleAddItem}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
             >
-              + Agregar Item
+              {t("addItem")}
             </button>
           </div>
 
@@ -515,15 +517,15 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
             {/* Totales */}
             <div className="flex justify-end space-x-4 text-lg">
               <div>
-                <span className="font-semibold">Subtotal: </span>
+                <span className="font-semibold">{t("subtotal")}: </span>
                 <span>{subtotal.toFixed(2)}€</span>
               </div>
               <div>
-                <span className="font-semibold">IVA (21%): </span>
+                <span className="font-semibold">{t("tax")}: </span>
                 <span>{tax.toFixed(2)}€</span>
               </div>
               <div className="text-xl font-bold">
-                <span>Total: </span>
+                <span>{t("total")}: </span>
                 <span>{total.toFixed(2)}€</span>
               </div>
             </div>
@@ -534,7 +536,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
             disabled={isSubmitting}
             className="bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-600 mt-4 font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Creando..." : "Crear Presupuesto"}
+            {isSubmitting ? t("creating") : t("submit")}
           </button>
 
          

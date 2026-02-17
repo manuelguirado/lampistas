@@ -1,0 +1,17 @@
+{
+  "loaded": "Machinery loaded successfully",
+  "fetchError": "Error fetching machinery: {{message}}",
+  "loading": "Loading machinery...",
+  "title": "My machinery",
+  "empty": "You have no assigned machinery",
+  "id": "ID",
+  "name": "Name",
+  "model": "Model",
+  "description": "Description",
+  "brand": "Brand",
+  "serial": "Serial No.",
+  "installation": "Installation",
+  "lastInspection": "Last inspection",
+  "notInstalled": "Not installed",
+  "notInspected": "Not inspected"
+}

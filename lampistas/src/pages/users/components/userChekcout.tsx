@@ -6,6 +6,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 
 type CheckoutFormProps = {
@@ -19,6 +20,7 @@ const UserCheckoutForm = ({
   ammount,
   userID,
 }: CheckoutFormProps) => {
+  const { t } = useTranslation("users.checkoutPage");
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -45,16 +47,16 @@ const UserCheckoutForm = ({
       ) {
         setError(error.message || "");
       } else if (error) {
-        setError("Ha ocurrido un error inesperado.");
+        setError(t("cardError"));
       } else {
-        setMessage("¡Pago realizado correctamente!");
+        setMessage(t("success"));
         // Redirigir automáticamente al success page
         setTimeout(() => {
           navigate("/user/payment/success");
         }, 1200);
       }
     } catch (err) {
-      setError("Error desconocido");
+      setError(t("unknownError"));
     }
     setIsProcessing(false);
   };
@@ -78,7 +80,7 @@ const UserCheckoutForm = ({
             />
           </svg>
           <h2 className="text-xl font-bold text-gray-800">
-            Realizar el pago 
+            {t("title")}
           </h2>
         </div>
         <div className="flex items-end gap-1">
@@ -124,7 +126,7 @@ const UserCheckoutForm = ({
               Procesando...
             </span>
           ) : (
-            `Suscribirse por ${ammount}€`
+            t("subscribe", { amount: ammount })
           )}
         </button>
         {error && <div className="text-red-600 mt-2 text-center text-sm">{error}</div>}

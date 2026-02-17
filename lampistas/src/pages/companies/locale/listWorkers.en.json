@@ -1,0 +1,47 @@
+{
+  "title": "Worker List",
+  "table": {
+    "workerId": "Worker ID",
+    "name": "Name",
+    "email": "Email",
+    "activeIncidents": "Active incidents",
+    "actions": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "generateCode": "Generate code",
+    "assignShift": "Shift"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "modal": {
+    "title": "Assign shift",
+    "workerLabel": "Worker:",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "shiftType": "Shift type",
+    "notesOptional": "Notes (optional)",
+    "notesPlaceholder": "Example: South area, priority emergencies...",
+    "cancel": "Cancel",
+    "assignShift": "Assign shift",
+    "shiftOptions": {
+      "morning": "Morning (8:00 - 16:00)",
+      "afternoon": "Afternoon (16:00 - 00:00)",
+      "night": "Night (00:00 - 8:00)",
+      "fullDay": "Full day (24h)"
+    }
+  },
+  "toast": {
+    "codeGenerated": "Generated code: {{code}}",
+    "codeError": "Error generating code: {{message}}",
+    "deleteSuccess": "Worker deleted successfully!",
+    "deleteError": "Error deleting worker: {{message}}",
+    "assignSuccess": "Shift assigned successfully!",
+    "assignError": "Error assigning shift: {{message}}",
+    "fetchWorkersError": "Error fetching workers: {{message}}"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "navigation": {
+    "Trabajadores": "Workers",
+    "Clientes": "Clients",
+    "Incidencias": "Incidents",
+    "Crear Presupuesto": "Create Budget",
+    "Maquinaria": "Machinery",
+    "Perfil": "Profile",
+    "Vincular Pagos": "Link Payments",
+    "Dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Register Worker",
+    "description": "Create a new worker account for your company",
+    "Nombre completo": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "Registrar Trabajador": "Register Worker"
+  }
+}

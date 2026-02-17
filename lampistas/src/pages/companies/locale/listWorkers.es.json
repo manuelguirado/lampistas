@@ -1,0 +1,47 @@
+{
+  "title": "Lista de trabajadores",
+  "table": {
+    "workerId": "ID Trabajador",
+    "name": "Nombre",
+    "email": "Email",
+    "activeIncidents": "Incidencias activas",
+    "actions": "Acciones"
+  },
+  "actions": {
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "generateCode": "Generar codigo",
+    "assignShift": "Guardia"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Pagina {{current}} de {{total}}"
+  },
+  "modal": {
+    "title": "Asignar guardia",
+    "workerLabel": "Trabajador:",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "shiftType": "Tipo de guardia",
+    "notesOptional": "Notas (opcional)",
+    "notesPlaceholder": "Ej: Zona sur, urgencias prioritarias...",
+    "cancel": "Cancelar",
+    "assignShift": "Asignar guardia",
+    "shiftOptions": {
+      "morning": "Manana (8:00 - 16:00)",
+      "afternoon": "Tarde (16:00 - 00:00)",
+      "night": "Noche (00:00 - 8:00)",
+      "fullDay": "Dia completo (24h)"
+    }
+  },
+  "toast": {
+    "codeGenerated": "Codigo generado: {{code}}",
+    "codeError": "Error al generar codigo: {{message}}",
+    "deleteSuccess": "Trabajador eliminado con exito!",
+    "deleteError": "Error al eliminar trabajador: {{message}}",
+    "assignSuccess": "Guardia asignada exitosamente!",
+    "assignError": "Error al asignar guardia: {{message}}",
+    "fetchWorkersError": "Error al cargar trabajadores: {{message}}"
+  }
+}

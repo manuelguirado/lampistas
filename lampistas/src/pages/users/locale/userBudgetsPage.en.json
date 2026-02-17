@@ -1,0 +1,21 @@
+{
+  "pdfDownloaded": "PDF downloaded successfully",
+  "pdfDownloadError": "Error downloading PDF",
+  "loadError": "Error loading budgets",
+  "title": "Received budgets",
+  "budgetId": "Budget ID",
+  "incidentId": "Incident ID",
+  "titleCol": "Title",
+  "description": "Description",
+  "items": "Items",
+  "totalAmount": "Total amount",
+  "downloadPdf": "Download PDF",
+  "pay": "Pay",
+  "quantity": "Quantity",
+  "price": "Price",
+  "downloadPdfBtn": "Download PDF",
+  "showing": "Showing {{from}} to {{to}} of {{total}} budgets",
+  "previous": "Previous",
+  "next": "Next",
+  "close": "Close"
+}

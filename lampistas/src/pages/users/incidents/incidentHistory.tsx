@@ -3,8 +3,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "../components/header";
 import api from '../../../api/intercepttors'
 import type { IncidentHistoryItem } from "../../../types/incidentHistory";
+import { useTranslation } from "react-i18next";
 
 export default function IncidentHistory() {
+    const { t } = useTranslation("users.incidentHistoryPage");
     const [history, setHistory] = useState<IncidentHistoryItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalHistory, setTotalHistory] = useState(0);
@@ -44,7 +46,7 @@ export default function IncidentHistory() {
     if (loading) {
         return (
             <div className="w-full min-h-screen flex items-center justify-center">
-                <div className="text-xl">Cargando historial...</div>
+                <div className="text-xl">{t("loading")}</div>
             </div>
         );
     }
@@ -52,28 +54,28 @@ export default function IncidentHistory() {
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">Historial de Incidencias</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("title")}</h2>
             
             {history.length === 0 ? (
                 <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
-                    No hay incidencias en el historial
+                    {t("empty")}
                 </div>
             ) : (
                 <div className="w-full max-w-7xl overflow-x-auto">
                     <table className="min-w-full bg-white border border-gray-300 shadow-md">
                         <thead>
                             <tr className="bg-amber-200">
-                                <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Título</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Descripción</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Estado</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Usuario</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Trabajador</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Empresa</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Creado</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Cerrado</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Último Cambio</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Log de Cambio</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("id")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("titleCol")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("description")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("status")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("user")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("worker")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("company")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("created")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("closed")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("lastChange")}</th>
+                                <th className="py-2 px-4 border border-gray-300 text-left">{t("changeLog")}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,7 +104,7 @@ export default function IncidentHistory() {
                                     </td>
                                     <td className="py-2 px-4 border border-gray-300">
                                         <span className="font-medium text-blue-600">
-                                            {incident.userName || 'N/A'}
+                                            {incident.userName || t("na")}
                                         </span>
                                     </td>
                                     <td className="py-2 px-4 border border-gray-300">
@@ -111,12 +113,12 @@ export default function IncidentHistory() {
                                                 {incident.workerName}
                                             </span>
                                         ) : (
-                                            <span className="text-gray-400 italic">Sin asignar</span>
+                                            <span className="text-gray-400 italic">{t("unassigned")}</span>
                                         )}
                                     </td>
                                     <td className="py-2 px-4 border border-gray-300">
                                         <span className="font-medium text-green-600">
-                                            {incident.companyName || 'N/A'}
+                                            {incident.companyName || t("na")}
                                         </span>
                                     </td>
                                     <td className="py-2 px-4 border border-gray-300 text-sm">
@@ -144,7 +146,7 @@ export default function IncidentHistory() {
                                                 </span>
                                             </>
                                         ) : (
-                                            <span className="text-gray-400 italic">No cerrada</span>
+                                            <span className="text-gray-400 italic">{t("notClosed")}</span>
                                         )}
                                     </td>
                                     <td className="py-2 px-4 border border-gray-300 text-sm">
@@ -161,12 +163,12 @@ export default function IncidentHistory() {
                                                 </span>
                                             </>
                                         ) : (
-                                            <span className="text-gray-400 italic">N/A</span>
+                                            <span className="text-gray-400 italic">{t("na")}</span>
                                         )}
                                     </td>
                                     <td className="py-2 px-4 border border-gray-300 max-w-xs">
                                         <div className="truncate" title={incident.changeLog}>
-                                            {incident.changeLog || 'N/A'}
+                                            {incident.changeLog || t("na")}
                                         </div>
                                     </td>
                                 </tr>
@@ -178,7 +180,11 @@ export default function IncidentHistory() {
                     {totalHistory > pageSize && (
                         <div className="flex items-center justify-between mt-6 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm">
                             <div className="flex items-center text-sm text-gray-500">
-                                Mostrando {Math.min((currentPage - 1) * pageSize + 1, totalHistory)} a {Math.min(currentPage * pageSize, totalHistory)} de {totalHistory} registros
+                                {t("showing", {
+                                    from: Math.min((currentPage - 1) * pageSize + 1, totalHistory),
+                                    to: Math.min(currentPage * pageSize, totalHistory),
+                                    total: totalHistory,
+                                })}
                             </div>
                             
                             <div className="flex items-center space-x-2">
@@ -193,7 +199,7 @@ export default function IncidentHistory() {
                                     } transition-colors`}
                                 >
                                     <ChevronLeft className="w-4 h-4 mr-1" />
-                                    Anterior
+                                    {t("previous")}
                                 </button>
 
                                 {/* Números de página */}
@@ -243,7 +249,7 @@ export default function IncidentHistory() {
                                             : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                                     } transition-colors`}
                                 >
-                                    Siguiente
+                                    {t("next")}
                                     <ChevronRight className="w-4 h-4 ml-1" />
                                 </button>
                             </div>

@@ -1,0 +1,7 @@
+{
+  "titulo": "Worker management",
+  "registrarTitulo": "Register worker",
+  "registrarDesc": "Add a new worker to the system",
+  "misTrabajadoresTitulo": "My workers",
+  "misTrabajadoresDesc": "View and manage your company workers"
+}

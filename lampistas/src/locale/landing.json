@@ -1,0 +1,15 @@
+{
+    "navigation": {
+        "Acceso Clientes": "Client Access",
+        "Acceso Empresa": "Company Access",
+        "Administradores": "Administrators",
+        "Acceso Trabajadores": "Worker Access"
+    },
+    "hero": {
+        "title": "Welcome to Lampistas",
+        "Description": "Are you a repair or maintenance service company? Make the digital leap with Lampistas: easily manage your workers and clients, and access a secure payment gateway to collect payments quickly and simply. Join today and start receiving online payments, while we handle account management and automate your administrative processes. Grow your business by connecting with more clients and simplifying your day to day.",
+        "button": "Get Started",
+        "link": "/register"
+    }
+
+}

@@ -1,0 +1,8 @@
+{
+  "subscriptionError": "Error creating payment: {{message}}",
+  "loading": "Loading...",
+  "title": "Complete payment by entering your card details",
+  "payNow": "Pay now",
+  "cardTitle": "Enter your card details",
+  "cardSubtitle": "Complete the payment to activate your subscription"
+}

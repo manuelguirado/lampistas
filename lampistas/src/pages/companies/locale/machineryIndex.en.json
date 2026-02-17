@@ -1,0 +1,9 @@
+{
+  "titulo": "Machinery management",
+  "crearTitulo": "Create machinery",
+  "crearDesc": "Register new machinery in the system",
+  "listarTitulo": "List machinery",
+  "listarDesc": "View all registered machinery",
+  "mantenimientoTitulo": "Update maintenance",
+  "mantenimientoDesc": "Register a new maintenance date for machinery"
+}

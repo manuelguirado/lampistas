@@ -8,9 +8,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Shield, Mail, Lock, UserPlus, LogIn } from "lucide-react";
 import api from '../../api/intercepttors'
+import { useTranslation } from "react-i18next";
 
 export default function AdminAuth() {
   const navigate = useNavigate();
+  const { t } = useTranslation("admin.authPage");
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   
@@ -56,17 +58,17 @@ export default function AdminAuth() {
       if (result.token) {
         localStorage.setItem("adminToken", result.token);
         localStorage.setItem("userType", "admin");
-        toast.success("¡Administrador registrado exitosamente!");
+        toast.success(t("registerSuccess"));
         navigate("/admin/adminDashboard");
       } else {
         // ✅ Mostrar el mensaje específico del backend
-        const errorMsg = result.message || "Error al registrar administrador";
+        const errorMsg = result.message || t("registerError");
   
         toast.error(errorMsg);
       }
     } catch (error) {
       console.error("💥 Error de conexión:", error); // ✅ Debug
-      toast.error("Error de conexión con el servidor");
+      toast.error(t("serverError"));
     }
   };
 
@@ -84,15 +86,15 @@ export default function AdminAuth() {
       if (result.token) {
         localStorage.setItem("adminToken", result.token);
         localStorage.setItem("userType", "admin");
-        toast.success("¡Login exitoso!");
+        toast.success(t("loginSuccess"));
         navigate("/admin/adminDashboard");
       } else {
         // ✅ Mostrar el mensaje específico del backend
-        toast.error(result.message || "Credenciales incorrectas");
+        toast.error(result.message || t("loginError"));
       }
     } catch (error) {
       toast.error(
-        "Error de conexión con el servidor" + (error as Error).message
+        t("serverError") + (error as Error).message
       );
     }
   };
@@ -107,9 +109,9 @@ export default function AdminAuth() {
           <Shield className="w-10 h-10 text-white" />
         </div>
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Panel de Administradores
+          {t("panelTitle")}
         </h1>
-        <p className="text-gray-600 text-lg">Acceso exclusivo para administradores del sistema</p>
+        <p className="text-gray-600 text-lg">{t("panelSubtitle")}</p>
       </div>
 
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -119,8 +121,8 @@ export default function AdminAuth() {
             <div className="mx-auto w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4">
               <UserPlus className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Registrar Admin</h2>
-            <p className="text-gray-600 text-sm">Crear nueva cuenta de administrador</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">{t("registerTitle")}</h2>
+            <p className="text-gray-600 text-sm">{t("registerSubtitle")}</p>
           </div>
           
           <form
@@ -129,7 +131,7 @@ export default function AdminAuth() {
           >
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Email
+                {t("email")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -137,7 +139,7 @@ export default function AdminAuth() {
                 </div>
                 <input
                   type="email"
-                  placeholder="admin@ejemplo.com"
+                  placeholder="admin@example.com"
                   {...registerForm("email")}
                   className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                     registerErrors.email ? "border-red-500" : "border-gray-300"
@@ -154,7 +156,7 @@ export default function AdminAuth() {
 
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Contraseña
+                {t("password")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -162,7 +164,7 @@ export default function AdminAuth() {
                 </div>
                 <input
                   type={showRegisterPassword ? "text" : "password"}
-                  placeholder="Contraseña segura"
+                  placeholder={t("password")}
                   {...registerForm("password")}
                   className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                     registerErrors.password ? "border-red-500" : "border-gray-300"
@@ -193,7 +195,7 @@ export default function AdminAuth() {
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
               <UserPlus className="w-5 h-5" />
-              Registrar Administrador
+              {t("registerButton")}
             </button>
           </form>
         </div>
@@ -204,8 +206,8 @@ export default function AdminAuth() {
             <div className="mx-auto w-12 h-12 bg-gradient-to-r from-purple-600 to-indigo-700 rounded-full flex items-center justify-center mb-4">
               <LogIn className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Iniciar Sesión</h2>
-            <p className="text-gray-600 text-sm">Accede a tu panel de administración</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">{t("loginTitle")}</h2>
+            <p className="text-gray-600 text-sm">{t("loginSubtitle")}</p>
           </div>
           
           <form
@@ -214,7 +216,7 @@ export default function AdminAuth() {
           >
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Email
+                {t("email")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -222,7 +224,7 @@ export default function AdminAuth() {
                 </div>
                 <input
                   type="email"
-                  placeholder="admin@ejemplo.com"
+                  placeholder="admin@example.com"
                   {...loginForm("email")}
                   className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                     loginErrors.email ? "border-red-500" : "border-gray-300"
@@ -239,7 +241,7 @@ export default function AdminAuth() {
 
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Contraseña
+                {t("password")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -247,7 +249,7 @@ export default function AdminAuth() {
                 </div>
                 <input
                   type={showLoginPassword ? "text" : "password"}
-                  placeholder="Tu contraseña"
+                  placeholder={t("password")}
                   {...loginForm("password")}
                   className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                     loginErrors.password ? "border-red-500" : "border-gray-300"
@@ -272,7 +274,7 @@ export default function AdminAuth() {
                 </p>
               )}
                <a href="/forgotPassword" className="text-amber-600 hover:text-amber-700 font-semibold">
-                ¿Olvidaste tu contraseña?
+                {t("forgotPassword")}
               </a>
             </div>
 
@@ -281,7 +283,7 @@ export default function AdminAuth() {
               className="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-3 px-4 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
               <LogIn className="w-5 h-5" />
-              Iniciar Sesión
+              {t("loginButton")}
             </button>
           </form>
         </div>
@@ -292,11 +294,10 @@ export default function AdminAuth() {
         <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-purple-200">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Shield className="w-5 h-5 text-purple-600" />
-            <span className="font-semibold text-gray-800">Acceso Seguro</span>
+            <span className="font-semibold text-gray-800">{t("secureAccess")}</span>
           </div>
           <p className="text-gray-600 text-sm">
-            Este panel está protegido y solo debe ser usado por administradores autorizados.
-            Todos los accesos son monitoreados y registrados.
+            {t("secureDesc")}
           </p>
         </div>
       </div>

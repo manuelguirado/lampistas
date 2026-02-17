@@ -1,0 +1,7 @@
+{
+  "titulo": "Client management",
+  "crearTitulo": "Create client",
+  "crearDesc": "Register a new client in the system",
+  "listarTitulo": "List clients",
+  "listarDesc": "View your clients"
+}

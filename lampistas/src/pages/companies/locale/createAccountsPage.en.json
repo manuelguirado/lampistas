@@ -1,0 +1,7 @@
+{
+  "title": "Create payments account",
+  "email": "Email",
+  "emailPh": "Enter your company email to link",
+  "submit": "Create account",
+  "error": "Error creating account: {{message}}"
+}

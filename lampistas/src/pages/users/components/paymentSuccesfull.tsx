@@ -1,6 +1,7 @@
 import api from "../../../api/intercepttors"
 import Header from "../components/header";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 interface DecodedToken {
   companyID: number;
   role: string;
@@ -8,6 +9,7 @@ interface DecodedToken {
   name?: string; // ✅ Agregar name opcional
 }
 export default function PaymentSuccesfull() {
+    const { t } = useTranslation("users.paymentSuccessPage");
     async function returntDashboard() {
         try {
            
@@ -20,11 +22,11 @@ export default function PaymentSuccesfull() {
         return (
             <div className="flex flex-col items-center justify-center h-screen bg-amber-100">
                     <Header />
-                <h1 className="text-3xl font-bold text-amber-800 mb-4">¡Pago realizado con éxito!</h1>
+                <h1 className="text-3xl font-bold text-amber-800 mb-4">{t("title")}</h1>
                 <button className="px-6 py-3 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors"
                     onClick={returntDashboard}
                 >
-                    Ir al dashboard 
+                    {t("cta")} 
                 </button>
             </div>  
         )

@@ -7,8 +7,10 @@ import { registerUserSchema, type RegisterUserSchema } from "../schemas/register
 import { useState } from 'react';
 import { Users, User, Mail, Lock, Eye, EyeOff, FileText, UserPlus } from 'lucide-react';
 import api from "../../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 export default function RegisterUser() {
     const navigate = useNavigate();
+    const { t } = useTranslation("companies.registerUserPage");
     const [showPassword, setShowPassword] = useState(false);
     
     const togglePassword = () => {
@@ -36,7 +38,7 @@ export default function RegisterUser() {
             const userData = await userResponse.data;
 
             if (!userData.userID) {
-                toast.error('Error al registrar usuario.');
+                toast.error(t("registerUserError"));
                 return;
             }
 
@@ -53,14 +55,14 @@ export default function RegisterUser() {
                    
             const contractData = await contractResponse.data;
             if (contractData.token || contractData.id) {
-                toast.success('¡Usuario y contrato creados exitosamente!');
+                toast.success(t("success"));
                 navigate('/company/clientes/mis-clientes');
             } else {
-                toast.error('Usuario creado pero error al crear el contrato.');
+                toast.error(t("contractError"));
             }
 
         } catch (error) {
-            toast.error('Error durante el proceso de registro.' + (error as string));
+            toast.error(t("processError", { message: error as string }));
         }
     }
 
@@ -74,8 +76,8 @@ export default function RegisterUser() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-cyan-600 to-blue-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
                         <Users className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Nuevo Cliente</h2>
-                    <p className="text-gray-600">Registrar cliente y crear contrato</p>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+                    <p className="text-gray-600">{t("subtitle")}</p>
                 </div>
 
                 {/* Formulario moderno */}
@@ -84,7 +86,7 @@ export default function RegisterUser() {
                         {/* Nombre */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Nombre Completo
+                                {t("nameLabel")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -92,7 +94,7 @@ export default function RegisterUser() {
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder="Nombre del cliente"
+                                    placeholder={t("namePlaceholder")}
                                     {...register("name")}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                                     required
@@ -109,7 +111,7 @@ export default function RegisterUser() {
                         {/* Email */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Correo Electrónico
+                                {t("emailLabel")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -117,7 +119,7 @@ export default function RegisterUser() {
                                 </div>
                                 <input
                                     type="email"
-                                    placeholder="cliente@email.com"
+                                    placeholder={t("emailPlaceholder")}
                                     {...register("email")}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                                     required
@@ -135,7 +137,7 @@ export default function RegisterUser() {
                         {/* Contraseña */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Contraseña Temporal
+                                {t("passwordLabel")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -143,7 +145,7 @@ export default function RegisterUser() {
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Contraseña temporal"
+                                    placeholder={t("passwordPlaceholder")}
                                     {...register("password")}
                                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                                     required
@@ -171,7 +173,7 @@ export default function RegisterUser() {
                         {/* Tipo de contrato */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Tipo de Contrato
+                                {t("contractTypeLabel")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -182,9 +184,9 @@ export default function RegisterUser() {
                                     {...register("contractType")}
                                     required
                                 >
-                                    <option value="" disabled>Selecciona tipo de contrato</option>
-                                    <option value="contract">📄 Contrato Fijo</option>
-                                    <option value="freeChoice">🔄 Libre Elección</option>
+                                    <option value="" disabled>{t("contractTypePlaceholder")}</option>
+                                    <option value="contract">📄 {t("contractOption")}</option>
+                                    <option value="freeChoice">🔄 {t("freeChoiceOption")}</option>
                                 </select>
                             </div>
                             {errors.contractType && (
@@ -201,7 +203,7 @@ export default function RegisterUser() {
                             className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-3 px-4 rounded-xl hover:from-cyan-700 hover:to-blue-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                         >
                             <UserPlus className="w-5 h-5" />
-                            Registrar Cliente
+                            {t("submit")}
                         </button>
                     </form>
                     
@@ -210,10 +212,9 @@ export default function RegisterUser() {
                         <div className="flex items-start gap-2">
                             <Users className="w-5 h-5 text-cyan-600 mt-0.5 flex-shrink-0" />
                             <div>
-                                <h4 className="text-cyan-800 font-semibold text-sm">Proceso automático:</h4>
+                                <h4 className="text-cyan-800 font-semibold text-sm">{t("autoTitle")}</h4>
                                 <p className="text-cyan-700 text-xs mt-1">
-                                    Se creará el usuario y automáticamente se generará el contrato asociado. 
-                                    El cliente recibirá las credenciales por email.
+                                    {t("autoDescription")}
                                 </p>
                             </div>
                         </div>

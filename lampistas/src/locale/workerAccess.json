@@ -1,0 +1,19 @@
+{
+  "navigation": {
+    "Acceso Clientes": "Client Access",
+    "Acceso Empresa": "Company Access",
+    "Administradores": "Administrators",
+    "Acceso Trabajadores": "Worker Access"
+  },
+  "login": {
+    "title": "Worker Portal",
+    "Description": "Access to your worker dashboard",
+    "email": "Email",
+    "password": "Password",
+    "¿Olvidaste tu contraseña?": "Forgot your password?",
+    "button": "Sign In",
+    "Codigo empresa": "Worker code",
+    "Ingrese su còdigo de empresa": "Enter your worker code",
+    "Acceso con Código": "Access Code"
+  }
+}

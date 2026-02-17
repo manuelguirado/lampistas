@@ -1,0 +1,23 @@
+{
+  "navigation": {
+    "Trabajadores": "Workers",
+    "Clientes": "Clients",
+    "Incidencias": "Incidents",
+    "Crear Presupuesto": "Create Budget",
+    "Maquinaria": "Machinery",
+    "Perfil": "Profile",
+    "Vincular Pagos": "Link Payments",
+    "Dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Register Client",
+    "description": "Create a new client account for your company",
+    "Nombre completo": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "tipo de contrato": "Contract Type",
+    "contrato fijo ": "Permanent Contract",
+    "Elección libre ": "Free choice",
+    "Registrar Cliente": "Register Client"
+  }
+}

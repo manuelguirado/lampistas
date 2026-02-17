@@ -1,0 +1,24 @@
+{
+    "navigation" : {
+        "Registrar Compañia": "Register Company",
+        "Listar Compañias": "List Companies",
+        "Boletin": "Newsletter"
+    },
+    "hero" : {
+        "title" : "Register new company",
+        "description" : "Add a new Company to the system",
+        "Información de la Empresa" : "Company Information",
+        "Nombre de la Empresa" : "Company Name",
+        "Email de la Empresa" : "Company Email",
+        "Teléfono de la Empresa" : "Company Phone",
+        "contraseña" : "Password",
+        "Imagen Corporativa" : "Company Logo",
+        "Seleccionar Archivo" : "Choose File",
+        "formatos soportados" : "Supported formats: JPG, PNG, GIF",
+        "dirección de la empresa" : "Company Address",
+        "direccion " : "Address",
+        "ciudad" : "City",
+        "codigo postal" : "Postal Code",
+        "Registrar Empresa" : "Register Company"
+    }
+}
