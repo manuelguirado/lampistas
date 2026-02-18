@@ -1,1 +1,20 @@
-{"title":"Welcome","subtitle":"Sign in to your account","email":"Email","emailPh":"you@example.com","password":"Password","passwordPh":"Your password","forgotPassword":"Forgot your password?","loginButton":"Sign in","or":"OR","companyCodeTitle":"Company code","companyCodePh":"Enter your company code","codeLoginButton":"Sign in with code","codeValid":"Valid company code!","codeInvalid":"Invalid company code","codeError":"Error validating company code","loginSuccess":"Signed in successfully!","tokenMissing":"No token received in response","loginError":"Login error"}
+{
+  "title": "Welcome",
+  "subtitle": "Sign in to your account",
+  "email": "Email",
+  "emailPh": "you@example.com",
+  "password": "Password",
+  "passwordPh": "Your password",
+  "forgotPassword": "Forgot your password?",
+  "loginButton": "Sign in",
+  "or": "OR",
+  "clientCodeTitle": "Client code",
+  "clientCodePh": "Enter your client code",
+  "codeLoginButton": "Sign in with code",
+  "codeValid": "Valid client code!",
+  "codeInvalid": "Invalid client code",
+  "codeError": "Error validating client code",
+  "loginSuccess": "Signed in successfully!",
+  "tokenMissing": "No token received in response",
+  "loginError": "Login error"
+}

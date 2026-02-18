@@ -75,58 +75,58 @@ export default function ListMachinery() {
     return (
       <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
         <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
-        <div className="w-full max-w-7xl overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 shadow-md">
-            <thead>
-              <tr className="bg-amber-200">
-                <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">{t("thNombre")}</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+        <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+          <table className="min-w-full text-sm">
+            <thead className="bg-amber-50">
+              <tr className="text-amber-900">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">ID</th>
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thNombre")}</th>
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("thTipo")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">{t("thMarca")}</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">{t("thModelo")}</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thMarca")}</th>
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thModelo")}</th>
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("thSerie")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("thFechaInstalacion")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">{t("thCliente")}</th>
-                <th className="py-2 px-4 border border-gray-300 text-left">{t("thAcciones")}</th>
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thCliente")}</th>
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thAcciones")}</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {machine.map((machinery) => (
-                <tr key={machinery.machineryID} className="hover:bg-amber-50">
-                  <td className="py-2 px-4 border border-gray-300">
+                <tr key={machinery.machineryID} className="hover:bg-amber-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-gray-700">
                     {machinery.machineryID}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 font-medium text-gray-900">
                     {machinery.name}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 text-gray-700">
                     {machinery.machineType}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 text-gray-700">
                     {machinery.brand || "-"}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 text-gray-700">
                     {machinery.model}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 font-mono text-xs text-gray-600">
                     {machinery.serialNumber}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 text-gray-700 whitespace-nowrap">
                     {machinery.installedAt 
                       ? new Date(machinery.installedAt).toLocaleDateString(i18n.language === "ca" ? "ca-ES" : i18n.language === "en" ? "en-US" : "es-ES")
                       : <span className="text-gray-400 italic">{t("sinInstalar")}</span>
                     }
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 text-gray-600">
                     {machinery.clientID || <span className="text-gray-400 italic">{t("sinAsignar")}</span>}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4">
                     <div className="flex gap-2">
                   <button
                     className="text-blue-500 hover:text-blue-700"

@@ -294,62 +294,62 @@ export default function WorkerHome() {
           {t("noAssigned")}
         </div>
       ) : (
-        <div className="w-full max-w-7xl overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 shadow-md">
-            <thead>
-              <tr className="bg-amber-200">
-                <th className="py-2 px-4 border border-gray-300 text-left">
+        <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+          <table className="min-w-full text-sm">
+            <thead className="bg-amber-50">
+              <tr className="text-amber-900">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   ID
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("incidentTitle")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("reportDate")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("reportedBy")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("status")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("priority")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("addPhotos")}{" "}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("details")}
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {activeIncidents.map((incident) => (
-                <tr key={incident.IncidentsID} className="hover:bg-amber-50">
-                  <td className="py-2 px-4 border border-gray-300">
+                <tr key={incident.IncidentsID} className="hover:bg-amber-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-gray-700">
                     {incident.IncidentsID}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4 text-gray-900 font-medium">
                     {incident.title}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.dateReported instanceof Date
-                      ? incident.dateReported.toLocaleDateString("es-ES")
-                      : new Date(incident.dateReported).toLocaleDateString(
+                  <td className="py-3 px-4 text-gray-700 whitespace-nowrap">
+                    {incident.createdAt instanceof Date
+                      ? incident.createdAt.toLocaleDateString("es-ES")
+                      : new Date(incident.createdAt).toLocaleDateString(
                           "es-ES",
                         )}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                    {incident.reportedByUserID}
+                  <td className="py-3 px-4 text-gray-600">
+                    {incident.reportedByUserID || t("unknown")}
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       <select
                         name="estado"
                         id={`status-${incident.IncidentsID}`}
                         defaultValue={incident.status}
-                        className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                       >
                         <option value="open">{t("open")}</option>
                         <option value="in_progress">{t("inProgress")}</option>
@@ -366,20 +366,20 @@ export default function WorkerHome() {
                             selectElement.value as incidentStatus,
                           );
                         }}
-                        className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-600 transition-colors"
+                        className="bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors text-sm font-medium"
                       >
                         {t("update")}
                       </button>
                     </div>
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4">
                     <span
-                      className={`px-2 py-1 rounded text-sm font-medium ${
+                      className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                         incident.priority === "high"
-                          ? "bg-red-100 text-red-800"
+                          ? "bg-rose-100 text-rose-800"
                           : incident.priority === "medium"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-green-100 text-green-800"
+                            ? "bg-orange-100 text-orange-800"
+                            : "bg-sky-100 text-sky-800"
                       }`}
                     >
                       {incident.priority === "high"
@@ -389,7 +389,7 @@ export default function WorkerHome() {
                           : t("priorityLow")}
                     </span>
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4">
                     <button
                       onClick={() =>
                         handleOpenIncidentModal({
@@ -397,12 +397,12 @@ export default function WorkerHome() {
                           name: incident.title,
                         })
                       }
-                      className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-600 transition-colors"
+                      className="px-3.5 py-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600 transition-colors font-semibold text-sm"
                     >
                       {t("addPhotosButton")}
                     </button>
                   </td>
-                  <td className="py-2 px-4 border border-gray-300">
+                  <td className="py-3 px-4">
                     <button
                       onClick={async () => {
                         const files = await getIncidentFiles(
@@ -412,14 +412,14 @@ export default function WorkerHome() {
                           incidentID: incident.IncidentsID,
                           title: incident.title,
                           date:
-                            incident.dateReported instanceof Date
-                              ? incident.dateReported
-                              : new Date(incident.dateReported),
+                            incident.createdAt instanceof Date
+                              ? incident.createdAt.toLocaleDateString("es-ES")
+                              : new Date(incident.createdAt).toLocaleDateString("es-ES"),
                           priority: incident.priority,
                           photoURL: files,
                         });
                       }}
-                      className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition-colors"
+                      className="px-3.5 py-2 rounded-lg border border-gray-400 text-gray-700 hover:bg-gray-100 transition-colors font-semibold text-sm"
                     >
                       {t("viewDetails")}
                     </button>

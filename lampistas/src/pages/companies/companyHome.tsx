@@ -113,22 +113,23 @@ export default function CompanyHome() {
         <div className='w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8'>
             <Header />
             <h1 className='text-3xl font-bold text-amber-800 mb-6'>{t("titulo")}</h1>
-            <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6' id='earnings'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("resumenGanancias")}</h2>
-                <p className='text-gray-700 text-lg'>{t("gananciasTotales")}: <span className='font-bold text-amber-600'>${earnings.reduce((a, b) => a + b, 0).toFixed(2)}</span></p>
-                
-            </div>
-            <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("graficoGanancias")}</h2>
-                <canvas id="earningsChart"></canvas>
-            </div>
-            <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("resumenIncidencias")}</h2>
-                <p className='text-gray-700 text-lg'>{t("incidenciasTotales")}: <span className='font-bold text-amber-600'>{incidents.reduce((a, b) => a + b, 0)}</span></p>
-            </div>
-            <div className='w-full max-w-4xl bg-white rounded-lg shadow-md p-6 mt-8'>
-                <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("graficoIncidencias")}</h2>
-                <canvas id="incidentsChart"></canvas>
+            <div className='w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6'>
+                <div className='bg-white rounded-lg shadow-md p-6' id='earnings'>
+                    <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("resumenGanancias")}</h2>
+                    <p className='text-gray-700 text-lg'>{t("gananciasTotales")}: <span className='font-bold text-amber-600'>${earnings.reduce((a, b) => a + b, 0).toFixed(2)}</span></p>
+                </div>
+                <div className='bg-white rounded-lg shadow-md p-6'>
+                    <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("graficoGanancias")}</h2>
+                    <canvas id="earningsChart"></canvas>
+                </div>
+                <div className='bg-white rounded-lg shadow-md p-6'>
+                    <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("resumenIncidencias")}</h2>
+                    <p className='text-gray-700 text-lg'>{t("incidenciasTotales")}: <span className='font-bold text-amber-600'>{incidents.reduce((a, b) => a + b, 0)}</span></p>
+                </div>
+                <div className='bg-white rounded-lg shadow-md p-6'>
+                    <h2 className='text-2xl font-semibold text-amber-800 mb-4'>{t("graficoIncidencias")}</h2>
+                    <canvas id="incidentsChart"></canvas>
+                </div>
             </div>  
         </div>
     );

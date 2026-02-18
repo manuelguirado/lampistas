@@ -111,61 +111,61 @@ export default function ListCompany() {
       <Header />
       <h2 className="text-2xl font-bold mb-6">{t("title")}</h2>
 
-      <div className="w-full max-w-7xl overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-md ">
-          <thead>
-            <tr className="bg-amber-200">
-              <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
+      <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+        <table className="min-w-full text-sm">
+          <thead className="bg-amber-50">
+            <tr className="text-amber-900">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">ID</th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                 {t("name")}
               </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                 {t("email")}
               </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                 {t("phone")}
               </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                 {t("status")}
               </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                 {t("address")}
               </th>
-              <th className="py-2 px-4 border border-gray-300 text-left">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                 {t("actions")}
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-100">
             {companies.map((company) => (
-              <tr key={company.name} className="hover:bg-amber-50">
-                <td className="py-2 px-4 border border-gray-300">
+              <tr key={company.name} className="hover:bg-amber-50/60 transition-colors">
+                <td className="py-3 px-4 font-semibold text-gray-700">
                   {company.companyID}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4 font-medium text-gray-900">
                   {company.name}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4 text-gray-700">
                   {company.email}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4 text-gray-700">
                   {company.phone}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-sm font-semibold ${
+                    className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                       company.suspended
-                        ? "bg-red-200 text-red-800"
-                        : "bg-green-200 text-green-800"
+                        ? "bg-rose-100 text-rose-800"
+                        : "bg-emerald-100 text-emerald-800"
                     }`}
                   >
                     {company.suspended ? t("suspended") : t("active")}
                   </span>
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4 text-gray-600">
                   {company.directions?.address || t("na")}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4">
                   <div className="flex gap-2 justify-center">
                     <button
                       className="p-2 hover:bg-amber-200 rounded transition-colors"

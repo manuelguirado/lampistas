@@ -5,13 +5,13 @@ import { Elements } from '@stripe/react-stripe-js';
 import api from "../../api/intercepttors";
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from "./checkoutForm";
-
+import Header from "../../components/header";
 
 export default function Payments() {
     const [stripePromise, setStripePromise] = useState<any>(null);
     const [clientSecret, setClientSecret] = useState<string>("");
     const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({companyemail : "", price: 30});
+    const [form, setForm] = useState({companyemail : "",companyphone : "", price: 30});
     const [formSubmitted, setFormSubmitted] = useState(false);
     console.log("Form data:", form);
     console.log("Client Secret:", clientSecret);
@@ -61,12 +61,24 @@ export default function Payments() {
 
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+            <Header />
             <div style={{ width: 400, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0001', padding: 32, marginTop: 32 }}>
                 {!formSubmitted && (
                     <>
                         <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16, textAlign: 'center' }}>Datos de la empresa</h2>
                         <form onSubmit={handleSubmit}>
-                            
+                             <div style={{ marginBottom: 16 }}>
+                                <label style={{ display: 'block', fontWeight: 500, marginBottom: 4 }}>Teléfono:</label>
+                                <input
+                                    type="tel"
+                                    name="companyphone"
+                                    value={form.companyphone}
+                                    onChange={handleChange}
+                                    required
+                                    style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #cbd5e1' }}
+                                    placeholder="Ej: 123-456-7890"
+                                />
+                            </div>
                            
                             <div style={{ marginBottom: 16 }}>
                                 <label style={{ display: 'block', fontWeight: 500, marginBottom: 4 }}>Email:</label>

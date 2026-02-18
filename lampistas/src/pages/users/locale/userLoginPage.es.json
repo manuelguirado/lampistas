@@ -1,1 +1,20 @@
-{"title":"Bienvenido","subtitle":"Inicia sesion en tu cuenta","email":"Email","emailPh":"tucorreo@ejemplo.com","password":"Contrasena","passwordPh":"Tu contrasena","forgotPassword":"Olvidaste tu contrasena?","loginButton":"Iniciar sesion","or":"O","companyCodeTitle":"Codigo de empresa","companyCodePh":"Ingresa tu codigo de empresa","codeLoginButton":"Acceder con codigo","codeValid":"Codigo de empresa valido!","codeInvalid":"Codigo de empresa invalido","codeError":"Error al validar el codigo de empresa","loginSuccess":"Inicio de sesion exitoso!","tokenMissing":"No se recibio token en la respuesta","loginError":"Error al iniciar sesion"}
+{
+  "title": "Bienvenido",
+  "subtitle": "Inicia sesion en tu cuenta",
+  "email": "Email",
+  "emailPh": "tucorreo@ejemplo.com",
+  "password": "Contrasena",
+  "passwordPh": "Tu contrasena",
+  "forgotPassword": "Olvidaste tu contrasena?",
+  "loginButton": "Iniciar sesion",
+  "or": "O",
+  "companyCodeTitle": "Codigo de cliente",
+  "companyCodePh": "Ingresa tu codigo de cliente",
+  "codeLoginButton": "Acceder con codigo",
+  "codeValid": "Codigo de cliente valido!",
+  "codeInvalid": "Codigo de cliente invalido",
+  "codeError": "Error al validar el codigo de cliente",
+  "loginSuccess": "Inicio de sesion exitoso!",
+  "tokenMissing": "No se recibio token en la respuesta",
+  "loginError": "Error al iniciar sesion"
+}

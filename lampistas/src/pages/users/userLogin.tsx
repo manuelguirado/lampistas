@@ -61,11 +61,15 @@ export default function UserLogin() {
 
           navigate("/user/userdashboard");
         } else {
-          toast.error(t("tokenMissing"));
+          toast.error(response.data.message || t("loginError"));
         }
       })
-      .catch(() => {
-        toast.error(t("loginError"));
+      .catch((error) => {
+        const errorMsg =
+          error?.response?.data?.message ||
+          error?.message ||
+          t("loginError");
+        toast.error(errorMsg);
       });
   };
 
@@ -176,7 +180,7 @@ export default function UserLogin() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <Building className="w-5 h-5 text-amber-600" />
-                <h3 className="text-lg font-semibold text-gray-800">{t("companyCodeTitle")}</h3>
+                <h3 className="text-lg font-semibold text-gray-800">{t("clientCodeTitle")}</h3>
               </div>
             </div>
             
@@ -188,7 +192,7 @@ export default function UserLogin() {
                 <input
                   type="text"
                   {...loginRegister("code")}
-                  placeholder={t("companyCodePh")}
+                  placeholder={t("clientCodePh")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
               </div>

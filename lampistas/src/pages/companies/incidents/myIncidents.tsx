@@ -1,7 +1,7 @@
 import Header from "../components/header";
 import { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft, UserPlus, X } from "lucide-react";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import api from "../../../api/intercepttors";
 import { useTranslation } from "react-i18next";
 
@@ -9,8 +9,9 @@ export default function MyIncidents() {
   const { t, i18n } = useTranslation("companies.myIncidents");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedIncident, setSelectedIncident] = useState<{ 
-    incidentID: number; 
+
+  const [selectedIncident, setSelectedIncident] = useState<{
+    incidentID: number;
     name: string;
     description?: string;
     dateReported?: string;
@@ -40,70 +41,82 @@ export default function MyIncidents() {
       priority: string;
       createdAt: string;
       assignedWorkerID: number | null;
-      assignedWorker?: { name: string };
+      assignedWorker?: { workerid: number; name: string } | null;
     }>
   >([]);
 
   const token = localStorage.getItem("companyToken");
-function handleOpenIncidentModal(incident: { 
-  incidentID: number; 
-  name: string;
-  description: string;
-  dateReported: string;
-}) {
-  setSelectedIncident({
-    incidentID: incident.incidentID,
-    name: incident.name,
-    description: incident.description,
-    dateReported: incident.dateReported,
-    files: []
-  });
-  setIsModalOpen(true);
-  
-  // Cargar archivos del trabajador para la incidencia seleccionada
-  api.get("/company/listFiles", {
-    params: { incidentID: incident.incidentID },
-    headers: { Authorization: `Bearer ${token}` }
-  })
-    .then((response) => {
-      const data = response.data;
-      const files = Array.isArray(data) ? data : data.files || [];
-      setSelectedIncident((prev) => prev ? { ...prev, files: files } : null);
-    })
-    .catch((error) => {
-      toast.error(t("toasts.loadFilesError", { message: error.message }));
-      setSelectedIncident((prev) => prev ? { ...prev, files: [] } : null);
+  function handleOpenIncidentModal(incident: {
+    incidentID: number;
+    name: string;
+    description: string;
+    dateReported: string;
+  }) {
+    setSelectedIncident({
+      incidentID: incident.incidentID,
+      name: incident.name,
+      description: incident.description,
+      dateReported: incident.dateReported,
+      files: [],
     });
-}
+    setIsModalOpen(true);
 
-    function handleCloseModal() {
-        setIsModalOpen(false);
-        setSelectedIncident(null);
-    }
+    // Cargar archivos del trabajador para la incidencia seleccionada
+    api
+      .get("/company/listFiles", {
+        params: { incidentID: incident.incidentID },
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const data = response.data;
+        const files = Array.isArray(data) ? data : data.files || [];
+        setSelectedIncident((prev) =>
+          prev ? { ...prev, files: files } : null,
+        );
+      })
+      .catch((error) => {
+        toast.error(t("toasts.loadFilesError", { message: error.message }));
+        setSelectedIncident((prev) => (prev ? { ...prev, files: [] } : null));
+      });
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false);
+    setSelectedIncident(null);
+  }
   // Cargar trabajadores
   useEffect(() => {
-    api.get("/company/listWorkers", {
-      params: { limit: 100, offset: 0 },
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    api
+      .get("/company/listWorkers", {
+        params: { limit: 100, offset: 0 },
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
         setWorkers(response.data.workers || []);
       })
-      .catch((err) => toast.error(t("toasts.loadWorkersError", { message: (err as Error).message })));
+      .catch((err) =>
+        toast.error(
+          t("toasts.loadWorkersError", { message: (err as Error).message }),
+        ),
+      );
   }, [token, t]);
 
   // Cargar incidencias
   useEffect(() => {
-    api.get("/company/listIncidents", {
-      params: { limit: pageSize, offset },
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    api
+      .get("/company/listIncidents", {
+        params: { limit: pageSize, offset },
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
-        setIncidents(response.data.incidents);
-        setTotalIncidents(response.data.total);
+        console.log("Incidents response:", response.data);
+        setIncidents(response.data.incidents || []);
+        setTotalIncidents(response.data.total || 0);
       })
       .catch((error) => {
-        toast.error(t("toasts.loadIncidentsError", { message: (error as Error).message }));
+        toast.error(
+          t("toasts.loadIncidentsError", { message: (error as Error).message }),
+        );
       });
   }, [currentPage, token, offset, t]);
 
@@ -112,9 +125,10 @@ function handleOpenIncidentModal(incident: {
     if (!workerID) return;
 
     try {
-       api.post("/company/assignIncident", 
+      await api.post(
+        "/company/assignIncident",
         { incidentID, workerID },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       toast.success(t("toasts.assignSuccess"));
@@ -122,96 +136,155 @@ function handleOpenIncidentModal(incident: {
       setIncidents((prev) =>
         prev.map((inc) =>
           inc.IncidentsID === incidentID
-            ? { ...inc, assignedWorkerID: workerID }
-            : inc
-        )
+            ? {
+                ...inc,
+                assignedWorkerID: workerID,
+                assignedWorker:
+                  workers.find((worker) => worker.workerid === workerID) ||
+                  null,
+              }
+            : inc,
+        ),
       );
-    } catch (error: any) {
-      toast.error(t("toasts.assignError", { message: error.response?.data?.message || error.message }));
+    } catch (error: unknown) {
+      const apiMessage =
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        typeof (error as { response?: { data?: { message?: string } } })
+          .response?.data?.message === "string"
+          ? (error as { response?: { data?: { message?: string } } }).response
+              ?.data?.message
+          : undefined;
+
+      const fallbackMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error(
+        t("toasts.assignError", { message: apiMessage || fallbackMessage }),
+      );
     }
   }
 
   const totalPages = Math.ceil(totalIncidents / pageSize);
+
+  const getStatusBadgeClass = (status: string) => {
+    if (status === "OPEN") return "bg-emerald-100 text-emerald-800";
+    if (status === "IN_PROGRESS") return "bg-amber-100 text-amber-800";
+    return "bg-rose-100 text-rose-800";
+  };
+
+  const getPriorityBadgeClass = (priority: string) => {
+    if (priority === "HIGH") return "bg-rose-100 text-rose-800";
+    if (priority === "MEDIUM") return "bg-orange-100 text-orange-800";
+    return "bg-sky-100 text-sky-800";
+  };
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
       <Header />
       <h2 className="text-2xl font-bold mb-6">{t("title")}</h2>
 
-      <div className="w-full max-w-7xl overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-md">
-          <thead>
-            <tr className="bg-amber-200">
-              <th className="py-2 px-4 border border-gray-300">ID</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.title")}</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.description")}</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.status")}</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.priority")}</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.date")}</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.assignTo")}</th>
-              <th className="py-2 px-4 border border-gray-300">{t("table.workerReports")}</th>
+      <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+        <table className="min-w-full text-sm">
+          <thead className="bg-amber-50">
+            <tr className="text-amber-900">
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">ID</th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.title")}
+              </th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.description")}
+              </th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.status")}
+              </th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.priority")}
+              </th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.date")}
+              </th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.assignTo")}
+              </th>
+              <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
+                {t("table.workerReports")}
+              </th>
             </tr>
           </thead>
-          <tbody>
-            {incidents.map((incident) => (
-              <tr key={incident.IncidentsID} className="hover:bg-amber-50">
-                <td className="py-2 px-4 border border-gray-300">
+          <tbody className="divide-y divide-gray-100">
+            {incidents
+              .filter(
+                (incident) => incident.status?.toUpperCase() !== "CLOSED",
+              )
+              .map((incident) => {
+                const normalizedStatus = incident.status?.toUpperCase();
+
+                return (
+              <tr key={incident.IncidentsID} className="hover:bg-amber-50/60 transition-colors">
+                <td className="py-3 px-4 font-semibold text-gray-700">
                   {incident.IncidentsID}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4 text-gray-900 font-medium">
                   {incident.title}
                 </td>
-                <td className="py-2 px-4 border border-gray-300 max-w-xs truncate">
+                <td className="py-3 px-4 text-gray-600 max-w-xs truncate" title={incident.description}>
                   {incident.description}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs font-semibold ${
-                      incident.status === "OPEN"
-                        ? "bg-red-200 text-red-800"
-                        : incident.status === "IN_PROGRESS"
-                        ? "bg-yellow-200 text-yellow-800"
-                        : "bg-green-200 text-green-800"
-                    }`}
+                    className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(normalizedStatus)}`}
                   >
-                    {incident.status === "OPEN"
+                    {normalizedStatus === "OPEN"
                       ? t("status.open")
-                      : incident.status === "IN_PROGRESS"
-                      ? t("status.inProgress")
-                      : t("status.closed")}
+                      : normalizedStatus === "IN_PROGRESS"
+                        ? t("status.inProgress")
+                        : t("status.closed")}
                   </span>
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs font-semibold ${
-                      incident.priority === "HIGH"
-                        ? "bg-red-200 text-red-800"
-                        : incident.priority === "MEDIUM"
-                        ? "bg-orange-200 text-orange-800"
-                        : "bg-blue-200 text-blue-800"
-                    }`}
+                    className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeClass(incident.priority)}`}
                   >
                     {incident.priority === "HIGH"
                       ? t("priority.high")
                       : incident.priority === "MEDIUM"
-                      ? t("priority.medium")
-                      : t("priority.low")}
+                        ? t("priority.medium")
+                        : t("priority.low")}
                   </span>
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
-                  {new Date(incident.createdAt).toLocaleDateString(i18n.language === "ca" ? "ca-ES" : i18n.language === "en" ? "en-US" : "es-ES")}
+                <td className="py-3 px-4 text-gray-700 whitespace-nowrap">
+                  {new Date(incident.createdAt).toLocaleDateString(
+                    i18n.language === "ca"
+                      ? "ca-ES"
+                      : i18n.language === "en"
+                        ? "en-US"
+                        : "es-ES",
+                  )}
                 </td>
-                <td className="py-2 px-4 border border-gray-300">
+                <td className="py-3 px-4">
                   <div className="flex items-center gap-2">
+                    {incident.assignedWorkerID && (
+                      <span className="text-sm text-gray-700 font-medium">
+                        {(incident.assignedWorker &&
+                          incident.assignedWorker.name) ||
+                          workers.find(
+                            (worker) =>
+                              worker.workerid === incident.assignedWorkerID,
+                          )?.name ||
+                          "Asignado"}
+                      </span>
+                    )}
+
                     <select
                       value={incident.assignedWorkerID || ""}
                       onChange={(e) =>
                         handleAssignWorker(
                           incident.IncidentsID,
-                          Number(e.target.value)
+                          Number(e.target.value),
                         )
                       }
-                      className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
                       <option value="">{t("assign.unassigned")}</option>
                       {workers.map((worker) => (
@@ -224,23 +297,25 @@ function handleOpenIncidentModal(incident: {
                       <UserPlus size={16} className="text-green-600" />
                     )}
                   </div>
-                
                 </td>
-                  <td className="py-2 px-4 border border-gray-300">
-                     <button  
-                       onClick={() => handleOpenIncidentModal({
-                         incidentID: incident.IncidentsID,
-                         name: incident.title,
-                         description: incident.description,
-                         dateReported: incident.createdAt
-                       })} 
-                       className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors font-semibold"
-                     >
-                      {t("assign.viewReports")}
-                     </button>
-                  </td>
+                <td className="py-3 px-4">
+                  <button
+                    onClick={() =>
+                      handleOpenIncidentModal({
+                        incidentID: incident.IncidentsID,
+                        name: incident.title,
+                        description: incident.description,
+                        dateReported: incident.createdAt,
+                      })
+                    }
+                    className="px-3.5 py-2 rounded-lg border border-amber-400 text-amber-700 hover:bg-amber-100 transition-colors font-semibold"
+                  >
+                    {t("assign.viewReports")}
+                  </button>
+                </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>
@@ -294,7 +369,9 @@ function handleOpenIncidentModal(incident: {
               </p>
               {selectedIncident.description && (
                 <>
-                  <p className="text-sm text-gray-600 mt-2">{t("modal.description")}</p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {t("modal.description")}
+                  </p>
                   <p className="font-semibold text-gray-800">
                     {selectedIncident.description}
                   </p>
@@ -302,7 +379,9 @@ function handleOpenIncidentModal(incident: {
               )}
               {selectedIncident.dateReported && (
                 <>
-                  <p className="text-sm text-gray-600 mt-2">{t("modal.reportDate")}</p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {t("modal.reportDate")}
+                  </p>
                   <p className="font-semibold text-gray-800">
                     {new Date(selectedIncident.dateReported).toLocaleString()}
                   </p>
@@ -312,18 +391,34 @@ function handleOpenIncidentModal(incident: {
 
             {/* Files Section */}
             <div className="mb-4">
-              <h4 className="font-semibold text-gray-800 mb-2">{t("modal.workerFiles")}</h4>
-              
+              <h4 className="font-semibold text-gray-800 mb-2">
+                {t("modal.workerFiles")}
+              </h4>
+
               {selectedIncident.files && selectedIncident.files.length > 0 ? (
                 <div className="space-y-3 max-h-60 overflow-y-auto">
                   {selectedIncident.files.map((file, index) => {
-                    const fileName = file.key.split('/').pop() || t("modal.file", { index: index + 1 });
-                    const fileExtension = fileName.split('.').pop()?.toLowerCase();
-                    const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension || '');
-                    const isPdf = fileExtension === 'pdf';
+                    const fileName =
+                      file.key.split("/").pop() ||
+                      t("modal.file", { index: index + 1 });
+                    const fileExtension = fileName
+                      .split(".")
+                      .pop()
+                      ?.toLowerCase();
+                    const isImage = [
+                      "jpg",
+                      "jpeg",
+                      "png",
+                      "gif",
+                      "webp",
+                    ].includes(fileExtension || "");
+                    const isPdf = fileExtension === "pdf";
 
                     return (
-                      <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                      <div
+                        key={index}
+                        className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium text-gray-800 truncate">
                             📎 {fileName}
@@ -334,37 +429,45 @@ function handleOpenIncidentModal(incident: {
                             </span>
                           )}
                         </div>
-                        
+
                         {/* Preview para imágenes */}
                         {isImage && file.signedUrl && (
                           <div className="mb-2">
-                            <img 
-                              src={file.signedUrl} 
+                            <img
+                              src={file.signedUrl}
                               alt={fileName}
                               className="max-w-full h-32 object-cover rounded border"
                               onError={(e) => {
-                                console.error('Error loading image:', file.signedUrl, file);
-                                e.currentTarget.style.display = 'none';
+                                console.error(
+                                  "Error loading image:",
+                                  file.signedUrl,
+                                  file,
+                                );
+                                e.currentTarget.style.display = "none";
                                 // Mostrar mensaje de error
-                                const errorDiv = document.createElement('div');
-                                errorDiv.className = 'bg-red-100 p-2 rounded text-center';
+                                const errorDiv = document.createElement("div");
+                                errorDiv.className =
+                                  "bg-red-100 p-2 rounded text-center";
                                 errorDiv.innerHTML = `<span class="text-red-600 text-sm">⚠️ ${t("modal.imageError")}</span>`;
-                                e.currentTarget.parentNode?.appendChild(errorDiv);
+                                e.currentTarget.parentNode?.appendChild(
+                                  errorDiv,
+                                );
                               }}
-                             
                             />
                           </div>
                         )}
-                        
+
                         {/* Preview para PDFs */}
                         {isPdf && (
                           <div className="mb-2">
                             <div className="bg-red-100 p-2 rounded text-center">
-                              <span className="text-red-600 font-medium">📄 PDF</span>
+                              <span className="text-red-600 font-medium">
+                                📄 PDF
+                              </span>
                             </div>
                           </div>
                         )}
-                        
+
                         <div className="flex gap-2">
                           {file.signedUrl && (
                             <a
@@ -380,7 +483,7 @@ function handleOpenIncidentModal(incident: {
                             <button
                               onClick={() => {
                                 // Función para descargar - puedes implementar la lógica aquí
-                                window.open(file.signedUrl, '_blank');
+                                window.open(file.signedUrl, "_blank");
                               }}
                               className="text-green-600 hover:bg-green-100 text-sm flex-1 text-center py-1 px-2 bg-green-50 rounded border-none cursor-pointer"
                             >

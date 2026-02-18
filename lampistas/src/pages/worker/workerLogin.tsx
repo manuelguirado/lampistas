@@ -70,11 +70,15 @@ export default function WorkerLogin() {
           }
           navigate("/worker/workerDashboard");
         } else {
-          toast.error(t("invalidCredentials"));
+          toast.error(data.message || t("invalidCredentials"));
         }
       })
       .catch((err) => {
-        toast.error(t("loginError", { message: err.message }));
+        const errorMsg =
+          err?.response?.data?.message ||
+          err?.message ||
+          t("invalidCredentials");
+        toast.error(t("loginError", { message: errorMsg }));
       });
   }
   return (

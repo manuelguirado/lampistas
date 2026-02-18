@@ -62,10 +62,16 @@ export default function LoginCompany() {
           navigate("/company/companyDashboard");
           localStorage.setItem("companyToken", responseData.token);
           localStorage.setItem("userType", "COMPANY");
+        } else {
+          toast.error(responseData.message || t("errorLogin", { message: "" }));
         }
       })
       .catch((error) => {
-        toast.error(t("errorLogin", { message: (error as Error).message }));
+        const errorMsg =
+          error?.response?.data?.message ||
+          error?.message ||
+          t("errorLogin", { message: "" });
+        toast.error(t("errorLogin", { message: errorMsg }));
       });
   }
 

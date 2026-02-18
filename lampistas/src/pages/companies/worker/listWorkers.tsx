@@ -154,27 +154,29 @@ export default function ListWorkers() {
             <Header />
             <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
             
-            <div className="w-full max-w-7xl overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-300 shadow-md">
-                    <thead>
-                        <tr className="bg-amber-200">
-                            <th className="py-2 px-4 border border-gray-300">{t("thWorkerId")}</th>
-                            <th className="py-2 px-4 border border-gray-300">{t("thName")}</th>
-                            <th className="py-2 px-4 border border-gray-300">{t("thEmail")}</th>
-                            <th className="py-2 px-4 border border-gray-300">{t("thActiveIncidents")}</th>
-                            <th className="py-2 px-4 border border-gray-300">{t("thActions")}</th>
+            <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+                <table className="min-w-full text-sm">
+                    <thead className="bg-amber-50">
+                        <tr className="text-amber-900">
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thWorkerId")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thName")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thEmail")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thActiveIncidents")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thActions")}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                         {workers.map((worker) => (
-                            <tr key={worker.workerid} className="hover:bg-amber-100">
-                                <td className="py-2 px-4 border border-gray-300">{worker.workerid}</td>
-                                <td className="py-2 px-4 border border-gray-300">{worker.name}</td>
-                                <td className="py-2 px-4 border border-gray-300">{worker.email}</td>
-                                <td className="py-2 px-4 border border-gray-300">
-                                    {worker.activeIncidents.length}
+                            <tr key={worker.workerid} className="hover:bg-amber-50/60 transition-colors">
+                                <td className="py-3 px-4 font-semibold text-gray-700">{worker.workerid}</td>
+                                <td className="py-3 px-4 font-medium text-gray-900">{worker.name}</td>
+                                <td className="py-3 px-4 text-gray-700">{worker.email}</td>
+                                <td className="py-3 px-4">
+                                    <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-800">
+                                        {worker.activeIncidents.length}
+                                    </span>
                                 </td>
-                                <td className="py-2 px-4 border border-gray-300">
+                                <td className="py-3 px-4">
                                     <div className="flex gap-2 flex-wrap">
                                         <button 
                                             className="text-blue-500 hover:text-blue-700"

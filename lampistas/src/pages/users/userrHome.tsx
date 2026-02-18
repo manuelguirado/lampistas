@@ -204,56 +204,56 @@ export default function WorkerHome() {
         </div>
       </div>
 
-      <div className="w-full max-w-7xl overflow-x-auto">
+      <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
             <span className="ml-2 text-gray-600">{t("loading")}</span>
           </div>
         ) : (
-          <table className="min-w-full bg-white border border-gray-300 shadow-md">
-            <thead>
-              <tr className="bg-amber-200">
-                <th className="py-2 px-4 border border-gray-300 text-left">
+          <table className="min-w-full text-sm">
+            <thead className="bg-amber-50">
+              <tr className="text-amber-900">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   ID
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("incidentTitle")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("reportDate")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("status")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("priority")}
                 </th>
-                <th className="py-2 px-4 border border-gray-300 text-left">
+                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">
                   {t("viewIncident")}
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {paginatedIncidents.length > 0 ? (
                 paginatedIncidents.map((incident) => (
-                  <tr key={incident.IncidentsID} className="hover:bg-amber-50">
-                    <td className="py-2 px-4 border border-gray-300">
+                  <tr key={incident.IncidentsID} className="hover:bg-amber-50/60 transition-colors">
+                    <td className="py-3 px-4 font-semibold text-gray-700">
                       {incident.IncidentsID}
                     </td>
-                    <td className="py-2 px-4 border border-gray-300">
+                    <td className="py-3 px-4 text-gray-900 font-medium">
                       {incident.title}
                     </td>
-                    <td className="py-2 px-4 border border-gray-300">
-                      {incident.dateReported instanceof Date
-                        ? incident.dateReported.toLocaleDateString("es-ES", {
+                    <td className="py-3 px-4 text-gray-700 whitespace-nowrap">
+                      {incident.createdAt instanceof Date
+                        ? incident.createdAt.toLocaleDateString("es-ES", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
                             hour: "2-digit",
                             minute: "2-digit",
                           })
-                        : new Date(incident.dateReported).toLocaleDateString(
+                        : new Date(incident.createdAt).toLocaleDateString(
                             "es-ES",
                             {
                               year: "numeric",
@@ -265,13 +265,25 @@ export default function WorkerHome() {
                           )}
                     </td>
 
-                    <td className="py-2 px-4 border border-gray-300">
-                      {incident.status}
+                    <td className="py-3 px-4">
+                      <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                        {incident.status}
+                      </span>
                     </td>
-                    <td className="py-2 px-4 border border-gray-300">
-                      {incident.priority}
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          incident.priority === "high"
+                            ? "bg-rose-100 text-rose-800"
+                            : incident.priority === "medium"
+                              ? "bg-orange-100 text-orange-800"
+                              : "bg-sky-100 text-sky-800"
+                        }`}
+                      >
+                        {incident.priority}
+                      </span>
                     </td>
-                    <td className="py-2 px-4 border border-gray-300">
+                    <td className="py-3 px-4">
                       <button
                         onClick={() =>
                           handleOpenIncidentModal({
@@ -282,7 +294,7 @@ export default function WorkerHome() {
                             dateReported: incident.dateReported,
                           })
                         }
-                        className="text-blue-600 hover:underline"
+                        className="border border-amber-400 text-amber-700 hover:bg-amber-100 transition-colors px-3.5 py-1.5 rounded-lg font-semibold text-sm"
                       >
                         {t("view")}
                       </button>

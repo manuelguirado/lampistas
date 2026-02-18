@@ -151,6 +151,9 @@ import workerShiftsPageCa from "./pages/worker/locale/workerShiftsPage.ca.json";
 import workerHomePageEs from "./pages/worker/locale/workerHomePage.es.json";
 import workerHomePageEn from "./pages/worker/locale/workerHomePage.en.json";
 import workerHomePageCa from "./pages/worker/locale/workerHomePage.ca.json";
+import homeEs from "./pages/locale/home.es.json";
+import homeEn from "./pages/locale/home.en.json";
+import homeCa from "./pages/locale/home.ca.json";
 
 const resources = {
   es: {
@@ -203,6 +206,7 @@ const resources = {
     "worker.historyPage": workerHistoryPageEs,
     "worker.shiftsPage": workerShiftsPageEs,
     "worker.homePage": workerHomePageEs,
+    home: homeEs,
   },
   en: {
     "companies.loginCompany": loginCompanyEn,
@@ -254,6 +258,7 @@ const resources = {
     "worker.historyPage": workerHistoryPageEn,
     "worker.shiftsPage": workerShiftsPageEn,
     "worker.homePage": workerHomePageEn,
+    home: homeEn,
   },
   ca: {
     "companies.loginCompany": loginCompanyCa,
@@ -305,6 +310,7 @@ const resources = {
     "worker.historyPage": workerHistoryPageCa,
     "worker.shiftsPage": workerShiftsPageCa,
     "worker.homePage": workerHomePageCa,
+    home: homeCa,
   }
 } as const;
 
