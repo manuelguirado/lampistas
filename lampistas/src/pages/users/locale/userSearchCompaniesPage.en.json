@@ -1,0 +1,15 @@
+{
+  "hireError": "Could not hire the company",
+  "hireSuccess": "Company hired successfully",
+  "hireUnexpectedError": "Unexpected error while hiring the company",
+  "loadError": "Could not load companies",
+  "unexpectedError": "Unexpected error",
+  "title": "Search companies",
+  "subtitle": "Find companies near your address and review their information before hiring.",
+  "loading": "Loading companies...",
+  "empty": "No companies found for your area.",
+  "email": "Email:",
+  "phone": "Phone:",
+  "zipCode": "ZIP:",
+  "hireButton": "Hire"
+}

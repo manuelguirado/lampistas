@@ -103,6 +103,9 @@ import userLoginPageCa from "./pages/users/locale/userLoginPage.ca.json";
 import userRegisterPageEs from "./pages/users/locale/userRegisterPage.es.json";
 import userRegisterPageEn from "./pages/users/locale/userRegisterPage.en.json";
 import userRegisterPageCa from "./pages/users/locale/userRegisterPage.ca.json";
+import userSearchCompaniesPageEs from "./pages/users/locale/userSearchCompaniesPage.es.json";
+import userSearchCompaniesPageEn from "./pages/users/locale/userSearchCompaniesPage.en.json";
+import userSearchCompaniesPageCa from "./pages/users/locale/userSearchCompaniesPage.ca.json";
 import userHeaderEs from "./pages/users/locale/userHeader.es.json";
 import userHeaderEn from "./pages/users/locale/userHeader.en.json";
 import userHeaderCa from "./pages/users/locale/userHeader.ca.json";
@@ -190,6 +193,7 @@ const resources = {
     "admin.suspendCompanyPage": suspendCompanyPageEs,
     "users.loginPage": userLoginPageEs,
     "users.registerPage": userRegisterPageEs,
+    "users.searchCompaniesPage": userSearchCompaniesPageEs,
     "users.header": userHeaderEs,
     "users.homePage": userHomePageEs,
     "users.incidentIndexPage": incidentIndexPageEs,
@@ -242,6 +246,7 @@ const resources = {
     "admin.suspendCompanyPage": suspendCompanyPageEn,
     "users.loginPage": userLoginPageEn,
     "users.registerPage": userRegisterPageEn,
+    "users.searchCompaniesPage": userSearchCompaniesPageEn,
     "users.header": userHeaderEn,
     "users.homePage": userHomePageEn,
     "users.incidentIndexPage": incidentIndexPageEn,
@@ -294,6 +299,7 @@ const resources = {
     "admin.suspendCompanyPage": suspendCompanyPageCa,
     "users.loginPage": userLoginPageCa,
     "users.registerPage": userRegisterPageCa,
+    "users.searchCompaniesPage": userSearchCompaniesPageCa,
     "users.header": userHeaderCa,
     "users.homePage": userHomePageCa,
     "users.incidentIndexPage": incidentIndexPageCa,

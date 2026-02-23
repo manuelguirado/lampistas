@@ -1,0 +1,15 @@
+{
+  "hireError": "No se pudo contratar la empresa",
+  "hireSuccess": "Empresa contratada exitosamente",
+  "hireUnexpectedError": "Error inesperado al contratar la empresa",
+  "loadError": "No se pudieron cargar las empresas",
+  "unexpectedError": "Error inesperado",
+  "title": "Buscar empresas",
+  "subtitle": "Encuentra empresas cercanas a tu dirección y revisa su información antes de contratar.",
+  "loading": "Cargando empresas...",
+  "empty": "No se encontraron empresas para tu zona.",
+  "email": "Email:",
+  "phone": "Teléfono:",
+  "zipCode": "CP:",
+  "hireButton": "Contratar"
+}

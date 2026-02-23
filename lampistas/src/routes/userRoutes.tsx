@@ -12,6 +12,7 @@ import IncidentLayout from "../pages/users/incidents/incidentLayout";
 import IncidentHistory from "../pages/users/incidents/incidentHistory";
 import UserPayments from "../pages/users/components/userPayments";
 import PaymentSuccesfull from "../pages/users/components/paymentSuccesfull";
+import Searchcompnies from "../pages/users/Searchcompnies";
 
 export default function UserRoutes() {
   return (
@@ -20,6 +21,7 @@ export default function UserRoutes() {
       <Route path="userRegister" element={<RegisterUser />} />
       <Route path="userLogin" element={<UserLogin />} />
      
+            <Route path="searchCompanies" element={ <Searchcompnies /> } />
 
       {/* Rutas protegidas */}
       <Route
