@@ -12,7 +12,7 @@ export default function CompanyHome() {
     const incidentsChartRef = useRef<Chartjs | null>(null);
     const token = localStorage.getItem('companyToken');
     const months = t("meses", { returnObjects: true }) as string[];
-   
+  
 
     useEffect(() => {
         

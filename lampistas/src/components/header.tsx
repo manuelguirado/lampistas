@@ -29,14 +29,7 @@ export default function Header() {
               Acceso Empresas
             </button>
           </Link>
-          <Link to="/admin/registerAdmin">
-            <button
-              id="administrator"
-              className="flex items-center rounded-md bg-amber-500 px-4 py-2 hover:bg-amber-600 transition-colors text-white mr-2"
-            >
-              Administradores
-            </button>
-          </Link>
+        
           <Link to="/worker/workerLogin">
             <button className="flex items-center rounded-md bg-yellow-500 px-4 py-2 hover:bg-yellow-600 transition-colors text-black">
               Acceso Trabajadores
@@ -74,11 +67,7 @@ export default function Header() {
                   Acceso Empresas
                 </button>
               </Link>
-              <Link to="/admin/registerAdmin">
-                <button className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
-                  Acesso Administradores
-                </button>
-              </Link>
+             
 
               <Link to="/worker/workerLogin">
                 <button className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">

@@ -34,34 +34,30 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        
         const userType = (localStorage.getItem("userType") ||
           "company") as UserType;
-      
         const refreshToken = getRefreshTokenKey(userType);
-      
-           const getUserID = getIdKey(userType);
-        
+        const userID = getIdKey(userType);
 
         if (!refreshToken) {
           throw new Error("No refresh token available");
         }
-       
+
+        if (!userID) {
+          throw new Error("No user id available");
+        }
 
         const { data } = await axios.post(
           `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
           {
             token: refreshToken,
             userType: userType,
-            id: Number(getUserID),
+            id: Number(userID),
           }
         );
-     
-      
 
         // ✅ Guardar nuevos tokens
-        setTokens(userType, data.accessToken, data.refreshToken,data.userID);
-      
+        setTokens(userType, data.accessToken, data.refreshToken, Number(userID));
 
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);

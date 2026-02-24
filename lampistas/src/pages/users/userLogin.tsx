@@ -55,10 +55,7 @@ export default function UserLogin() {
           if (response.data.refreshToken) {
             localStorage.setItem("userRefreshToken", response.data.refreshToken);
           }
-          if (response.data.userID) {
-            localStorage.setItem("userID", response.data.userID.toString());
-          }
-
+        
           navigate("/user/userdashboard");
         } else {
           toast.error(response.data.message || t("loginError"));

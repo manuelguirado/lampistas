@@ -13,5 +13,9 @@
   "crearMaquinaria": "Create machinery",
   "errorDashboardUrl": "Error fetching dashboard URL: {{message}}",
   "errorReturnUrl": "Error fetching return URL: {{message}}",
-  "errorDecodeToken": "Error decoding token: {{message}}"
+  "errorDecodeToken": "Error decoding token: {{message}}",
+  "paymentsModalTitle": "Activate your payments",
+  "paymentsModalDescription": "To access the dashboard or charge budgets, you need to link your payments account first.",
+  "paymentsModalCancel": "Not now",
+  "paymentsModalActivate": "Link payments"
 }

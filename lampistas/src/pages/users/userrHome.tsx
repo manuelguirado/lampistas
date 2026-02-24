@@ -86,6 +86,7 @@ export default function WorkerHome() {
     api
       .get("/user/myIncidents")
       .then((response) => {
+        
         setMyIncidents(response.data.incidents || []);
         setIsLoading(false);
       })

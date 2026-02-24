@@ -18,6 +18,7 @@ export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const token = localStorage.getItem('adminToken');
     const [adminEmail, setAdminEmail] = useState<string>('');
+   
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     useEffect(() => {
         if (token) {

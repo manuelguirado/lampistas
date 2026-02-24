@@ -16,9 +16,37 @@ interface DecodedToken {
 export default function Header() {
   const { t } = useTranslation("companies.header");
   const [isOpen, setIsOpen] = useState(false);
-  const [returnUrl, setReturnUrl] = useState<string>("");
-
+  const [showPaymentsModal, setShowPaymentsModal] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  function getApiErrorMessage(error: unknown): string {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      typeof (error as { response?: unknown }).response === "object" &&
+      (error as { response?: { data?: { message?: string } } }).response?.data
+        ?.message
+    ) {
+      return (
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || ""
+      );
+    }
+
+    return (error as Error).message || "";
+  }
+
+  function isPaymentsNotLinkedError(error: unknown): boolean {
+    const message = getApiErrorMessage(error).toLowerCase();
+    return message.includes("no stripe account found");
+  }
+
+  async function handleActivatePayments() {
+    setShowPaymentsModal(false);
+    await fetchReturnUrl();
+  }
+
     async function fetchDashboardUrl() {
       try {
          const response = await api.post("/payments/create-login-link",  {
@@ -27,7 +55,11 @@ export default function Header() {
          const  { loginLink } = response.data;
           window.location.href = loginLink; // Redirige al usuario al dashboard de Stripe
       }catch (error) {
-        toast.error(t("errorDashboardUrl", { message: (error as Error).message }));
+        if (isPaymentsNotLinkedError(error)) {
+          setShowPaymentsModal(true);
+          return;
+        }
+        toast.error(t("errorDashboardUrl", { message: getApiErrorMessage(error) }));
       }
     }
    async function fetchReturnUrl() {
@@ -37,10 +69,9 @@ export default function Header() {
         params: { email: decoded.email }
       });
 
-      setReturnUrl(response.data.url);
       window.location.href = response.data.url; // Redirige al usuario a la URL de Stripe
     }catch (error) {
-      toast.error(t("errorReturnUrl", { message: (error as Error).message }));
+      toast.error(t("errorReturnUrl", { message: getApiErrorMessage(error) }));
     }
   }
 
@@ -107,7 +138,8 @@ export default function Header() {
               <User size={22} />
               <span className="font-semibold text-sm">{t("perfil")}</span>
             </button>
-            {showProfileMenu && (
+            
+            {showProfileMenu &&  (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-amber-200 z-50 animate-fade-in">
                 <button
                   className="flex items-center gap-2 w-full px-4 py-3 text-amber-700 hover:bg-amber-100 transition-colors text-left"
@@ -206,6 +238,31 @@ export default function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showPaymentsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+          <div className="w-full max-w-md rounded-xl bg-white shadow-xl border border-amber-200 p-6">
+            <h2 className="text-xl font-bold text-amber-800 mb-2">
+              {t("paymentsModalTitle")}
+            </h2>
+            <p className="text-gray-700 mb-6">{t("paymentsModalDescription")}</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowPaymentsModal(false)}
+                className="px-4 py-2 rounded-md border border-amber-300 text-amber-700 hover:bg-amber-50 transition-colors"
+              >
+                {t("paymentsModalCancel")}
+              </button>
+              <button
+                onClick={handleActivatePayments}
+                className="px-4 py-2 rounded-md bg-amber-500 text-white hover:bg-amber-600 transition-colors"
+              >
+                {t("paymentsModalActivate")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
