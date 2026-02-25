@@ -8,17 +8,17 @@ export default function Footer() {
     const languages = [
     {
       code: "es",
-      name: t("language.spanish"),
+      name: t("español"),
       flag: "🇪🇸",
     },
     {
       code: "en",
-      name: t("language.english"),
+      name: t("english"),
       flag: "🇬🇧",
     },
     {
                 code: "ca",
-        name: t("language.catalan"),
+        name: t("catalan"),
         
     }
   ];

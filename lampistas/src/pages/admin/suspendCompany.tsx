@@ -36,7 +36,7 @@ export default function SuspendCompany() {
                  
             
             const result = await response.data;
-            console.log('Resultado de la suspensión:', result);
+        
           
             
             if (result.company || result.success !== false) {

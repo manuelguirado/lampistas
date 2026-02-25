@@ -27,6 +27,7 @@ export default function UserBudgets() {
   const [budgets, setBudgets] = useState<BudgetType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalBudgets, setTotalBudgets] = useState(0);
+  const [isPaid, setIsPaid] = useState(false);
   const pageSize = 5;
   const offset = (currentPage - 1) * pageSize;
   const totalPages = Math.ceil(totalBudgets / pageSize);
@@ -119,7 +120,8 @@ export default function UserBudgets() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {budgets.map((budget) => (
+
+             { isPaid  !== true &&budgets.map((budget)  => (
               <tr key={budget.budgetID} className="hover:bg-amber-50/60 transition-colors">
                 <td className="py-3 px-4 font-semibold text-gray-700">
                   {budget.budgetID}
@@ -162,6 +164,7 @@ export default function UserBudgets() {
                         companyID: companyID || 0,
                       });
                       setShowPayment(true);
+                      setIsPaid(true);
                     }}
                   >
                     {t("pay")}

@@ -1,8 +1,8 @@
 import Header from "../../components/header";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router";
-import api from "../../api/intercepttors";
 const CheckoutForm = () => {
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -18,7 +18,7 @@ const navigate = useNavigate();
     setMessage("");
     try {
       
-      const { error, paymentIntent } = await stripe.confirmPayment({
+      const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: 'http://localhost:5173/payments/success',
@@ -36,7 +36,7 @@ const navigate = useNavigate();
           navigate('/payment/success');
         }, 1200);
       }
-    } catch (err) {
+    } catch {
       setError("Error desconocido");
     }
     setIsProcessing(false);
@@ -63,7 +63,7 @@ const navigate = useNavigate();
         <button
           disabled={isProcessing || !stripe || !elements}
           type="submit"
-          className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-200 disabled:bg-amber-200 disabled:text-amber-800 disabled:opacity-100 text-lg"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-200 disabled:bg-primary-600 disabled:text-white disabled:opacity-80 text-lg"
         >
           {isProcessing ? (
             <span className="flex items-center justify-center gap-2">
@@ -71,7 +71,7 @@ const navigate = useNavigate();
               Procesando...
             </span>
           ) : (
-            "Suscribirse"
+            "Pagar"
           )}
         </button>
         {error && <div className="text-red-600 mt-4 text-center">{error}</div>}

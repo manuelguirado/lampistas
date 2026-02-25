@@ -1,5 +1,6 @@
 import Header from "../../../components/header";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import {
   PaymentElement,
   useElements,
@@ -16,9 +17,7 @@ type CheckoutFormProps = {
 };
 
 const UserCheckoutForm = ({
-  companyID,
   ammount,
-  userID,
 }: CheckoutFormProps) => {
   const { t } = useTranslation("users.checkoutPage");
   const [error, setError] = useState<string>("");
@@ -34,7 +33,7 @@ const UserCheckoutForm = ({
     setError("");
     setMessage("");
     try {
-      const { error, paymentIntent } = await stripe.confirmPayment({
+      const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: "http://localhost:5173/user/payment/success",
@@ -55,7 +54,7 @@ const UserCheckoutForm = ({
           navigate("/user/payment/success");
         }, 1200);
       }
-    } catch (err) {
+    } catch {
       setError(t("unknownError"));
     }
     setIsProcessing(false);
@@ -101,7 +100,7 @@ const UserCheckoutForm = ({
         <button
           disabled={isProcessing || !stripe || !elements}
           type="submit"
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-2 rounded-lg shadow transition-colors duration-200 disabled:opacity-50 text-base"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-2 rounded-lg shadow transition-colors duration-200 disabled:bg-primary-600 disabled:text-white disabled:opacity-80 text-base"
         >
           {isProcessing ? (
             <span className="flex items-center justify-center gap-2">
@@ -126,7 +125,7 @@ const UserCheckoutForm = ({
               Procesando...
             </span>
           ) : (
-            t("subscribe", { amount: ammount })
+            "Pagar"
           )}
         </button>
         {error && <div className="text-red-600 mt-2 text-center text-sm">{error}</div>}

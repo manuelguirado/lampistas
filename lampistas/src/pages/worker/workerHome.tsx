@@ -66,8 +66,7 @@ export default function WorkerHome() {
 
     const buildUrl = (value: string) => {
       const fullAddress = encodeURIComponent(value);
-      console.log("Encoded address for geocoding:", fullAddress);
-      console.log("Geocoding address:", value);
+  
       return `https://nominatim.openstreetmap.org/search?q=${fullAddress}&format=json&limit=1&addressdetails=0&countrycodes=es`;
     };
 
@@ -110,7 +109,6 @@ export default function WorkerHome() {
           throw new Error(`Error ${res.status}: ${res.statusText}`);
         }
         const data = res.data;
-        console.log("Raw response data from getDirections API:", data);
 
         const coords = [];
 
@@ -120,14 +118,14 @@ export default function WorkerHome() {
             throw new Error(t("invalidAddress"));
           }
           const geocoded = await geocodeAddress(address);
-          console.log(`Geocoded coordinates for address "${address}":`, geocoded);
+       
           coords.push(geocoded);
         } catch (err) {
           console.error("Error geocoding address:", err);
         }
 
         setCoordinates(coords);
-        console.log("Final coordinates array:", coords);
+       
       })
       .catch((err) => {
         console.error("Error fetching incident directions:", err);
@@ -146,7 +144,7 @@ export default function WorkerHome() {
       },
     );
 
-    console.log("Incident photos response:", incident);
+ç
     return incident.data.files;
   }
   function handleViewDetails(incident: {
@@ -540,7 +538,7 @@ export default function WorkerHome() {
                   <h4 className="font-semibold text-gray-800 mb-2">
                     {t("files")}
                   </h4>
-                  {console.log("DEBUG modal.photoURL:", modal.photoURL)}
+             
                   {Array.isArray(modal.photoURL) &&
                   modal.photoURL.filter(Boolean).length > 0 ? (
                     <div className="space-y-3 max-h-80 overflow-y-auto">

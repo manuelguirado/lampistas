@@ -109,7 +109,7 @@ export default function MyIncidents() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        console.log("Incidents response:", response.data);
+    
         setIncidents(response.data.incidents || []);
         setTotalIncidents(response.data.total || 0);
       })

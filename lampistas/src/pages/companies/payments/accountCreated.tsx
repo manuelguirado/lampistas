@@ -15,7 +15,7 @@ export default function AccountCreated() {
             const token = localStorage.getItem("companyToken");
             const decoded = jwtDecode<DecodedToken>(token as string);
             const response = await api.post("/payments/create-login-link", { email: decoded.email });
-            console.log('Received create-login-link response:', response.data);
+
             const { loginLink } = response.data;
             window.location.href = loginLink; // Redirige al usuario a la URL de Stripe
         } catch (error) {

@@ -46,7 +46,7 @@ const [client, setClients] = useState<
   useEffect(() => {
     setBudgetNumber(generateBudgetNumber());
   }, []);
-console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar generación de número de presupuesto
+
   // ✅ FUNCIÓN para descargar el PDF
   const downloadPDF = (pdfBuffer: ArrayBuffer, filename: string) => {
     const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
@@ -208,7 +208,7 @@ console.log("Generated budget number:", budgetNumber); // ✅ Log para verificar
         clientAddress: selectedClientData.address || '',
       };
       
-      console.log("Request data:", requestData); // ✅ Log para verificar datos antes de enviar
+     
 
       
       const response = await api.post('/company/createBudget', requestData, {

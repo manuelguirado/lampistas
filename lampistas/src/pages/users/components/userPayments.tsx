@@ -15,10 +15,11 @@ type UserPaymentsProps = {
 
 export default function UserPayments({ userID, ammount , companyID }: UserPaymentsProps) {
     const { t } = useTranslation("users.paymentsPage");
-    const [stripePromise, setStripePromise] = useState<any>(null);
+    const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
     const [clientSecret, setClientSecret] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
+  
     // Obtener publishable key solo una vez
     useState(() => {
         api.get('/payments/config').then(config => {
@@ -54,7 +55,7 @@ export default function UserPayments({ userID, ammount , companyID }: UserPaymen
         clientSecret: clientSecret,
         theme: 'stripe',
     };
-    console.log("clientSecret in UserPayments:", clientSecret);
+
 
     if (loading) return <div>{t("loading")}</div>;
 
@@ -65,22 +66,10 @@ export default function UserPayments({ userID, ammount , companyID }: UserPaymen
             {/* Botón para crear el PaymentIntent y mostrar el formulario de Stripe */}
             {!formSubmitted && (
                 <button
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                        padding: '12px',
-                        backgroundColor: '#2563eb',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: 4,
-                        fontSize: 16,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        marginBottom: 24,
-                    }}
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-2 rounded-lg shadow transition-colors duration-200 disabled:bg-primary-300 disabled:text-white disabled:opacity-100 text-base"
                     onClick={handleSubmit}
                 >
-                    {t("payNow")}
+                    Pagar
                 </button>
             )}
             {/* Mostrar el formulario de Stripe solo si ya tenemos clientSecret y formSubmitted */}

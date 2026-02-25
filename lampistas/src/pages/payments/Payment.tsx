@@ -13,8 +13,7 @@ export default function Payments() {
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({companyemail : "",companyphone : "", price: 30});
     const [formSubmitted, setFormSubmitted] = useState(false);
-    console.log("Form data:", form);
-    console.log("Client Secret:", clientSecret);
+   
     // Obtener publishable key solo una vez
     useState(() => {
         api.get('/payments/config').then(config => {
@@ -27,7 +26,7 @@ export default function Payments() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        console.log(form);
+      
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -35,14 +34,12 @@ export default function Payments() {
         setLoading(true);
 
         try {
-            console.log('Form data in submit :', form);
+          
             const subscription = await api.post('/payments/create-subscription', form).then(res => res.data);
-            console.log("subcriptsion response:", subscription);
-            console.log("Received clientSecret:", subscription.clientSecret);
-            console.log("data", subscription); 
+           
             
             setClientSecret(subscription.clientSecret);
-            console.log('Received clientSecret:', subscription.clientSecret);
+           
             setFormSubmitted(true);
         } catch (error) {
             alert('Error creando la suscripción' + (error as Error).message);
