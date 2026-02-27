@@ -47,11 +47,11 @@ const Editor = forwardRef<Quill | null, EditorProps>(
         quill.setContents(defaultValueRef.current as Quill.DeltaStatic);
       }
 
-      quill.on(Quill.events.TEXT_CHANGE, (...args) => {
+      quill.on("text-change", (...args) => {
         onTextChangeRef.current?.(...args);
       });
 
-      quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
+      quill.on("selection-change", (...args) => {
         onSelectionChangeRef.current?.(...args);
       });
 
