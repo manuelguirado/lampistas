@@ -1,13 +1,8 @@
-import api from "../../../api/intercepttors"
+
 import Header from "../components/header";
-import { jwtDecode } from "jwt-decode";
+
 import { useTranslation } from "react-i18next";
-interface DecodedToken {
-  companyID: number;
-  role: string;
-  email: string;
-  name?: string; // ✅ Agregar name opcional
-}
+
 export default function PaymentSuccesfull() {
     const { t } = useTranslation("users.paymentSuccessPage");
     async function returntDashboard() {

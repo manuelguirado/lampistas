@@ -22,7 +22,7 @@ export default function CreateNewsLetter() {
 
         api
             .post("/mailing/sendNewsletter", { title, content })
-            .then(response => {
+            .then(() => {
                 alert(t("success"));
                 setTitle("");
                 setContent("");

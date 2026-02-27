@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import {  TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 export default function WorkerHome() {
   const { t } = useTranslation("worker.homePage");
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
-  const [incidentFiles, setIncidentFiles] = useState<
+  const [ setIncidentFiles] = useState<
     { incidentID: number; files: string[] }[]
   >([]);
   const [directions, setDirections] = useState<
@@ -411,8 +411,8 @@ export default function WorkerHome() {
                           title: incident.title,
                           date:
                             incident.createdAt instanceof Date
-                              ? incident.createdAt.toLocaleDateString("es-ES")
-                              : new Date(incident.createdAt).toLocaleDateString("es-ES"),
+                              ? incident.createdAt
+                              : new Date(incident.createdAt),
                           priority: incident.priority,
                           photoURL: files,
                         });

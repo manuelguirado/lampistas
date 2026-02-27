@@ -35,11 +35,11 @@ export default function UserRoutes() {
         {/* ✅ Ruta index - se muestra en /worker/workerdashboard */}
         <Route index element={<UserHome />} />
       </Route>
-    
-        <Route path="myMachinery" element={ <ProtectedRoute userType="user"><MyMachinery /></ProtectedRoute> } />
-        <Route path="myBudgets" element={ <ProtectedRoute userType="user"><UserBudgets /></ProtectedRoute> } />
-        <Route path="userPayments" element={ <ProtectedRoute userType="user"><UserPayments /></ProtectedRoute> } />
-        <Route path="payment/success" element={ <ProtectedRoute userType="user"><PaymentSuccesfull /></ProtectedRoute> } />
+
+      <Route path="myMachinery" element={<ProtectedRoute userType="user"><MyMachinery /></ProtectedRoute>} />
+      <Route path="myBudgets" element={<ProtectedRoute userType="user"><UserBudgets /></ProtectedRoute>} />
+      <Route path="userPayments" element={<ProtectedRoute userType="user"><UserPayments userID={0} ammount={0} companyID={0} /></ProtectedRoute>} />
+      <Route path="payment/success" element={<ProtectedRoute userType="user"><PaymentSuccesfull /></ProtectedRoute>} />
       <Route
         path="MisInciendencias/*"
         element={
