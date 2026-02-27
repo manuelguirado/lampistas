@@ -144,7 +144,7 @@ export default function WorkerHome() {
       },
     );
 
-ç
+
     return incident.data.files;
   }
   function handleViewDetails(incident: {
@@ -527,7 +527,7 @@ export default function WorkerHome() {
               <div className="flex flex-col gap-1">
                 <span>
                   {t("reportDateLabel", {
-                    date: modal.date.toLocaleDateString("es-ES"),
+                    date: modal.date,
                   })}
                 </span>
                 <span className="font-semibold">

@@ -292,7 +292,7 @@ export default function WorkerHome() {
                             name: incident.title,
                             files: [],
                             description: incident.description,
-                            dateReported: incident.dateReported,
+                            dateReported: incident.createdAt,
                           })
                         }
                         className="border border-amber-400 text-amber-700 hover:bg-amber-100 transition-colors px-3.5 py-1.5 rounded-lg font-semibold text-sm"
