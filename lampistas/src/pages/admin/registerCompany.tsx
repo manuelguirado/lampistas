@@ -6,6 +6,7 @@ import {registerCompanySchema, type RegisterCompanySchema } from './schemas/regi
 import Header from '../admin/components/header';
 import { useState } from 'react';
 import api from '../../api/intercepttors'   
+import { useTranslation } from "react-i18next";
 import { 
   Building2, 
   Mail, 
@@ -20,6 +21,7 @@ import {
   Map
 } from 'lucide-react';
 export default function RegisterCompany() {
+    const { t } = useTranslation("admin.registerCompanyPage");
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     
@@ -44,7 +46,6 @@ export default function RegisterCompany() {
             formData.append('password', data.password);
             formData.append('phone', data.phone);
             
-            // Enviar directions como JSON string (el backend lo parseará)
             formData.append('directions', JSON.stringify(data.directions));
             
             // Añadir el logo si existe
@@ -58,16 +59,16 @@ export default function RegisterCompany() {
         
             
             if (result.token){
-                toast.success('¡Empresa registrada exitosamente!');
+                toast.success(t("success"));
                 navigate('/admin/adminDashboard');
             } else {
-                const errorMsg = result.message || 'Error al registrar empresa';
+                const errorMsg = result.message || t("registerError");
               
                 toast.error(errorMsg);
             }
         } catch (error) {
             console.error('Error registering company:', error);
-            toast.error('Error de conexión con el servidor');
+            toast.error(t("serverError"));
         }
     }
     return (
@@ -80,8 +81,8 @@ export default function RegisterCompany() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
                         <Building2 className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Registrar Nueva Empresa</h2>
-                    <p className="text-gray-600">Agrega una empresa al sistema</p>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+                    <p className="text-gray-600">{t("subtitle")}</p>
                 </div>
 
                 {/* Formulario moderno */}
@@ -91,14 +92,14 @@ export default function RegisterCompany() {
                         <div>
                             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                 <Building className="w-5 h-5 text-blue-600" />
-                                Información de la Empresa
+                                {t("companyInfo")}
                             </h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Nombre de la empresa */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Nombre de la Empresa
+                                        {t("companyName")}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -106,7 +107,7 @@ export default function RegisterCompany() {
                                         </div>
                                         <input
                                             type="text"
-                                            placeholder="Nombre de la empresa"
+                                            placeholder={t("companyNamePh")}
                                             {...registerForm("name")}
                                             className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                                 registerErrors.name ? 'border-red-500' : 'border-gray-300'
@@ -124,7 +125,7 @@ export default function RegisterCompany() {
                                 {/* Email */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Correo Electrónico
+                                        {t("email")}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -133,7 +134,7 @@ export default function RegisterCompany() {
                                         <input
                                             type="email"
                                             inputMode="email"
-                                            placeholder="correo@empresa.com"
+                                            placeholder={t("email@gmail.com")}
                                             {...registerForm("email")}
                                             className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                                 registerErrors.email ? 'border-red-500' : 'border-gray-300'
@@ -151,7 +152,7 @@ export default function RegisterCompany() {
                                 {/* Contraseña */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Contraseña
+                                        {t("password")}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -159,7 +160,7 @@ export default function RegisterCompany() {
                                         </div>
                                         <input
                                             type={showPassword ? "text" : "password"}
-                                            placeholder="Contraseña segura"
+                                            placeholder={t("passwordPh")}
                                             {...registerForm("password")}
                                             className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                                 registerErrors.password ? 'border-red-500' : 'border-gray-300'
@@ -188,7 +189,7 @@ export default function RegisterCompany() {
                                 {/* Teléfono */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Teléfono
+                                        {t("phone")}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -197,7 +198,7 @@ export default function RegisterCompany() {
                                         <input
                                             type="tel"
                                             inputMode="tel"
-                                            placeholder="+1 234 567 890"
+                                            placeholder={t("phonePh")}
                                             {...registerForm("phone")}
                                             className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                                 registerErrors.phone ? 'border-red-500' : 'border-gray-300'
@@ -218,12 +219,12 @@ export default function RegisterCompany() {
                         <div>
                             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                 <Image className="w-5 h-5 text-blue-600" />
-                                Imagen Corporativa
+                                {t("corporateImage")}
                             </h3>
                             
                             <div className="space-y-2">
                                 <label className="block text-gray-700 text-sm font-semibold">
-                                    Logo de la Empresa
+                                    {t("companyLogo")}
                                 </label>
                                 <input
                                     type="file"
@@ -240,7 +241,7 @@ export default function RegisterCompany() {
                                     </p>
                                 )}
                                 <p className="text-xs text-gray-500">
-                                    Formatos soportados: JPG, PNG, GIF. Máximo 5MB.
+                                    {t("formats")}
                                 </p>
                             </div>
                         </div>
@@ -249,14 +250,14 @@ export default function RegisterCompany() {
                         <div>
                             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                 <Map className="w-5 h-5 text-blue-600" />
-                                Dirección de la Empresa
+                                {t("addressInfo")}
                             </h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Dirección */}
                                 <div className="md:col-span-2 space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Dirección
+                                        {t("address")}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -264,7 +265,7 @@ export default function RegisterCompany() {
                                         </div>
                                         <input
                                             type="text"
-                                            placeholder="Calle, número, edificio..."
+                                            placeholder={t("addressPh")}
                                             {...registerForm("directions.address")}
                                             className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                                 registerErrors.directions?.address ? 'border-red-500' : 'border-gray-300'
@@ -282,11 +283,11 @@ export default function RegisterCompany() {
                                 {/* Ciudad */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Ciudad
+                                        {t("city")}
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Ciudad"
+                                        placeholder={t("city")}
                                         {...registerForm("directions.city")}
                                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                             registerErrors.directions?.city ? 'border-red-500' : 'border-gray-300'
@@ -303,11 +304,11 @@ export default function RegisterCompany() {
                                 {/* Estado */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Estado/Provincia
+                                        {t("state")}
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="Estado"
+                                        placeholder={t("state")}
                                         {...registerForm("directions.state")}
                                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                             registerErrors.directions?.state ? 'border-red-500' : 'border-gray-300'
@@ -324,11 +325,11 @@ export default function RegisterCompany() {
                                 {/* Código postal */}
                                 <div className="space-y-2">
                                     <label className="block text-gray-700 text-sm font-semibold">
-                                        Código Postal
+                                        {t("zipCode")}
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="C.P."
+                                        placeholder={t("zipCode")}
                                         {...registerForm("directions.zipCode")}
                                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
                                             registerErrors.directions?.zipCode ? 'border-red-500' : 'border-gray-300'
@@ -351,7 +352,7 @@ export default function RegisterCompany() {
                                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:to-indigo-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-3"
                             >
                                 <Send className="w-5 h-5" />
-                                Registrar Empresa
+                                {t("submit")}
                             </button>
                         </div>
                     </form>

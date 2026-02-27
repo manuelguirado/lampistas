@@ -1,0 +1,21 @@
+{
+  "cargando": "Carregant...",
+  "empresa": "Empresa",
+  "trabajadores": "Treballadors",
+  "clientes": "Clients",
+  "incidencias": "Incidencies",
+  "crearPresupuesto": "Crear pressupost",
+  "maquinaria": "Maquinaria",
+  "perfil": "Perfil",
+  "vincularPagos": "Vincular pagaments",
+  "dashboard": "Tauler",
+  "registrarCliente": "Registrar client",
+  "crearMaquinaria": "Crear maquinaria",
+  "errorDashboardUrl": "Error en obtenir el tauler: {{message}}",
+  "errorReturnUrl": "Error en obtenir la URL de retorn: {{message}}",
+  "errorDecodeToken": "Error en descodificar el token: {{message}}",
+  "paymentsModalTitle": "Activa els teus pagaments",
+  "paymentsModalDescription": "Per accedir al tauler o cobrar pressupostos, primer has de vincular el teu compte de pagaments.",
+  "paymentsModalCancel": "Ara no",
+  "paymentsModalActivate": "Vincular pagaments"
+}

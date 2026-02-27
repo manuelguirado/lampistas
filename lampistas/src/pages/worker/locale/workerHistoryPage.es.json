@@ -1,0 +1,22 @@
+{
+  "loading": "Cargando historial...",
+  "title": "Historial de incidencias",
+  "empty": "No hay incidencias en el historial",
+  "id": "ID",
+  "titleCol": "Título",
+  "description": "Descripción",
+  "status": "Estado",
+  "user": "Usuario",
+  "worker": "Trabajador",
+  "company": "Empresa",
+  "created": "Creado",
+  "closed": "Cerrado",
+  "lastChange": "Último cambio",
+  "changeLog": "Log de cambio",
+  "na": "N/A",
+  "unassigned": "Sin asignar",
+  "notClosed": "No cerrada",
+  "showing": "Mostrando {{from}} a {{to}} de {{total}} registros",
+  "previous": "Anterior",
+  "next": "Siguiente"
+}

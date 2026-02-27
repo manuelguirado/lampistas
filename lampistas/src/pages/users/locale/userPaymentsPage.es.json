@@ -1,0 +1,8 @@
+{
+  "loading": "Cargando...",
+  "title": "Realiza el pago rellenando los datos de la tarjeta",
+  "payNow": "Pagar ahora",
+  "cardTitle": "Introduce los datos de tu tarjeta",
+  "cardSubtitle": "Completa el pago para activar tu suscripción.",
+  "subscriptionError": "Error creando la suscripción"
+}

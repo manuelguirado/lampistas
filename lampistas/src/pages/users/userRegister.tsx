@@ -2,43 +2,77 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import Header from "../../components/header";
-import { User, Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, UserPlus, Map, MapPin } from 'lucide-react';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { userRegisterSchema, type UserRegisterData } from "./schemas/userRegisterSchema";
 export default function UserRegister() {
     const navigate = useNavigate();
+    const { t } = useTranslation("users.registerPage");
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-    });
+   const {
+    register :  registerForm,
+    handleSubmit : handleFormSubmit,
+    formState: { errors: registerErrors },
+   } = useForm<UserRegisterData>({
+    resolver: zodResolver(userRegisterSchema),
+    mode: "onChange",
+    })
+
+   
     
     const togglePassword = () => {
         setShowPassword(!showPassword);
     };
     
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-       
+    async function handleSubmit(data : UserRegisterData) {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userRegister`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(data),
             });
-            const data = await response.json();
-          
-            if (data ) {
-                toast.success('¡Usuario registrado exitosamente!');
-                setFormData({ name: '', email: '', password: '' });
-                navigate('/user/userLogin');
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                toast.error(responseData?.message || t("registerError"));
+                return;
+            }
+
+            if (responseData) {
+                const loginResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userLogin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: data.email, password: data.password }),
+                });
+
+                const loginData = await loginResponse.json();
+
+                if (!loginResponse.ok || !loginData?.token) {
+                    toast.error(loginData?.message || t("registerError"));
+                    return;
+                }
+
+                localStorage.setItem("userToken", loginData.token);
+                localStorage.setItem("userType", "user");
+                if (loginData.userID) {
+                    localStorage.setItem("userID", loginData.userID.toString());
+                }
+
+                toast.success(t("success"));
+
+                navigate('/user/searchCompanies');
             } else {
-                toast.error('Error al registrar usuario.');
+                toast.error(t("registerError"));
             }
         } catch (error) {
     
-            toast.error('Error al registrar usuario: ' + (error as Error).message);
+            toast.error(t("registerErrorDetail", { message: (error as Error).message }));
         }
     }
 
@@ -52,17 +86,17 @@ export default function UserRegister() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
                         <UserPlus className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">Crear Cuenta</h2>
-                    <p className="text-gray-600">Únete a nuestra plataforma</p>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+                    <p className="text-gray-600">{t("subtitle")}</p>
                 </div>
 
                 {/* Formulario moderno */}
                 <div className="bg-white rounded-2xl shadow-2xl p-8 border border-amber-100">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleFormSubmit(handleSubmit)} className="space-y-6">
                         {/* Campo Nombre */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Nombre Completo
+                                {t("name")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -70,20 +104,23 @@ export default function UserRegister() {
                                 </div>
                                 <input
                                     type="text"
-                                    name="name"
-                                    placeholder="Tu nombre completo"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    {...registerForm("name")}
+                                    placeholder={t("namePh")}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                                    required
                                 />
                             </div>
+                            {registerErrors.name && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {registerErrors.name.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Campo Email */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Correo Electrónico
+                                {t("email")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -91,20 +128,23 @@ export default function UserRegister() {
                                 </div>
                                 <input
                                     type="email"
-                                    name="email"
-                                    placeholder="tu@email.com"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    {...registerForm("email")}
+                                    placeholder={t("emailPh")}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                                    required
                                 />
                             </div>
+                            {registerErrors.email && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {registerErrors.email.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Campo Contraseña */}
                         <div className="space-y-2">
                             <label className="block text-gray-700 text-sm font-semibold">
-                                Contraseña
+                                {t("password")}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -112,12 +152,9 @@ export default function UserRegister() {
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    name="password"
-                                    placeholder="Contraseña segura"
-                                    value={formData.password}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    {...registerForm("password")}
+                                    placeholder={t("passwordPh")}
                                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                                    required
                                 />
                                 <button
                                     type="button"
@@ -131,27 +168,126 @@ export default function UserRegister() {
                                     )}
                                 </button>
                             </div>
+                            {registerErrors.password && (
+                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                    <span>⚠️</span>
+                                    {registerErrors.password.message}
+                                </p>
+                            )}
+                        </div>
+                        {/*direcciones*/}
+                       <div>
+                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                <Map className="w-5 h-5 text-blue-600" />
+                                {t("addressInfo")}
+                            </h3>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Dirección */}
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="block text-gray-700 text-sm font-semibold">
+                                        {t("address")}
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <MapPin className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder={t("addressPh")}
+                                            {...registerForm("directions.0.address")}
+                                            className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                                                registerErrors.directions?.[0]?.address ? 'border-red-500' : 'border-gray-300'
+                                            }`}
+                                        />
+                                    </div>
+                                    {registerErrors.directions?.[0]?.address && (
+                                        <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                            <span>⚠️</span>
+                                            {registerErrors.directions[0]?.address?.message}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Ciudad */}
+                                <div className="space-y-2">
+                                    <label className="block text-gray-700 text-sm font-semibold">
+                                        {t("city")}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder={t("city")}
+                                        {...registerForm("directions.0.city")}
+                                        className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                                            registerErrors.directions?.[0]?.city ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    />
+                                    {registerErrors.directions?.[0]?.city && (
+                                        <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                            <span>⚠️</span>
+                                            {registerErrors.directions[0]?.city?.message}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Estado */}
+                                <div className="space-y-2">
+                                    <label className="block text-gray-700 text-sm font-semibold">
+                                        {t("state")}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder={t("state")}
+                                        {...registerForm("directions.0.state")}
+                                        className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                                            registerErrors.directions?.[0]?.state ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    />
+                                    {registerErrors.directions?.[0]?.state && (
+                                        <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                            <span>⚠️</span>
+                                            {registerErrors.directions[0]?.state?.message}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Código postal */}
+                                <div className="space-y-2">
+                                    <label className="block text-gray-700 text-sm font-semibold">
+                                        {t("zipCode")}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder={t("zipCode")}
+                                        {...registerForm("directions.0.zipCode")}
+                                        className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white ${
+                                            registerErrors.directions?.[0]?.zipCode ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    />
+                                    {registerErrors.directions?.[0]?.zipCode && (
+                                        <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                            <span>⚠️</span>
+                                            {registerErrors.directions[0]?.zipCode?.message}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            <button type="submit" className="w-full px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+                                {t("registerButton")}
+                            </button>
                         </div>
 
-                        {/* Botón de registro */}
-                        <button
-                            type="submit"
-                            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                        >
-                            <UserPlus className="w-5 h-5" />
-                            Crear Mi Cuenta
-                        </button>
                     </form>
                     
                     {/* Link al login */}
                     <div className="text-center mt-6">
                         <p className="text-gray-600 text-sm">
-                            ¿Ya tienes cuenta?{" "}
+                            {t("hasAccount")} {" "}
                             <button
                                 onClick={() => navigate('/user/userLogin')}
                                 className="text-amber-600 hover:text-amber-700 font-semibold transition-colors"
                             >
-                                Inicia sesión aquí
+                                {t("goLogin")}
                             </button>
                         </p>
                     </div>

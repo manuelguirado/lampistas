@@ -1,0 +1,13 @@
+{
+  "title": "Actualitzar manteniment",
+  "subtitle": "Registrar l'ultima inspeccio de maquinaria",
+  "selectMachinery": "Seleccionar maquinaria",
+  "selectMachineryPh": "-- Selecciona maquinaria --",
+  "lastInspection": "Data de l'ultima inspeccio",
+  "submit": "Actualitzar manteniment",
+  "important": "Important:",
+  "importantDesc": "Aquesta data s'utilitzara per calcular el proxim manteniment programat i generar alertes automatiques.",
+  "listError": "Error en carregar la llista de maquinaria: {{message}}",
+  "success": "Manteniment actualitzat correctament!",
+  "updateError": "Error en actualitzar manteniment: {{message}}"
+}

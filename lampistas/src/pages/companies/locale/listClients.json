@@ -1,0 +1,34 @@
+{
+  "navigation": {
+    "Trabajadores": "Workers",
+    "Clientes": "Clients",
+    "Incidencias": "Incidents",
+    "Crear Presupuesto": "Create Budget",
+    "Maquinaria": "Machinery",
+    "Perfil": "Profile",
+    "Vincular Pagos": "Link Payments",
+    "Dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Clients List",
+    "clientid": "Client ID",
+    "nombre": "Name",
+    "email": "Email",
+    "Tipo de contrato": "Contract Type",
+    "Elección libre ": "Free choice",
+    "Contrato fijo ": "Permanent Contract",
+    "Accciones": "Actions"
+  },
+  "Acctions": {
+    "Ver Contratos": "View Contracts",
+    "Assignar Códigio": "Assign Code"
+  },
+  "ver Contratos": {
+    "title": "View Contracts",
+    "Cliente": "Client",
+    "Fecha de inicio": "Start Date",
+    "Fecha de fin": "End Date",
+    "tipo de contrato": "Contract Type",
+    "status": "Status"
+  }
+}

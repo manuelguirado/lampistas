@@ -1,0 +1,8 @@
+{
+  "loading": "Loading...",
+  "title": "Make the payment by filling in your card details",
+  "payNow": "Pay now",
+  "cardTitle": "Enter your card details",
+  "cardSubtitle": "Complete the payment to activate your subscription.",
+  "subscriptionError": "Error creating subscription"
+}

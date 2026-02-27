@@ -3,8 +3,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Header from "../components/header";
 import api from '../../../api/intercepttors'
 import type { IncidentHistoryItem } from "../../../types/incidentHistory";
+import { useTranslation } from "react-i18next";
 
 export default function IncidentHistory() {
+    const { t } = useTranslation("users.incidentHistoryPage");
     const [history, setHistory] = useState<IncidentHistoryItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalHistory, setTotalHistory] = useState(0);
@@ -44,7 +46,7 @@ export default function IncidentHistory() {
     if (loading) {
         return (
             <div className="w-full min-h-screen flex items-center justify-center">
-                <div className="text-xl">Cargando historial...</div>
+                <div className="text-xl">{t("loading")}</div>
             </div>
         );
     }
@@ -52,74 +54,74 @@ export default function IncidentHistory() {
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">Historial de Incidencias</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("title")}</h2>
             
             {history.length === 0 ? (
                 <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
-                    No hay incidencias en el historial
+                    {t("empty")}
                 </div>
             ) : (
-                <div className="w-full max-w-7xl overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-300 shadow-md">
-                        <thead>
-                            <tr className="bg-amber-200">
-                                <th className="py-2 px-4 border border-gray-300 text-left">ID</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Título</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Descripción</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Estado</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Usuario</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Trabajador</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Empresa</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Creado</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Cerrado</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Último Cambio</th>
-                                <th className="py-2 px-4 border border-gray-300 text-left">Log de Cambio</th>
+                <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+                    <table className="min-w-full text-sm">
+                        <thead className="bg-amber-50">
+                            <tr className="text-amber-900">
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("id")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("titleCol")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("description")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("status")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("user")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("worker")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("company")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("created")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("closed")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("lastChange")}</th>
+                                <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("changeLog")}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-100">
                             {history.map((incident, index) => (
-                                <tr key={`${incident.id}-${index}`} className="hover:bg-amber-50">
-                                    <td className="py-2 px-4 border border-gray-300">{incident.id}</td>
-                                    <td className="py-2 px-4 border border-gray-300 max-w-xs">
-                                        <div className="truncate" title={incident.title}>
+                                <tr key={`${incident.id}-${index}`} className="hover:bg-amber-50/60 transition-colors">
+                                    <td className="py-3 px-4 font-semibold text-gray-700">{incident.id}</td>
+                                    <td className="py-3 px-4 max-w-xs">
+                                        <div className="truncate font-medium text-gray-900" title={incident.title}>
                                             {incident.title}
                                         </div>
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300 max-w-xs">
-                                        <div className="truncate" title={incident.description}>
+                                    <td className="py-3 px-4 max-w-xs">
+                                        <div className="truncate text-gray-600" title={incident.description}>
                                             {incident.description}
                                         </div>
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                            incident.status?.toLowerCase() === 'closed' ? 'bg-green-100 text-green-800' :
-                                            incident.status?.toLowerCase() === 'open' ? 'bg-red-100 text-red-800' :
-                                            incident.status?.toLowerCase() === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
+                                    <td className="py-3 px-4">
+                                        <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                            incident.status?.toLowerCase() === 'closed' ? 'bg-emerald-100 text-emerald-800' :
+                                            incident.status?.toLowerCase() === 'open' ? 'bg-rose-100 text-rose-800' :
+                                            incident.status?.toLowerCase() === 'in_progress' ? 'bg-orange-100 text-orange-800' :
                                             'bg-gray-100 text-gray-800'
                                         }`}>
                                             {incident.status}
                                         </span>
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300">
-                                        <span className="font-medium text-blue-600">
-                                            {incident.userName || 'N/A'}
+                                    <td className="py-3 px-4">
+                                        <span className="font-medium text-sky-600">
+                                            {incident.userName || t("na")}
                                         </span>
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300">
+                                    <td className="py-3 px-4">
                                         {incident.workerName ? (
                                             <span className="font-medium text-purple-600">
                                                 {incident.workerName}
                                             </span>
                                         ) : (
-                                            <span className="text-gray-400 italic">Sin asignar</span>
+                                            <span className="text-gray-400 italic">{t("unassigned")}</span>
                                         )}
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300">
-                                        <span className="font-medium text-green-600">
-                                            {incident.companyName || 'N/A'}
+                                    <td className="py-3 px-4">
+                                        <span className="font-medium text-emerald-600">
+                                            {incident.companyName || t("na")}
                                         </span>
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300 text-sm">
+                                    <td className="py-3 px-4 text-sm text-gray-700 whitespace-nowrap">
                                         {new Date(incident.createdAt).toLocaleDateString('es-ES', {
                                             year: 'numeric',
                                             month: 'short',
@@ -130,7 +132,7 @@ export default function IncidentHistory() {
                                             {new Date(incident.createdAt).toLocaleTimeString('es-ES')}
                                         </span>
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300 text-sm">
+                                    <td className="py-3 px-4 text-sm text-gray-700 whitespace-nowrap">
                                         {incident.closedAt ? (
                                             <>
                                                 {new Date(incident.closedAt).toLocaleDateString('es-ES', {
@@ -144,10 +146,10 @@ export default function IncidentHistory() {
                                                 </span>
                                             </>
                                         ) : (
-                                            <span className="text-gray-400 italic">No cerrada</span>
+                                            <span className="text-gray-400 italic">{t("notClosed")}</span>
                                         )}
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300 text-sm">
+                                    <td className="py-3 px-4 text-sm text-gray-700 whitespace-nowrap">
                                         {incident.changedAt ? (
                                             <>
                                                 {new Date(incident.changedAt).toLocaleDateString('es-ES', {
@@ -161,12 +163,12 @@ export default function IncidentHistory() {
                                                 </span>
                                             </>
                                         ) : (
-                                            <span className="text-gray-400 italic">N/A</span>
+                                            <span className="text-gray-400 italic">{t("na")}</span>
                                         )}
                                     </td>
-                                    <td className="py-2 px-4 border border-gray-300 max-w-xs">
-                                        <div className="truncate" title={incident.changeLog}>
-                                            {incident.changeLog || 'N/A'}
+                                    <td className="py-3 px-4 max-w-xs">
+                                        <div className="truncate text-gray-600" title={incident.changeLog}>
+                                            {incident.changeLog || t("na")}
                                         </div>
                                     </td>
                                 </tr>
@@ -178,7 +180,11 @@ export default function IncidentHistory() {
                     {totalHistory > pageSize && (
                         <div className="flex items-center justify-between mt-6 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm">
                             <div className="flex items-center text-sm text-gray-500">
-                                Mostrando {Math.min((currentPage - 1) * pageSize + 1, totalHistory)} a {Math.min(currentPage * pageSize, totalHistory)} de {totalHistory} registros
+                                {t("showing", {
+                                    from: Math.min((currentPage - 1) * pageSize + 1, totalHistory),
+                                    to: Math.min(currentPage * pageSize, totalHistory),
+                                    total: totalHistory,
+                                })}
                             </div>
                             
                             <div className="flex items-center space-x-2">
@@ -193,7 +199,7 @@ export default function IncidentHistory() {
                                     } transition-colors`}
                                 >
                                     <ChevronLeft className="w-4 h-4 mr-1" />
-                                    Anterior
+                                    {t("previous")}
                                 </button>
 
                                 {/* Números de página */}
@@ -243,7 +249,7 @@ export default function IncidentHistory() {
                                             : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                                     } transition-colors`}
                                 >
-                                    Siguiente
+                                    {t("next")}
                                     <ChevronRight className="w-4 h-4 ml-1" />
                                 </button>
                             </div>

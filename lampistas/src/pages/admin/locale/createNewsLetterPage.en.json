@@ -1,0 +1,1 @@
+{"title":"Create newsletter","labelTitle":"Title","labelContent":"Content","submit":"Create update","validation":"Complete title and content.","success":"Newsletter created successfully","error":"Error creating newsletter: {{message}}"}

@@ -1,0 +1,22 @@
+{
+  "loading": "Carregant historial...",
+  "title": "Historial d'incidències",
+  "empty": "No hi ha incidències a l'historial",
+  "id": "ID",
+  "titleCol": "Títol",
+  "description": "Descripció",
+  "status": "Estat",
+  "user": "Usuari",
+  "worker": "Treballador",
+  "company": "Empresa",
+  "created": "Creat",
+  "closed": "Tancat",
+  "lastChange": "Últim canvi",
+  "changeLog": "Log de canvi",
+  "na": "N/A",
+  "unassigned": "Sense assignar",
+  "notClosed": "No tancada",
+  "showing": "Mostrant {{from}} a {{to}} de {{total}} registres",
+  "previous": "Anterior",
+  "next": "Següent"
+}

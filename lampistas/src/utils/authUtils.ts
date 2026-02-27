@@ -1,67 +1,68 @@
 import type { UserType } from '../types/userType';
+import {
+  getAccessTokenKey,
+  getIdKey,
+  getLoginRoute,
+  getRefreshTokenKey,
+  setTokens,
+} from '../api/helpers';
 
 // Configuración por tipo de usuario
 const USER_CONFIG = {
   admin: {
-    tokenKey: 'adminToken',
-    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/admin/refreshToken`,
-    loginUrl: '/admin',
+    refreshTokenKey: 'adminRefreshToken',
   },
   company: {
-    tokenKey: 'companyToken',
-    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/company/refreshToken`,
-    loginUrl: '/company/companyLogin',
+    refreshTokenKey: 'companyRefreshToken',
   },
   worker: {
-    tokenKey: 'workerToken',
-    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/worker/refreshToken`,
-    loginUrl: '/worker/workerLogin',
+    refreshTokenKey: 'workerRefreshToken',
   },
   user: {
-    tokenKey: 'userToken',
-    refreshUrl: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/refreshToken`,
-    loginUrl: '/user/userLogin',
+    refreshTokenKey: 'userRefreshToken',
   },
 };
 
 // Utilidad para refrescar el token de cualquier tipo de usuario
 export async function refreshToken(userType: UserType): Promise<string | null> {
-  const config = USER_CONFIG[userType];
-  const currentToken = localStorage.getItem(config.tokenKey);
+  const refreshTokenValue = getRefreshTokenKey(userType);
+  const userID = getIdKey(userType);
+  const currentAccessToken = getAccessTokenKey(userType);
   
-  if (!currentToken) {
-    console.error(`No ${userType} token found to refresh`);
+  if (!refreshTokenValue || !userID) {
+    console.error(`Missing refresh credentials for ${userType}`);
     return null;
   }
 
   try {
-    const response = await fetch(config.refreshUrl, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/refreshToken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${currentToken}`,
+        ...(currentAccessToken ? { Authorization: `Bearer ${currentAccessToken}` } : {}),
       },
-      body: JSON.stringify({ token: currentToken }),
+      body: JSON.stringify({
+        token: refreshTokenValue,
+        userType,
+        id: Number(userID),
+      }),
     });
 
     const data = await response.json();
 
-    if (data.token) {
-      // Guardar el nuevo token
-      localStorage.setItem(config.tokenKey, data.token);
-    
-      return data.token;
+    if (response.ok && data.accessToken && data.refreshToken) {
+      setTokens(userType, data.accessToken as string, data.refreshToken as string, Number(userID));
+      return data.accessToken as string;
     } else {
       console.error(`❌ Error al refrescar ${userType} token:`, data.message);
-      // Si falla el refresh, limpiar el token y redirigir al login
-      localStorage.removeItem(config.tokenKey);
-      window.location.href = config.loginUrl;
+      localStorage.clear();
+      window.location.href = getLoginRoute(userType);
       return null;
     }
   } catch (error) {
     console.error(`❌ Error de conexión al refrescar ${userType} token:`, error);
-    localStorage.removeItem(config.tokenKey);
-    window.location.href = config.loginUrl;
+    localStorage.clear();
+    window.location.href = getLoginRoute(userType);
     return null;
   }
 }
@@ -72,8 +73,7 @@ export async function fetchWithTokenRefresh(
   userType: UserType,
   options: RequestInit = {}
 ): Promise<Response> {
-  const config = USER_CONFIG[userType];
-  const token = localStorage.getItem(config.tokenKey);
+  const token = getAccessTokenKey(userType);
   
   // Agregar token a los headers si existe
   const headers = {
@@ -104,7 +104,7 @@ export function setupAutoRefresh(userType: UserType) {
   const config = USER_CONFIG[userType];
 
   const intervalId = setInterval(async () => {
-    const token = localStorage.getItem(config.tokenKey);
+    const token = localStorage.getItem(config.refreshTokenKey);
     if (token) {
      
       await refreshToken(userType);
@@ -125,7 +125,7 @@ export function setupAllAutoRefresh() {
   // Verificar cada tipo de usuario y configurar auto-refresh si está logueado
   (['admin', 'company', 'worker', 'user'] as UserType[]).forEach((userType) => {
     const config = USER_CONFIG[userType];
-    const token = localStorage.getItem(config.tokenKey);
+    const token = localStorage.getItem(config.refreshTokenKey);
     if (token) {
       const cleanup = setupAutoRefresh(userType);
       cleanupFunctions.push(cleanup);

@@ -7,8 +7,10 @@ import {workerLoginSchema, type WorkerLoginSchema} from '../worker/schemas/worke
 import { useState } from 'react';
 import { Eye, EyeOff, Wrench, Mail, Lock, HardHat } from 'lucide-react';
 import api from '../../api/intercepttors'
+import { useTranslation } from "react-i18next";
 export default function WorkerLogin() {
   const navigate = useNavigate();
+  const { t } = useTranslation("worker.loginPage");
   const [showPassword, setShowPassword] = useState(false);
   
   const togglePassword = () => {
@@ -40,11 +42,11 @@ export default function WorkerLogin() {
 
           navigate("/worker/workerDashboard");
         } else {
-          toast.error('Código inválido. Por favor, inténtelo de nuevo.');
+          toast.error(t("invalidCode"));
         }
       })
       .catch((error) => {
-        toast.error('Error en login: ' + error.message);
+        toast.error(t("codeError", { message: error.message }));
       });
   }
   function handleLogin(data : WorkerLoginSchema) {
@@ -56,7 +58,7 @@ export default function WorkerLogin() {
       .then((res) => res.data)
       .then((data) => {
         if (data.token) {
-          toast.success('¡Inicio de sesión exitoso!');
+          toast.success(t("loginSuccess"));
           // Guardar token y userType en localStorage
           localStorage.setItem("workerToken", data.token);
           localStorage.setItem("userType", "worker");
@@ -68,11 +70,15 @@ export default function WorkerLogin() {
           }
           navigate("/worker/workerDashboard");
         } else {
-          toast.error('Credenciales incorrectas');
+          toast.error(data.message || t("invalidCredentials"));
         }
       })
       .catch((err) => {
-        toast.error('Error during login: ' + err.message);
+        const errorMsg =
+          err?.response?.data?.message ||
+          err?.message ||
+          t("invalidCredentials");
+        toast.error(t("loginError", { message: errorMsg }));
       });
   }
   return (
@@ -85,8 +91,8 @@ export default function WorkerLogin() {
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
             <HardHat className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Portal Trabajadores</h2>
-          <p className="text-gray-600">Accede a tus asignaciones</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+          <p className="text-gray-600">{t("subtitle")}</p>
         </div>
 
         {/* Formulario principal */}
@@ -96,7 +102,7 @@ export default function WorkerLogin() {
             {/* Email Input */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Correo Electrónico
+                {t("email")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -106,7 +112,7 @@ export default function WorkerLogin() {
                   type="email"
                   id="email"
                   {...loginRegister("email")}
-                  placeholder="trabajador@ejemplo.com"
+                  placeholder={t("emailPh")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
               </div>
@@ -121,7 +127,7 @@ export default function WorkerLogin() {
             {/* Password Input */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Contraseña
+                {t("password")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -131,7 +137,7 @@ export default function WorkerLogin() {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   {...loginRegister("password")}
-                  placeholder="Tu contraseña"
+                  placeholder={t("passwordPh")}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
                 <button
@@ -152,6 +158,9 @@ export default function WorkerLogin() {
                   {loginErrors.password.message}
                 </p>
               )}
+               <a href="/forgotPassword" className="text-amber-600 hover:text-amber-700 font-semibold">
+                {t("forgotPassword")}
+              </a>
             </div>
 
             {/* Botón Login */}
@@ -159,14 +168,14 @@ export default function WorkerLogin() {
               type="submit"
               className="w-full bg-gradient-to-r from-green-600 to-emerald-700 text-white py-3 px-4 rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Acceder con Email
+              {t("loginEmail")}
             </button>
           </form>
 
           {/* Separador */}
           <div className="flex items-center my-8">
             <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-gray-500 text-sm font-medium">O</span>
+            <span className="px-4 text-gray-500 text-sm font-medium">{t("or")}</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
@@ -175,7 +184,7 @@ export default function WorkerLogin() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <Wrench className="w-5 h-5 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-800">Código de Trabajador</h3>
+                <h3 className="text-lg font-semibold text-gray-800">{t("workerCodeTitle")}</h3>
               </div>
             </div>
             
@@ -188,7 +197,7 @@ export default function WorkerLogin() {
                   type="text"
                   id="workerCode"
                   {...loginRegister("code")}
-                  placeholder="Código de trabajador"
+                  placeholder={t("workerCodePh")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                 />
               </div>
@@ -205,7 +214,7 @@ export default function WorkerLogin() {
               onClick={handleLoginSubmit(handleValidateCode)}
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
-              Acceder con Código
+              {t("loginCode")}
             </button>
           </div>
         </div>
@@ -213,9 +222,9 @@ export default function WorkerLogin() {
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
-            ¿Problemas para acceder?{" "}
+            {t("support")}{" "}
             <a href="#" className="text-green-600 hover:text-green-700 font-semibold">
-              Contacta soporte
+              {t("contactSupport")}
             </a>
           </p>
         </div>

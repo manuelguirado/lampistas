@@ -1,0 +1,14 @@
+{
+  "titulo": "Welcome to your Company Dashboard",
+  "resumenGanancias": "Earnings Overview",
+  "gananciasTotales": "Total Earnings",
+  "graficoGanancias": "Monthly Earnings Chart",
+  "resumenIncidencias": "Closed Incidents Overview",
+  "incidenciasTotales": "Total Closed Incidents",
+  "graficoIncidencias": "Monthly Closed Incidents Chart",
+  "etiquetaGanancias": "My earnings",
+  "etiquetaIncidencias": "Closed incidents",
+  "tituloGanancias": "Monthly earnings",
+  "tituloIncidencias": "Monthly closed incidents",
+  "meses": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+}

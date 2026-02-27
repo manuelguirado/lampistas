@@ -1,0 +1,5 @@
+{
+  "decodeError": "Error decoding token: {{message}}",
+  "myShifts": "My shifts",
+  "incidentsHistory": "Incident history"
+}

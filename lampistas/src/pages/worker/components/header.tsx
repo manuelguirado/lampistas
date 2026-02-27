@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 interface DecodedToken {
     workerID: number;
     role: string;
@@ -13,6 +14,7 @@ interface DecodedToken {
     
 }
 export default function Header() {
+    const { t } = useTranslation("worker.header");
     const [isOpen, setIsOpen] = useState(false);
     const toggleMenu = () => setIsOpen(!isOpen);
     const token = localStorage.getItem('workerToken');
@@ -23,10 +25,10 @@ export default function Header() {
                 const decoded = jwtDecode<DecodedToken>(token);
                 setWorkerName(decoded.workerName);
             } catch (error) {
-                toast.error('❌ Error decoding token: ' + (error as Error).message);
+                toast.error(t('decodeError', { message: (error as Error).message }));
             }
         }
-    }, [token]);
+    }, [token, t]);
     
     return (
         <header className="w-full bg-amber-100 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
@@ -40,12 +42,12 @@ export default function Header() {
                  
                     <Link to="/worker/misGuardias">
                         <button className="rounded-md bg-amber-500 px-3 py-2 hover:bg-amber-600 transition-colors text-white text-sm whitespace-nowrap">
-                            Mis guardias
+                            {t("myShifts")}
                         </button>
                     </Link>
                     <Link to="/worker/incidentHistory">
                         <button className="rounded-md bg-yellow-500 px-3 py-2 hover:bg-yellow-600 transition-colors text-black text-sm whitespace-nowrap">
-                            Historial de incidencias
+                            {t("incidentsHistory")}
                         </button>
                     </Link>
                 
@@ -75,10 +77,10 @@ export default function Header() {
                         <nav className="flex flex-col p-4 space-y-2">
                           
                             <Link to="/worker/misGuardias" className="text-left w-full rounded-md bg-amber-500 px-4 py-3 hover:bg-amber-600 transition-colors text-white">
-                               Mis guardias 
+                                         {t("myShifts")} 
                             </Link>
                             <Link to="/worker/incidentHistory" className="text-left w-full rounded-md bg-yellow-500 px-4 py-3 hover:bg-yellow-600 transition-colors text-black">
-                               Historial de incidencias 
+                                         {t("incidentsHistory")} 
                             </Link>
                            
                         </nav>

@@ -1,0 +1,8 @@
+{
+  "title": "Fer el pagament",
+  "processing": "Processant...",
+  "subscribe": "Subscriure's per {{amount}}€",
+  "cardError": "S'ha produIt un error inesperat.",
+  "success": "Pagament realitzat correctament",
+  "unknownError": "Error desconegut"
+}

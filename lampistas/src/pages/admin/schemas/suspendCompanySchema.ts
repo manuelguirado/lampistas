@@ -2,7 +2,7 @@ import {z} from "zod";
 
 // Schema para el INPUT del formulario (antes del transform)
 export const suspendCompanySchema = z.object({
-    companyId: z.string().min(1, "El ID de la empresa es requerido"),
+   companyEmail :  z.email("Email inválido"),
     until: z.string()
         .min(1, "La fecha es requerida")
         .refine((val) => {
@@ -22,6 +22,6 @@ export type SuspendCompanySchema = z.infer<typeof suspendCompanySchema>;
 
 // Tipo para el OUTPUT (después de procesar)
 export type SuspendCompanyOutput = {
-    companyId: string;
+    companyEmail: string;
     until: Date;
 };

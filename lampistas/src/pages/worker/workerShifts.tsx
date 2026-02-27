@@ -5,7 +5,9 @@ import type { EventInput } from '@fullcalendar/core';
 import toast from 'react-hot-toast';
 import type { Shift } from '../../types/shitfts';
 import api from '../../api/intercepttors'
+import { useTranslation } from 'react-i18next';
 export default function WorkerShifts() {
+  const { t } = useTranslation('worker.shiftsPage');
   const [shifts, setShifts] = useState<EventInput[]>([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('workerToken');
@@ -26,7 +28,7 @@ export default function WorkerShifts() {
         // Transformar los datos del backend a formato FullCalendar
         const events: EventInput[] = data.shifts.map((shift: Shift) => ({
           id: shift.ShiftID,
-          title: shift.shiftType || 'Guardia',
+          title: shift.shiftType || t('fallbackShift'),
           start: shift.startDate,
           end: shift.endDate,
           backgroundColor: getShiftColor(shift.shiftType),
@@ -34,9 +36,9 @@ export default function WorkerShifts() {
         }));
         setShifts(events);
       })
-      .catch(err => toast.error('Error fetching shifts: ' + err.message))
+      .catch(err => toast.error(t('fetchError', { message: err.message })))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [token, t]);
 
   function getShiftColor(shiftType: string): string {
     const colors: Record<string, string> = {
@@ -51,7 +53,7 @@ export default function WorkerShifts() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Cargando guardias...</div>
+        <div className="text-xl">{t('loading')}</div>
       </div>
     );
   }
@@ -60,25 +62,25 @@ export default function WorkerShifts() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="container mx-auto px-4 pt-24">
-        <h2 className="text-3xl font-bold mb-6">Mis Guardias</h2>
+        <h2 className="text-3xl font-bold mb-6">{t('title')}</h2>
         
         {/* Leyenda */}
         <div className="flex gap-4 mb-6 sm:flex flex-col">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-400 rounded"></div>
-            <span className="text-sm">Mañana</span>
+            <span className="text-sm">{t('morning')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-orange-500 rounded"></div>
-            <span className="text-sm">Tarde</span>
+            <span className="text-sm">{t('afternoon')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-blue-900 rounded"></div>
-            <span className="text-sm">Noche</span>
+            <span className="text-sm">{t('night')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-green-500 rounded"></div>
-            <span className="text-sm">Día completo</span>
+            <span className="text-sm">{t('fullDay')}</span>
           </div>
         </div>
 

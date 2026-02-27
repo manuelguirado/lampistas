@@ -1,0 +1,23 @@
+{
+  "title": "Nou client",
+  "subtitle": "Registrar client i crear contracte",
+  "fullNameLabel": "Nom complet",
+  "fullNamePlaceholder": "Nom del client",
+  "emailLabel": "Correu electronic",
+  "emailPlaceholder": "client@email.com",
+  "passwordLabel": "Contrasenya temporal",
+  "passwordPlaceholder": "Contrasenya temporal",
+  "contractTypeLabel": "Tipus de contracte",
+  "contractTypePlaceholder": "Selecciona tipus de contracte",
+  "contractFixedOption": "Contracte fixe",
+  "contractFreeOption": "Lliure eleccio",
+  "submit": "Registrar client",
+  "infoTitle": "Proces automatic:",
+  "infoText": "Es creara l'usuari i automaticament es generara el contracte associat. El client rebra les credencials per email.",
+  "toast": {
+    "userError": "Error en registrar l'usuari.",
+    "success": "Usuari i contracte creats correctament!",
+    "contractError": "Usuari creat pero error en crear el contracte.",
+    "processError": "Error durant el proces de registre: {{message}}"
+  }
+}

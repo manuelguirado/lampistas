@@ -1,0 +1,9 @@
+{
+  "titulo": "Gestio de maquinaria",
+  "crearTitulo": "Crear maquinaria",
+  "crearDesc": "Registra nova maquinaria al sistema",
+  "listarTitulo": "Llistar maquinaria",
+  "listarDesc": "Veure tota la maquinaria registrada",
+  "mantenimientoTitulo": "Actualitzar manteniment",
+  "mantenimientoDesc": "Registrar una nova data de manteniment per a la maquinaria"
+}

@@ -1,0 +1,23 @@
+{
+  "cargando": "Cargando historial...",
+  "titulo": "Historial de incidencias",
+  "sinHistorial": "No hay incidencias en el historial",
+  "thId": "ID",
+  "thTitulo": "Titulo",
+  "thDescripcion": "Descripcion",
+  "thEstado": "Estado",
+  "thUsuario": "Usuario",
+  "thTrabajador": "Trabajador",
+  "thEmpresa": "Empresa",
+  "thCreado": "Creado",
+  "thCerrado": "Cerrado",
+  "thUltimoCambio": "Ultimo cambio",
+  "thLog": "Log de cambio",
+  "na": "N/A",
+  "sinAsignar": "Sin asignar",
+  "noCerrada": "No cerrada",
+  "mostrando": "Mostrando {{from}} a {{to}} de {{total}} registros",
+  "anterior": "Anterior",
+  "siguiente": "Siguiente",
+  "errorHistorial": "Error al cargar historial"
+}

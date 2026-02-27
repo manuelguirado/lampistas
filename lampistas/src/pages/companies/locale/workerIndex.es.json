@@ -1,0 +1,7 @@
+{
+  "titulo": "Gestion de trabajadores",
+  "registrarTitulo": "Registrar trabajador",
+  "registrarDesc": "Agrega un nuevo trabajador al sistema",
+  "misTrabajadoresTitulo": "Mis trabajadores",
+  "misTrabajadoresDesc": "Visualiza y administra los trabajadores de tu empresa"
+}

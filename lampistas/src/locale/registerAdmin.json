@@ -1,0 +1,17 @@
+{
+  "navigation": {
+    "Acceso Clientes": "Client Access",
+    "Acceso Empresa": "Company Access",
+    "Administradores": "Administrators",
+    "Acceso Trabajadores": "Worker Access"
+  },
+  "login": {
+    "title": "Admin Registration",
+    "Description": "Create new administrator account",
+    "email": "Email",
+    "password": "Password",
+    "¿Olvidaste tu contraseña?": "Forgot your password?",
+    "button": "Sign In"
+    
+  }
+}

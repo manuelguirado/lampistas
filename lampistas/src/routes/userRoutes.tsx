@@ -10,12 +10,18 @@ import UserBudgets from "../pages/users/userBudgets";
 import IncidentIndex from "../pages/users/incidents/incidentIndex";
 import IncidentLayout from "../pages/users/incidents/incidentLayout";
 import IncidentHistory from "../pages/users/incidents/incidentHistory";
+import UserPayments from "../pages/users/components/userPayments";
+import PaymentSuccesfull from "../pages/users/components/paymentSuccesfull";
+import Searchcompnies from "../pages/users/Searchcompnies";
+
 export default function UserRoutes() {
   return (
     <Routes>
       {/* Ruta pública */}
       <Route path="userRegister" element={<RegisterUser />} />
       <Route path="userLogin" element={<UserLogin />} />
+     
+            <Route path="searchCompanies" element={ <Searchcompnies /> } />
 
       {/* Rutas protegidas */}
       <Route
@@ -32,6 +38,8 @@ export default function UserRoutes() {
     
         <Route path="myMachinery" element={ <ProtectedRoute userType="user"><MyMachinery /></ProtectedRoute> } />
         <Route path="myBudgets" element={ <ProtectedRoute userType="user"><UserBudgets /></ProtectedRoute> } />
+        <Route path="userPayments" element={ <ProtectedRoute userType="user"><UserPayments /></ProtectedRoute> } />
+        <Route path="payment/success" element={ <ProtectedRoute userType="user"><PaymentSuccesfull /></ProtectedRoute> } />
       <Route
         path="MisInciendencias/*"
         element={
@@ -40,6 +48,8 @@ export default function UserRoutes() {
           </ProtectedRoute>
         }
       >
+
+        
     
         <Route index element={<IncidentIndex />} />
         <Route path="createIncident" element={<CreateIncident />} />

@@ -1,0 +1,23 @@
+{
+  "title": "Nuevo cliente",
+  "subtitle": "Registrar cliente y crear contrato",
+  "fullNameLabel": "Nombre completo",
+  "fullNamePlaceholder": "Nombre del cliente",
+  "emailLabel": "Correo electronico",
+  "emailPlaceholder": "cliente@email.com",
+  "passwordLabel": "Contrasena temporal",
+  "passwordPlaceholder": "Contrasena temporal",
+  "contractTypeLabel": "Tipo de contrato",
+  "contractTypePlaceholder": "Selecciona tipo de contrato",
+  "contractFixedOption": "Contrato fijo",
+  "contractFreeOption": "Libre eleccion",
+  "submit": "Registrar cliente",
+  "infoTitle": "Proceso automatico:",
+  "infoText": "Se creara el usuario y automaticamente se generara el contrato asociado. El cliente recibira las credenciales por email.",
+  "toast": {
+    "userError": "Error al registrar usuario.",
+    "success": "Usuario y contrato creados exitosamente!",
+    "contractError": "Usuario creado pero error al crear el contrato.",
+    "processError": "Error durante el proceso de registro: {{message}}"
+  }
+}

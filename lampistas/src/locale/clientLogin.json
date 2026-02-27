@@ -1,0 +1,19 @@
+{
+  "navigation": {
+    "Acceso Clientes": "Client Access",
+    "Acceso Empresa": "Company Access",
+    "Administradores": "Administrators",
+    "Acceso Trabajadores": "Worker Access"
+  },
+  "login": {
+    "title": "Welcome",
+    "Description": "Sign in to your account",
+    "email": "Email",
+    "password": "Password",
+    "¿Olvidaste tu contraseña?": "Forgot your password?",
+    "button": "Sign In",
+    "Codigo empresa": "Company code",
+    "Ingrese su còdigo de empresa": "Enter your company code",
+    "Acceso con Código": "Access Code"
+  }
+}

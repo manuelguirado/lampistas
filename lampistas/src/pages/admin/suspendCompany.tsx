@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router';
 import { suspendCompanySchema, type SuspendCompanySchema } from './schemas/suspendCompanySchema';
 import {  Hash, Calendar, Pause, AlertTriangle } from 'lucide-react';
 import api from '../../api/intercepttors';
+import { useTranslation } from "react-i18next";
 export default function SuspendCompany() {
+  const { t } = useTranslation("admin.suspendCompanyPage");
     const navigate = useNavigate();
     const token = localStorage.getItem('adminToken');
     const {
@@ -21,8 +23,10 @@ export default function SuspendCompany() {
 
     async function handleSubmit(data: SuspendCompanySchema) {
         try {
-            const response = await api.patch(`/admin/suspendCompany/${data.companyId}`, {
+            const response = await api.patch(`/admin/suspendCompany`, {
+                companyEmail: data.companyEmail,
                 until: new Date(data.until), // Convertir string a Date
+                
             }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -32,17 +36,18 @@ export default function SuspendCompany() {
                  
             
             const result = await response.data;
+        
           
             
             if (result.company || result.success !== false) {
-                toast.success('¡Empresa suspendida exitosamente!');
+              toast.success(t("success"));
                 navigate('/admin/listCompany');
             } else {
-                toast.error(result.message || 'Error al suspender empresa');
+              toast.error(result.message || t("suspendError"));
             }
         } catch (error) {
             console.error('💥 Error:', error);
-            toast.error('Error de conexión con el servidor');
+            toast.error(t("serverError"));
         }
     }
   return (
@@ -55,8 +60,8 @@ export default function SuspendCompany() {
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-red-600 to-orange-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
             <Pause className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Suspender Empresa</h2>
-          <p className="text-gray-600">Suspender temporalmente acceso de la empresa</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+          <p className="text-gray-600">{t("subtitle")}</p>
         </div>
 
         {/* Formulario moderno */}
@@ -65,7 +70,7 @@ export default function SuspendCompany() {
             {/* ID de la empresa */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                ID de la Empresa
+                {t("companyEmail")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,19 +78,19 @@ export default function SuspendCompany() {
                 </div>
                 <input
                   type="text"
-                  placeholder="ID de la empresa a suspender"
-                  {...registerSuspend("companyId")}
+                  placeholder={t("companyEmailPh")}
+                  {...registerSuspend("companyEmail")}
                   className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-200 bg-gray-50 focus:bg-white ${
-                    suspendCompanyErrors.companyId
+                    suspendCompanyErrors.companyEmail
                       ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 focus:ring-red-500 focus:border-red-500'
                   }`}
                 />
               </div>
-              {suspendCompanyErrors.companyId && (
+              {suspendCompanyErrors.companyEmail && (
                 <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
                   <span>⚠️</span>
-                  {suspendCompanyErrors.companyId.message}
+                  {suspendCompanyErrors.companyEmail.message}
                 </p>
               )}
             </div>
@@ -93,7 +98,7 @@ export default function SuspendCompany() {
             {/* Fecha de suspensión */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Suspender hasta
+                {t("until")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -123,7 +128,7 @@ export default function SuspendCompany() {
               className="w-full bg-gradient-to-r from-red-600 to-orange-700 text-white py-3 px-4 rounded-xl hover:from-red-700 hover:to-orange-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
               <Pause className="w-5 h-5" />
-              Suspender Empresa
+              {t("submit")}
             </button>
           </form>
           
@@ -132,10 +137,9 @@ export default function SuspendCompany() {
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-red-800 font-semibold text-sm">Acción Crítica:</h4>
+                <h4 className="text-red-800 font-semibold text-sm">{t("critical")}</h4>
                 <p className="text-red-700 text-xs mt-1">
-                  La empresa no podrá acceder al sistema hasta la fecha especificada. 
-                  Esta acción afecta a todos los usuarios de la empresa.
+                  {t("criticalDesc")}
                 </p>
               </div>
             </div>

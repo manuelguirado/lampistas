@@ -1,0 +1,15 @@
+{
+  "hireError": "No s'ha pogut contractar l'empresa",
+  "hireSuccess": "Empresa contractada correctament",
+  "hireUnexpectedError": "Error inesperat en contractar l'empresa",
+  "loadError": "No s'han pogut carregar les empreses",
+  "unexpectedError": "Error inesperat",
+  "title": "Buscar empreses",
+  "subtitle": "Troba empreses properes a la teva adreça i revisa la seva informació abans de contractar.",
+  "loading": "Carregant empreses...",
+  "empty": "No s'han trobat empreses per a la teva zona.",
+  "email": "Correu:",
+  "phone": "Telèfon:",
+  "zipCode": "CP:",
+  "hireButton": "Contractar"
+}

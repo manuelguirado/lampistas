@@ -1,0 +1,8 @@
+{
+  "decodeError": "Error al decodificar token: {{message}}",
+  "loading": "Cargando...",
+  "myMachinery": "Mi maquinaria",
+  "myIncidents": "Mis incidencias",
+  "createIncidents": "Crear incidencias",
+  "myBudgets": "Mis presupuestos"
+}

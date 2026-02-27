@@ -1,0 +1,23 @@
+{
+  "cargando": "Loading history...",
+  "titulo": "Incident history",
+  "sinHistorial": "There are no incidents in history",
+  "thId": "ID",
+  "thTitulo": "Title",
+  "thDescripcion": "Description",
+  "thEstado": "Status",
+  "thUsuario": "User",
+  "thTrabajador": "Worker",
+  "thEmpresa": "Company",
+  "thCreado": "Created",
+  "thCerrado": "Closed",
+  "thUltimoCambio": "Last change",
+  "thLog": "Change log",
+  "na": "N/A",
+  "sinAsignar": "Unassigned",
+  "noCerrada": "Not closed",
+  "mostrando": "Showing {{from}} to {{to}} of {{total}} records",
+  "anterior": "Previous",
+  "siguiente": "Next",
+  "errorHistorial": "Error loading history"
+}

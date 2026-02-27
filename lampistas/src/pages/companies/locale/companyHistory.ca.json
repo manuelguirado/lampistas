@@ -1,0 +1,23 @@
+{
+  "cargando": "Carregant historial...",
+  "titulo": "Historial d'incidencies",
+  "sinHistorial": "No hi ha incidencies a l'historial",
+  "thId": "ID",
+  "thTitulo": "Titol",
+  "thDescripcion": "Descripcio",
+  "thEstado": "Estat",
+  "thUsuario": "Usuari",
+  "thTrabajador": "Treballador",
+  "thEmpresa": "Empresa",
+  "thCreado": "Creat",
+  "thCerrado": "Tancat",
+  "thUltimoCambio": "Ultim canvi",
+  "thLog": "Log de canvi",
+  "na": "N/A",
+  "sinAsignar": "Sense assignar",
+  "noCerrada": "No tancada",
+  "mostrando": "Mostrant {{from}} a {{to}} de {{total}} registres",
+  "anterior": "Anterior",
+  "siguiente": "Seguent",
+  "errorHistorial": "Error en carregar historial"
+}

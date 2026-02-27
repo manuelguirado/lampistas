@@ -1,0 +1,8 @@
+{
+  "subscriptionError": "Error en crear el pagament: {{message}}",
+  "loading": "Carregant...",
+  "title": "Fes el pagament emplenant les dades de la targeta",
+  "payNow": "Pagar ara",
+  "cardTitle": "Introdueix les dades de la targeta",
+  "cardSubtitle": "Completa el pagament per activar la subscripció"
+}

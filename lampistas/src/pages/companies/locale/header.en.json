@@ -1,0 +1,21 @@
+{
+  "cargando": "Loading...",
+  "empresa": "Company",
+  "trabajadores": "Workers",
+  "clientes": "Clients",
+  "incidencias": "Incidents",
+  "crearPresupuesto": "Create budget",
+  "maquinaria": "Machinery",
+  "perfil": "Profile",
+  "vincularPagos": "Link payments",
+  "dashboard": "Dashboard",
+  "registrarCliente": "Register client",
+  "crearMaquinaria": "Create machinery",
+  "errorDashboardUrl": "Error fetching dashboard URL: {{message}}",
+  "errorReturnUrl": "Error fetching return URL: {{message}}",
+  "errorDecodeToken": "Error decoding token: {{message}}",
+  "paymentsModalTitle": "Activate your payments",
+  "paymentsModalDescription": "To access the dashboard or charge budgets, you need to link your payments account first.",
+  "paymentsModalCancel": "Not now",
+  "paymentsModalActivate": "Link payments"
+}

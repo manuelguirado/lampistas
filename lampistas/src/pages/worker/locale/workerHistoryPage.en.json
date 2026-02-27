@@ -1,0 +1,22 @@
+{
+  "loading": "Loading history...",
+  "title": "Incident history",
+  "empty": "No incidents in history",
+  "id": "ID",
+  "titleCol": "Title",
+  "description": "Description",
+  "status": "Status",
+  "user": "User",
+  "worker": "Worker",
+  "company": "Company",
+  "created": "Created",
+  "closed": "Closed",
+  "lastChange": "Last change",
+  "changeLog": "Change log",
+  "na": "N/A",
+  "unassigned": "Unassigned",
+  "notClosed": "Not closed",
+  "showing": "Showing {{from}} to {{to}} of {{total}} records",
+  "previous": "Previous",
+  "next": "Next"
+}

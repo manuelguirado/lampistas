@@ -1,0 +1,8 @@
+{
+  "decodeError": "Error decoding token: {{message}}",
+  "loading": "Loading...",
+  "myMachinery": "My machinery",
+  "myIncidents": "My incidents",
+  "createIncidents": "Create incidents",
+  "myBudgets": "My budgets"
+}

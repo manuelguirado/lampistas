@@ -1,0 +1,53 @@
+{
+  "title": "My incidents",
+  "table": {
+    "id": "ID",
+    "title": "Title",
+    "description": "Description",
+    "status": "Status",
+    "priority": "Priority",
+    "date": "Date",
+    "assignTo": "Assign to",
+    "workerReports": "Worker reports"
+  },
+  "status": {
+    "open": "Open",
+    "inProgress": "In progress",
+    "closed": "Closed"
+  },
+  "priority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "assign": {
+    "unassigned": "Unassigned",
+    "viewReports": "View worker reports"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "modal": {
+    "title": "Worker reports",
+    "incident": "Incident:",
+    "description": "Description:",
+    "reportDate": "Reported on:",
+    "workerFiles": "Worker files:",
+    "file": "File {{index}}",
+    "view": "View",
+    "download": "Download",
+    "close": "Close",
+    "noReports": "There are no worker reports for this incident.",
+    "noReportsDesc": "Files will appear here when the worker uploads reports.",
+    "imageError": "The image could not be loaded"
+  },
+  "toasts": {
+    "loadFilesError": "Error loading files: {{message}}",
+    "loadWorkersError": "Error loading workers: {{message}}",
+    "loadIncidentsError": "Error loading incidents: {{message}}",
+    "assignSuccess": "Worker assigned successfully!",
+    "assignError": "Error assigning worker: {{message}}"
+  }
+}

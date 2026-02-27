@@ -7,8 +7,10 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { HardHat, User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
 import api from "../../../api/intercepttors";
+import { useTranslation } from "react-i18next";
 export default function RegisterWorker() {
   const navigate = useNavigate();
+  const { t } = useTranslation("companies.registerWorkerPage");
   const [showPassword, setShowPassword] = useState(false);
   
   const togglePassword = () => {
@@ -32,11 +34,11 @@ export default function RegisterWorker() {
       },
    
     }).then(() => {
-      toast.success("¡Trabajador registrado con éxito!");
+      toast.success(t("success"));
       navigate("/company/trabajadores/misTrabajadores");
     })
     .catch((error) => {
-      toast.error("Error registering worker: " + (error as Error).message);
+      toast.error(t("error", { message: (error as Error).message }));
     });
       
   }
@@ -54,8 +56,8 @@ export default function RegisterWorker() {
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-700 rounded-full flex items-center justify-center mb-4 shadow-lg">
             <HardHat className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Nuevo Trabajador</h2>
-          <p className="text-gray-600">Agregar miembro al equipo</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h2>
+          <p className="text-gray-600">{t("subtitle")}</p>
         </div>
 
         {/* Formulario moderno */}
@@ -67,14 +69,14 @@ export default function RegisterWorker() {
             {/* Nombre */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Nombre Completo
+                {t("nameLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  placeholder="Nombre del trabajador"
+                  placeholder={t("namePlaceholder")}
                   {...register("name")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                   required
@@ -91,7 +93,7 @@ export default function RegisterWorker() {
             {/* Email */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Correo Electrónico
+                {t("emailLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -99,7 +101,7 @@ export default function RegisterWorker() {
                 </div>
                 <input
                   type="email"
-                  placeholder="trabajador@email.com"
+                  placeholder={t("emailPlaceholder")}
                   {...register("email")}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                   required
@@ -116,7 +118,7 @@ export default function RegisterWorker() {
             {/* Contraseña */}
             <div className="space-y-2">
               <label className="block text-gray-700 text-sm font-semibold">
-                Contraseña Temporal
+                {t("passwordLabel")}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -124,7 +126,7 @@ export default function RegisterWorker() {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Contraseña temporal"
+                  placeholder={t("passwordPlaceholder")}
                   {...register("password")}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                   required
@@ -148,7 +150,7 @@ export default function RegisterWorker() {
                 </p>
               )}
               <p className="text-xs text-gray-500">
-                El trabajador podrá cambiar esta contraseña después del primer acceso
+                {t("passwordHint")}
               </p>
             </div>
 
@@ -158,7 +160,7 @@ export default function RegisterWorker() {
               className="w-full bg-gradient-to-r from-green-600 to-emerald-700 text-white py-3 px-4 rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
               <UserPlus className="w-5 h-5" />
-              Registrar Trabajador
+              {t("submit")}
             </button>
           </form>
           
@@ -167,10 +169,9 @@ export default function RegisterWorker() {
             <div className="flex items-start gap-2">
               <HardHat className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="text-green-800 font-semibold text-sm">Información importante:</h4>
+                <h4 className="text-green-800 font-semibold text-sm">{t("infoTitle")}</h4>
                 <p className="text-green-700 text-xs mt-1">
-                  Se generará automáticamente un código de trabajador que será 
-                  enviado al email del nuevo empleado.
+                  {t("infoDesc")}
                 </p>
               </div>
             </div>

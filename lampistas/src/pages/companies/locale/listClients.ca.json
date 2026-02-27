@@ -1,0 +1,47 @@
+{
+  "title": "Llista de clients",
+  "table": {
+    "clientId": "ID Client",
+    "name": "Nom",
+    "email": "Correu",
+    "contractType": "Tipus de contracte",
+    "actions": "Accions"
+  },
+  "contract": {
+    "contract": "Contracte",
+    "freeChoice": "Lliure eleccio"
+  },
+  "actions": {
+    "viewContracts": "Veure contractes",
+    "viewContractsTitle": "Veure contractes",
+    "generateCodeTitle": "Generar codi"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Seguent",
+    "page": "Pagina {{current}} de {{total}}"
+  },
+  "modal": {
+    "title": "Contractes de {{name}}",
+    "noContracts": "No s'han trobat contractes",
+    "headers": {
+      "contractType": "Tipus de contracte",
+      "startDate": "Data d'inici",
+      "endDate": "Data de fi",
+      "status": "Estat"
+    },
+    "status": {
+      "active": "Actiu",
+      "inactive": "Inactiu"
+    }
+  },
+  "toast": {
+    "codeGenerated": "Codi generat: {{code}}",
+    "codeError": "Error en generar el codi.",
+    "fetchClientsError": "Error en carregar clients: {{message}}",
+    "fetchContractsError": "Error en carregar contractes: {{message}}"
+  },
+  "date": {
+    "na": "No disponible"
+  }
+}

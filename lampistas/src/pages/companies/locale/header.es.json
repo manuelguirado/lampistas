@@ -1,0 +1,21 @@
+{
+  "cargando": "Cargando...",
+  "empresa": "Empresa",
+  "trabajadores": "Trabajadores",
+  "clientes": "Clientes",
+  "incidencias": "Incidencias",
+  "crearPresupuesto": "Crear presupuesto",
+  "maquinaria": "Maquinaria",
+  "perfil": "Perfil",
+  "vincularPagos": "Vincular pagos",
+  "dashboard": "Dashboard",
+  "registrarCliente": "Registrar cliente",
+  "crearMaquinaria": "Crear maquinaria",
+  "errorDashboardUrl": "Error al obtener el panel: {{message}}",
+  "errorReturnUrl": "Error al obtener la URL de retorno: {{message}}",
+  "errorDecodeToken": "Error al decodificar el token: {{message}}",
+  "paymentsModalTitle": "Activa tus pagos",
+  "paymentsModalDescription": "Para acceder al dashboard o cobrar presupuestos, primero debes vincular tu cuenta de pagos.",
+  "paymentsModalCancel": "Ahora no",
+  "paymentsModalActivate": "Vincular pagos"
+}

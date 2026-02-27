@@ -1,0 +1,13 @@
+{
+  "title": "Actualizar mantenimiento",
+  "subtitle": "Registrar ultima inspeccion de maquinaria",
+  "selectMachinery": "Seleccionar maquinaria",
+  "selectMachineryPh": "-- Seleccione maquinaria --",
+  "lastInspection": "Fecha de ultima inspeccion",
+  "submit": "Actualizar mantenimiento",
+  "important": "Importante:",
+  "importantDesc": "Esta fecha se utilizara para calcular el proximo mantenimiento programado y generar alertas automaticas.",
+  "listError": "Error al cargar lista de maquinaria: {{message}}",
+  "success": "Mantenimiento actualizado exitosamente!",
+  "updateError": "Error actualizando mantenimiento: {{message}}"
+}

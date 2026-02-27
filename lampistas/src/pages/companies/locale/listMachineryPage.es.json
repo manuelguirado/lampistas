@@ -1,0 +1,19 @@
+{
+  "titulo": "Lista de maquinarias",
+  "thId": "ID",
+  "thNombre": "Nombre",
+  "thTipo": "Tipo de maquinaria",
+  "thMarca": "Marca",
+  "thModelo": "Modelo",
+  "thSerie": "Numero de serie",
+  "thFechaInstalacion": "Fecha de instalacion",
+  "thCliente": "Cliente",
+  "thAcciones": "Acciones",
+  "sinInstalar": "Sin instalar",
+  "sinAsignar": "Sin asignar",
+  "anterior": "Anterior",
+  "siguiente": "Siguiente",
+  "eliminadaOk": "Maquinaria eliminada correctamente!",
+  "errorEliminar": "Error al eliminar maquinaria. {{message}}",
+  "errorCargar": "Error al cargar maquinaria. {{message}}"
+}

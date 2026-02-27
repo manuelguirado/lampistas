@@ -1,0 +1,53 @@
+{
+  "title": "Les meves incidencies",
+  "table": {
+    "id": "ID",
+    "title": "Titol",
+    "description": "Descripcio",
+    "status": "Estat",
+    "priority": "Prioritat",
+    "date": "Data",
+    "assignTo": "Assignar a",
+    "workerReports": "Informes del treballador"
+  },
+  "status": {
+    "open": "Oberta",
+    "inProgress": "En curs",
+    "closed": "Tancada"
+  },
+  "priority": {
+    "high": "Alta",
+    "medium": "Mitjana",
+    "low": "Baixa"
+  },
+  "assign": {
+    "unassigned": "Sense assignar",
+    "viewReports": "Veure informes del treballador"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Seguent",
+    "page": "Pagina {{current}} de {{total}}"
+  },
+  "modal": {
+    "title": "Informes del treballador",
+    "incident": "Incidencia:",
+    "description": "Descripcio:",
+    "reportDate": "Data de report:",
+    "workerFiles": "Arxius del treballador:",
+    "file": "Arxiu {{index}}",
+    "view": "Veure",
+    "download": "Descarregar",
+    "close": "Tancar",
+    "noReports": "No hi ha informes del treballador per a aquesta incidencia.",
+    "noReportsDesc": "Els arxius apareixeran aqui quan el treballador pugi informes.",
+    "imageError": "No s'ha pogut carregar la imatge"
+  },
+  "toasts": {
+    "loadFilesError": "Error en carregar arxius: {{message}}",
+    "loadWorkersError": "Error en carregar treballadors: {{message}}",
+    "loadIncidentsError": "Error en carregar incidencies: {{message}}",
+    "assignSuccess": "Treballador assignat correctament!",
+    "assignError": "Error en assignar treballador: {{message}}"
+  }
+}

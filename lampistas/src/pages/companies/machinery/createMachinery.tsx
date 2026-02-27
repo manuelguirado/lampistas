@@ -7,9 +7,11 @@ import toast from "react-hot-toast";
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { CreateMachinerySchema, type CreateMachineryType } from "../schemas/CreateMachinerySchema";
+import { useTranslation } from "react-i18next";
 
 import api from "../../../api/intercepttors";
 export default function CreateMachinery() {
+    const { t } = useTranslation("companies.createMachineryPage");
     const token = localStorage.getItem("companyToken");
     const [clients, setClients] = useState<Array<{ userID: number; name: string }>>([]); // ✅ Cambiar clientID a userID
     const navigate = useNavigate();
@@ -39,9 +41,9 @@ export default function CreateMachinery() {
             setClients(response.data.clients); // ✅ Ajustar según la estructura de la respuesta
         })
         .catch((error) => {
-            toast.error("Error fetching clients: " + error.message);
+            toast.error(t("errorClientes", { message: error.message }));
         });
-    }, [token]);
+    }, [token, t]);
 
     async function handleSubmit(data: CreateMachineryType) {
        
@@ -61,32 +63,32 @@ export default function CreateMachinery() {
             });
             
             if (response.data.token || response.status === 200 || response.status === 201) {
-                toast.success("Maquinaria creada exitosamente!");
+                toast.success(t("success"));
                 navigate("/company/maquinaria/listarMaquinaria");
             } else {
-                toast.error('Error al crear maquinaria.');
+                toast.error(t("errorCrear"));
             }
         } catch (error :any ) {
-            toast.error("Error creating machinery: " + (error.response?.data?.message || error.message));
+            toast.error(t("errorCrearDetalle", { message: error.response?.data?.message || error.message }));
         }
     }
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">Crear Maquinaria</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
             <form
                 onSubmit={handleSubmitForm(handleSubmit)}
                 className="w-full max-w-md bg-white p-6 rounded-lg shadow-md space-y-4"
             >
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Nombre
+                        {t("nombre")}
                     </label>
                     <input
                         type="text"
                         {...register("name")}
-                        placeholder="Nombre de la maquinaria"                      
+                        placeholder={t("nombrePh")}                      
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         required
                     />
@@ -95,11 +97,11 @@ export default function CreateMachinery() {
 
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Descripción
+                        {t("descripcion")}
                     </label>
                     <textarea
                       
-                        placeholder="Descripción de la maquinaria"
+                        placeholder={t("descripcionPh")}
                        {...register("description")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                         rows={4}
@@ -109,12 +111,12 @@ export default function CreateMachinery() {
 
                 <div>
                     <label className="block text-gray-700 text-sm font-medium mb-1">
-                        Marca
+                        {t("marca")}
                     </label>
                     <input
                         type="text"
                 
-                        placeholder="Marca de la maquinaria"
+                        placeholder={t("marcaPh")}
                         {...register("brand")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
@@ -123,11 +125,11 @@ export default function CreateMachinery() {
 
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                                    Modelo
+                                    {t("modelo")}
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Modelo de la maquinaria"
+                                    placeholder={t("modeloPh")}
                                     {...register("model")}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                                     required
@@ -137,7 +139,7 @@ export default function CreateMachinery() {
             
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                                    Cliente
+                                    {t("cliente")}
                                 </label>
                               <AsyncSelect
                                           className="border p-2 rounded w-full"
@@ -157,8 +159,8 @@ export default function CreateMachinery() {
                                                 label: cl.name,
                                               }));
                                           }}
-                                          placeholder="Select Client"
-                                          noOptionsMessage={() => "No clients found"}
+                                          placeholder={t("selectClient")}
+                                          noOptionsMessage={() => t("noClients")}
                                           onChange={(selectedOption: { value: number; label: string } | null) => {
                                             setValue("clientID", selectedOption?.value?.toString() || "");
                                           }}
@@ -169,11 +171,11 @@ export default function CreateMachinery() {
 
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                                    Número de Serie
+                                    {t("serie")}
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Número de serie"
+                                    placeholder={t("seriePh")}
                                     {...register("serialNumber")}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                                 />
@@ -182,11 +184,11 @@ export default function CreateMachinery() {
 
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                                    Tipo de Maquinaria
+                                    {t("tipo")}
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Tipo de maquinaria"
+                                    placeholder={t("tipoPh")}
                                     {...register("machineType")}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                                 />
@@ -195,7 +197,7 @@ export default function CreateMachinery() {
 
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                                    Fecha de Instalación
+                                    {t("fechaInstalacion")}
                                 </label>
                                 <input
                                     type="date"
@@ -207,11 +209,11 @@ export default function CreateMachinery() {
 
                             <div>
                                 <label className="block text-gray-700 text-sm font-medium mb-1">
-                                    Nombre de Empresa
+                                    {t("empresa")}
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Nombre de la empresa"
+                                    placeholder={t("empresaPh")}
                                     {...register("companyName")}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                                 />
@@ -222,7 +224,7 @@ export default function CreateMachinery() {
                                 type="submit"
                                 className="w-full bg-amber-500 text-white py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors font-medium"
                             >
-                                Crear Maquinaria
+                                {t("submit")}
                             </button>
                         </form>
                     </div>

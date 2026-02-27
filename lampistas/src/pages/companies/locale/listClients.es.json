@@ -1,0 +1,47 @@
+{
+  "title": "Lista de clientes",
+  "table": {
+    "clientId": "ID Cliente",
+    "name": "Nombre",
+    "email": "Email",
+    "contractType": "Tipo de contrato",
+    "actions": "Acciones"
+  },
+  "contract": {
+    "contract": "Contrato",
+    "freeChoice": "Libre eleccion"
+  },
+  "actions": {
+    "viewContracts": "Ver contratos",
+    "viewContractsTitle": "Ver contratos",
+    "generateCodeTitle": "Generar codigo"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Pagina {{current}} de {{total}}"
+  },
+  "modal": {
+    "title": "Contratos de {{name}}",
+    "noContracts": "No se encontraron contratos",
+    "headers": {
+      "contractType": "Tipo de contrato",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin",
+      "status": "Estado"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    }
+  },
+  "toast": {
+    "codeGenerated": "Codigo generado: {{code}}",
+    "codeError": "Error al generar codigo.",
+    "fetchClientsError": "Error al cargar clientes: {{message}}",
+    "fetchContractsError": "Error al cargar contratos: {{message}}"
+  },
+  "date": {
+    "na": "No disponible"
+  }
+}

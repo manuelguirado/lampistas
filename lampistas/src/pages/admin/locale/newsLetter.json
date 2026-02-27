@@ -1,0 +1,13 @@
+{
+  "navigation": {
+    "Registrar Compañia": "Register Company",
+    "Listar Compañias": "List Companies",
+    "Boletin": "Newsletter"
+  },
+  "hero": {
+    "title": "Create Newsletter",
+    "description": "Title",
+    "Contenido": "Content",
+    "Crear Actualizacón": "Create Update"
+  }
+}

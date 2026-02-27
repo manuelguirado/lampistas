@@ -22,6 +22,9 @@ import ClientsIndex from "../pages/companies/clients/clientsIndex";
 import IncidentIndex from "../pages/companies/incidents/incidentIndex";
 import IncidentLayout from "../pages/companies/incidents/incidentsLayout";
 import CompanyHistory from "../pages/companies/incidents/companyHistory";
+import CreateAccounts from "../pages/companies/payments/createAccounts.tsx";
+import AccountCreated from "../pages/companies/payments/accountCreated.tsx";
+import CompanyHome from "../pages/companies/companyHome.tsx";
 export default function CompanyRoutes() {
   return (
     <Routes>
@@ -36,12 +39,28 @@ export default function CompanyRoutes() {
             <DashboardCompany />
           </ProtectedRoute>
         }
+        >
+            <Route  index  element={<CompanyHome />} />
+        </Route>
+     
+        
+        
+      
+       
+     
+      <Route 
+        path="create-account"
+        element={
+          <ProtectedRoute  userType="company">
+            <CreateAccounts />
+          </ProtectedRoute>
+        }
       />
       <Route
-        path="dashboard/*"
+       path="account-created"
         element={
           <ProtectedRoute userType="company">
-            <DashboardCompany />
+            <AccountCreated />
           </ProtectedRoute>
         }
       />

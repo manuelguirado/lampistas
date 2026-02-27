@@ -1,0 +1,19 @@
+{
+  "titulo": "Machinery list",
+  "thId": "ID",
+  "thNombre": "Name",
+  "thTipo": "Machinery type",
+  "thMarca": "Brand",
+  "thModelo": "Model",
+  "thSerie": "Serial number",
+  "thFechaInstalacion": "Installation date",
+  "thCliente": "Client",
+  "thAcciones": "Actions",
+  "sinInstalar": "Not installed",
+  "sinAsignar": "Unassigned",
+  "anterior": "Previous",
+  "siguiente": "Next",
+  "eliminadaOk": "Machinery deleted successfully!",
+  "errorEliminar": "Error deleting machinery. {{message}}",
+  "errorCargar": "Error fetching machinery. {{message}}"
+}

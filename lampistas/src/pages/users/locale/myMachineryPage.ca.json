@@ -1,0 +1,17 @@
+{
+  "loaded": "Maquinària carregada correctament",
+  "fetchError": "Error carregant maquinària: {{message}}",
+  "loading": "Carregant maquinària...",
+  "title": "La meva maquinària",
+  "empty": "No tens maquinària assignada",
+  "id": "ID",
+  "name": "Nom",
+  "model": "Model",
+  "description": "Descripció",
+  "brand": "Marca",
+  "serial": "Núm. sèrie",
+  "installation": "Instal·lació",
+  "lastInspection": "Darrera inspecció",
+  "notInstalled": "Sense instal·lar",
+  "notInspected": "No inspeccionada"
+}

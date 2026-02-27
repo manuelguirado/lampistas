@@ -5,8 +5,10 @@ import type { Contract } from '../../../types/contract';
 import type { Client } from '../../../types/clientType';
 import toast from 'react-hot-toast';
 import api from '../../../api/intercepttors';
+import { useTranslation } from "react-i18next";
 
 export default function ListClients() {
+    const { t, i18n } = useTranslation("companies.listClientsPage");
     const [clients, setClients] = useState<Client[]>([]);
     const [selectedClientContracts, setSelectedClientContracts] = useState<Contract[] | null>(null);
     const [selectedClientName, setSelectedClientName] = useState<string>('');
@@ -15,6 +17,7 @@ export default function ListClients() {
     const [totalClient, setTotalClient] = useState(0);
     const pageSize = 5;
     const token = localStorage.getItem('companyToken');
+   
 
     useEffect(() => {
         fetchClients();
@@ -25,17 +28,18 @@ export default function ListClients() {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
+                    "role": 'COMPANY',
                 },
             }).then((res) => res.data).then((data) => {
                 if (data.code) {
-                    toast.success(`Generated code: ${data.code}`);
+                    toast.success(t("codeGenerated", { code: data.code }));
                     window.navigator.clipboard.writeText(data.code);
                 } else {
-                    toast.error('Error generating code.');
+                    toast.error(t("codeError"));
                 }
             });
         } catch (error) {
-            toast.error('Error generating code.' + (error as Error).message);
+            toast.error(t("codeError") + " " + (error as Error).message);
         }
     }
     function fetchClients() {
@@ -43,6 +47,7 @@ export default function ListClients() {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
+                "role": 'COMPANY',
             },
         })
         .then((response) => {
@@ -51,7 +56,7 @@ export default function ListClients() {
             setTotalClient(data.total);
         })
         .catch((error) => {
-            toast.error('Error fetching clients.' + (error as Error).message);
+            toast.error(t("fetchClientsError", { message: (error as Error).message }));
         });
     }
 
@@ -72,59 +77,59 @@ export default function ListClients() {
                 setShowContractsModal(true);
             }
         } catch (error) {
-            toast.error('Error fetching client contracts.' + (error as Error).message);
+            toast.error(t("fetchContractsError", { message: (error as Error).message }));
         }
     }
 
     function formatDate(dateString: string | null) {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleDateString('es-ES');
+        if (!dateString) return t("na");
+        return new Date(dateString).toLocaleDateString(i18n.language === "ca" ? "ca-ES" : i18n.language === "en" ? "en-US" : "es-ES");
     }
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-white/80 items-center pt-20 md:pt-24 px-4 pb-8">
             <Header />
-            <h2 className="text-2xl font-bold mb-6">Lista de Clientes</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("titulo")}</h2>
             
-            <div className="w-full max-w-7xl overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-300 shadow-md">
-                    <thead>
-                        <tr className="bg-amber-200">
-                            <th className="py-2 px-4 border border-gray-300 text-left">ID Cliente</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Nombre</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Email</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Tipo de Contrato</th>
-                            <th className="py-2 px-4 border border-gray-300 text-left">Acciones</th>
+            <div className="w-full max-w-7xl overflow-x-auto rounded-2xl border border-amber-100 bg-white shadow-lg">
+                <table className="min-w-full text-sm">
+                    <thead className="bg-amber-50">
+                        <tr className="text-amber-900">
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thId")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thNombre")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thEmail")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thContrato")}</th>
+                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold">{t("thAcciones")}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                         {clients.map((client) => (
-                            <tr key={client.userID} className="hover:bg-amber-50">
-                                <td className="py-2 px-4 border border-gray-300">{client.userID}</td>
-                                <td className="py-2 px-4 border border-gray-300">{client.name}</td>
-                                <td className="py-2 px-4 border border-gray-300">{client.email}</td>
-                                <td className="py-2 px-4 border border-gray-300">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            <tr key={client.userID} className="hover:bg-amber-50/60 transition-colors">
+                                <td className="py-3 px-4 font-semibold text-gray-700">{client.userID}</td>
+                                <td className="py-3 px-4 font-medium text-gray-900">{client.name}</td>
+                                <td className="py-3 px-4 text-gray-700">{client.email}</td>
+                                <td className="py-3 px-4">
+                                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                                         client.contract === ' CONTRACT' 
-                                            ? 'bg-blue-100 text-blue-800' 
-                                            : 'bg-green-100 text-green-800'
+                                            ? 'bg-sky-100 text-sky-800' 
+                                            : 'bg-emerald-100 text-emerald-800'
                                     }`}>
-                                        {client.contract === ' CONTRACT' ? 'Contract' : 'Free Choice'}
+                                        {client.contract === ' CONTRACT' ? t("contract") : t("freeChoice")}
                                     </span>
                                 </td>
-                                <td className="py-2 px-4 border border-gray-300">
+                                <td className="py-3 px-4">
                                     <button
                                         onClick={() => viewClientContracts(client.userID, client.name)}
-                                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 px-3 py-1 rounded hover:bg-blue-50"
-                                        title="View Contracts"
+                                        className="inline-flex items-center gap-1 border border-amber-400 text-amber-700 hover:bg-amber-100 transition-colors px-3 py-1.5 rounded-lg font-semibold text-sm"
+                                        title={t("viewContracts")}
                                     >
                                         <Eye className="h-4 w-4" />
-                                        <span className="text-sm">View Contracts</span>
+                                        <span className="text-sm">{t("viewContracts")}</span>
                                     
                                     </button>
                                         <button 
                                             className="p-2 hover:bg-amber-200 rounded transition-colors"
-                                            title="Generate code"
+                                            title={t("generateCode")}
                                             onClick={() => handleGenerateCode(client.userID)}
                                         >
                                             <Code size={18} className="text-purple-600" />
@@ -141,15 +146,15 @@ export default function ListClients() {
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
                     >
-                        Previous
+                        {t("previous")}
                     </button>
-                    <span className="font-medium">Page {currentPage} of {Math.ceil(totalClient / pageSize)}</span>
+                    <span className="font-medium">{t("page", { current: currentPage, total: Math.ceil(totalClient / pageSize) })}</span>
                     <button
                         className="bg-amber-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
                         onClick={() => setCurrentPage((prev) => prev + 1)}
                         disabled={currentPage * pageSize >= totalClient}
                     >
-                        Next
+                        {t("next")}
                     </button>
                 </div>
             </div>
@@ -159,7 +164,7 @@ export default function ListClients() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto">
                         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-                            <h3 className="text-xl font-bold">Contracts for {selectedClientName}</h3>
+                            <h3 className="text-xl font-bold">{t("contractsFor", { name: selectedClientName })}</h3>
                             <button
                                 onClick={() => {
                                     setShowContractsModal(false);
@@ -173,42 +178,42 @@ export default function ListClients() {
                         
                         <div className="p-6">
                             {selectedClientContracts.length === 0 ? (
-                                <p className="text-center text-gray-500 py-8">No contracts found</p>
+                                <p className="text-center text-gray-500 py-8">{t("noContracts")}</p>
                             ) : (
-                                <table className="min-w-full">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contract Type</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
-                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <table className="min-w-full text-sm">
+                                    <thead className="bg-amber-50">
+                                        <tr className="text-amber-900">
+                                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold uppercase tracking-wide text-xs">{t("contractType")}</th>
+                                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold uppercase tracking-wide text-xs">{t("startDate")}</th>
+                                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold uppercase tracking-wide text-xs">{t("endDate")}</th>
+                                            <th className="sticky top-0 z-10 bg-amber-50 py-3 px-4 text-left font-semibold uppercase tracking-wide text-xs">{t("status")}</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-200">
+                                    <tbody className="divide-y divide-gray-100">
                                         {selectedClientContracts.map((contract) => (
-                                            <tr key={contract.id} className="hover:bg-gray-50">
-                                                <td className="px-4 py-3">
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                            <tr key={contract.id} className="hover:bg-amber-50/60 transition-colors">
+                                                <td className="py-3 px-4">
+                                                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                                                         contract.contractType === " CONTRACT"
-                                                            ? 'bg-blue-100 text-blue-800'
-                                                            : 'bg-green-100 text-green-800'
+                                                            ? 'bg-sky-100 text-sky-800'
+                                                            : 'bg-emerald-100 text-emerald-800'
                                                     }`}>
-                                                        {contract.contractType === " CONTRACT" ? 'Contract' : 'Free Choice'}
+                                                        {contract.contractType === " CONTRACT" ? t("contract") : t("freeChoice")}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900">
+                                                <td className="py-3 px-4 text-sm text-gray-700 whitespace-nowrap">
                                                     {formatDate(contract.startDate)}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900">
+                                                <td className="py-3 px-4 text-sm text-gray-700 whitespace-nowrap">
                                                     {formatDate(contract.endDate)}
                                                 </td>
-                                                <td className="px-4 py-3">
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                                <td className="py-3 px-4">
+                                                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                                                         contract.isActive 
-                                                            ? 'bg-green-100 text-green-800' 
-                                                            : 'bg-red-100 text-red-800'
+                                                            ? 'bg-emerald-100 text-emerald-800' 
+                                                            : 'bg-rose-100 text-rose-800'
                                                     }`}>
-                                                        {contract.isActive ? 'Active' : 'Inactive'}
+                                                        {contract.isActive ? t("active") : t("inactive")}
                                                     </span>
                                                 </td>
                                             </tr>

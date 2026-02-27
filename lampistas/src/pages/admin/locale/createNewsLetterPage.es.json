@@ -1,0 +1,1 @@
+{"title":"Crear newsletter","labelTitle":"Titulo","labelContent":"Contenido","submit":"Crear actualizacion","validation":"Completa el titulo y el contenido.","success":"Newsletter creada con exito","error":"Error al crear la newsletter: {{message}}"}

@@ -1,0 +1,21 @@
+{
+  "pdfDownloaded": "PDF descargado exitosamente",
+  "pdfDownloadError": "Error al descargar el PDF",
+  "loadError": "Error al cargar presupuestos",
+  "title": "Presupuestos recibidos",
+  "budgetId": "ID de presupuesto",
+  "incidentId": "ID de incidente",
+  "titleCol": "Título",
+  "description": "Descripción",
+  "items": "Ítems",
+  "totalAmount": "Monto total",
+  "downloadPdf": "Descargar PDF",
+  "pay": "Pagar",
+  "quantity": "Cantidad",
+  "price": "Precio",
+  "downloadPdfBtn": "Descargar PDF",
+  "showing": "Mostrando {{from}} a {{to}} de {{total}} presupuestos",
+  "previous": "Anterior",
+  "next": "Siguiente",
+  "close": "Cerrar"
+}

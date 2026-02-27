@@ -1,0 +1,17 @@
+{
+  "loaded": "Maquinarias cargadas correctamente",
+  "fetchError": "Error cargando maquinarias: {{message}}",
+  "loading": "Cargando maquinarias...",
+  "title": "Mis maquinarias",
+  "empty": "No tienes maquinarias asignadas",
+  "id": "ID",
+  "name": "Nombre",
+  "model": "Modelo",
+  "description": "Descripción",
+  "brand": "Marca",
+  "serial": "Nº serie",
+  "installation": "Instalación",
+  "lastInspection": "Última inspección",
+  "notInstalled": "Sin instalar",
+  "notInspected": "No inspeccionada"
+}

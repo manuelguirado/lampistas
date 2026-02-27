@@ -1,0 +1,23 @@
+{
+    "navigation" : {
+        "Trabajadores": "Workers",
+        "Clientes": "Clients",
+        "Incidencias": "Incidents",
+        "Crear Presupuesto": "Create Budget",
+        "Maquinaria": "Machinery",
+        "Perfil": "Profile",
+        "Vincular Pagos": "Link Payments",
+        "Dashboard": "Dashboard"
+    },
+    "hero": {
+        "title": "Company Dashboard",
+        "description" : "Welcome to your Company Dashboard",
+        "Ganancias" : "Earnings Overview",
+        "Ganancias totales" : "Total Earnings",
+        "Grafico de Ganancias Mensuales" : "Monthly Earnings Chart",
+        "Incidencias Cerradas" : "Closed Incidents",
+        "Incidencias totales" : "Total Incidents",
+        "Grafico de Incidencias Mensuales" : "Monthly Incidents Chart"
+    }
+
+}

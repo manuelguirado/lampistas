@@ -1,0 +1,20 @@
+{
+  "title": "Benvingut",
+  "subtitle": "Inicia sessio al teu compte",
+  "email": "Correu",
+  "emailPh": "tu@exemple.com",
+  "password": "Contrasenya",
+  "passwordPh": "La teva contrasenya",
+  "forgotPassword": "Has oblidat la contrasenya?",
+  "loginButton": "Iniciar sessio",
+  "or": "O",
+  "clientCodeTitle": "Codi de client",
+  "clientCodePh": "Introdueix el teu codi de client",
+  "codeLoginButton": "Accedir amb codi",
+  "codeValid": "Codi de client valid!",
+  "codeInvalid": "Codi de client invalid",
+  "codeError": "Error en validar el codi de client",
+  "loginSuccess": "Sessio iniciada correctament!",
+  "tokenMissing": "No s'ha rebut token a la resposta",
+  "loginError": "Error d'inici de sessio"
+}
