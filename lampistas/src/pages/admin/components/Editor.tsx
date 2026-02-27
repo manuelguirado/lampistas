@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
+import  { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
@@ -22,10 +22,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
       onSelectionChangeRef.current = onSelectionChange;
     });
 
-    useEffect(() => {
-      ref.current?.enable(!readOnly);
-    }, [ref, readOnly]);
-
+  
     useEffect(() => {
       const container = containerRef.current;
       if (!container) {
@@ -37,12 +34,17 @@ const Editor = forwardRef<Quill | null, EditorProps>(
       );
       const quill = new Quill(editorContainer, {
         theme: "snow",
+        readOnly: readOnly ?? false,
       });
 
-      ref.current = quill;
+      if (typeof ref === "function") {
+        ref(quill);
+      } else if (ref) {
+        ref.current = quill;
+      }
 
       if (defaultValueRef.current) {
-        quill.setContents(defaultValueRef.current);
+        quill.setContents(defaultValueRef.current as Quill.DeltaStatic);
       }
 
       quill.on(Quill.events.TEXT_CHANGE, (...args) => {
@@ -54,10 +56,14 @@ const Editor = forwardRef<Quill | null, EditorProps>(
       });
 
       return () => {
-        ref.current = null;
+        if (typeof ref === "function") {
+          ref(null);
+        } else if (ref) {
+          ref.current = null;
+        }
         container.innerHTML = "";
       };
-    }, [ref]);
+    }, []);
 
     return <div ref={containerRef}></div>;
   },
