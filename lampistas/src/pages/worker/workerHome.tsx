@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 export default function WorkerHome() {
   const { t } = useTranslation("worker.homePage");
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
-  // Removed unused setIncidentFiles state
-  // Removed unused directions state
+  
+  const [ setDirections] = useState<string[]>([]);
   const [coordinates, setCoordinates] = useState<
     { longitude: number; latitude: number }[]
   >([]);
