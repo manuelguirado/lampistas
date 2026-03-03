@@ -20,7 +20,7 @@ export default function WorkerHome() {
   const { t } = useTranslation("worker.homePage");
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
   
-  const [ setDirections] = useState<string[]>([]);
+  const [setDirections] = useState<string[]>([]);
   const [coordinates, setCoordinates] = useState<
     { longitude: number; latitude: number }[]
   >([]);
@@ -125,7 +125,7 @@ export default function WorkerHome() {
       })
       .catch((err) => {
         console.error("Error fetching incident directions:", err);
-        setDirections([]);
+  
         setCoordinates([]);
       });
   }, [modal?.incidentID]);
