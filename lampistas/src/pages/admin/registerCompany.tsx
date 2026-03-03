@@ -48,10 +48,8 @@ export default function RegisterCompany() {
             
             formData.append('directions', JSON.stringify(data.directions));
             
-            // Añadir el logo si existe
-            if (data.companyLogo && data.companyLogo.length > 0) {
-                formData.append('logo', data.companyLogo[0]);
-            }
+           
+           
 
             const response = await api.post('/admin/registerCompany', formData);
              

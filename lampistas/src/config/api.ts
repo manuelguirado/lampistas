@@ -1,5 +1,7 @@
 // API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+type ImportMetaEnv = { VITE_API_URL?: string };
+const metaEnv = (typeof import.meta !== 'undefined' && (import.meta.env as ImportMetaEnv)) || {};
+const API_BASE_URL = metaEnv.VITE_API_URL || 'http://localhost:3000';
 
 export const API_ENDPOINTS = {
   BASE_URL: API_BASE_URL,

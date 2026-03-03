@@ -10,7 +10,8 @@ export const registerCompanySchema = z.object({
       if (typeof window === "undefined" || !value || !(value instanceof window.FileList)) {
         return false;
       }
-      return value.length <= 1 && (value.length === 0 || value[0]?.size <= 5 * 1024 * 1024);
+      const files = value as FileList;
+      return files.length <= 1 && (files.length === 0 || files[0]?.size <= 5 * 1024 * 1024);
     }, {
       message: "Solo se permite un archivo para el logo y debe ser menor a 5MB",
     })
