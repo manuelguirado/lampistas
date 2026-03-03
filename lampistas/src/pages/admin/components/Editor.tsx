@@ -1,11 +1,11 @@
 import  { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
-import Quill from "quill";
+import Quill, { Delta, Op } from "quill";
 import "quill/dist/quill.snow.css";
 
 // Editor is an uncontrolled React component
 type EditorProps = {
   readOnly?: boolean;
-  defaultValue?: unknown;
+  defaultValue?: Delta | Op[];
   onTextChange?: (...args: unknown[]) => void;
   onSelectionChange?: (...args: unknown[]) => void;
 };
@@ -44,14 +44,14 @@ const Editor = forwardRef<Quill | null, EditorProps>(
       }
 
       if (defaultValueRef.current) {
-        quill.setContents(defaultValueRef.current as Quill.DeltaStatic);
+        quill.setContents(defaultValueRef.current );
       }
 
-      quill.on(Quill.events.TEXT_CHANGE, (...args) => {
+      quill.on("text-change", (...args) => {
         onTextChangeRef.current?.(...args);
       });
 
-      quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
+      quill.on("selection-change", (...args) => {
         onSelectionChangeRef.current?.(...args);
       });
 

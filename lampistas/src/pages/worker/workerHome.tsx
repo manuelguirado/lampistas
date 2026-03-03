@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  TileLayer, Marker, Popup } from "react-leaflet";
+// Removed unused react-leaflet imports
 import "leaflet/dist/leaflet.css";
 import type { IncidentType } from "../../types/incidentType";
 import toast from "react-hot-toast";
@@ -19,12 +19,8 @@ import { useTranslation } from "react-i18next";
 export default function WorkerHome() {
   const { t } = useTranslation("worker.homePage");
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
-  const [ setIncidentFiles] = useState<
-    { incidentID: number; files: string[] }[]
-  >([]);
-  const [directions, setDirections] = useState<
-    { address: string; city: string; zipCode: string; state: string }[]
-  >([]);
+  
+  const [ setDirections] = useState<string[]>([]);
   const [coordinates, setCoordinates] = useState<
     { longitude: number; latitude: number }[]
   >([]);
