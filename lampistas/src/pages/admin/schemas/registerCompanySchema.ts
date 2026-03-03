@@ -6,12 +6,14 @@ export const registerCompanySchema = z.object({
   password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
   phone: z.string().min(7, "El teléfono debe tener al menos 7 caracteres"),
   companyLogo: z
-    .custom<FileList>()
-    .refine((files) => !files || files.length <= 1, "Solo se permite un archivo para el logo")
-    .refine(
-      (files) => !files || files.length === 0 || files[0]?.size <= 5 * 1024 * 1024,
-      "El archivo debe ser menor a 5MB"
-    )
+    .custom((value) => {
+      if (typeof window === "undefined" || !value || !(value instanceof window.FileList)) {
+        return false;
+      }
+      return value.length <= 1 && (value.length === 0 || value[0]?.size <= 5 * 1024 * 1024);
+    }, {
+      message: "Solo se permite un archivo para el logo y debe ser menor a 5MB",
+    })
     .optional(),
   
   directions : z.object({

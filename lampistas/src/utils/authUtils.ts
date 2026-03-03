@@ -35,7 +35,10 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
   }
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/refreshToken`, {
+    type ImportMetaEnv = { VITE_API_URL?: string };
+    const metaEnv = (typeof import.meta !== 'undefined' && (import.meta.env as ImportMetaEnv)) || {};
+    const apiUrl = metaEnv.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/auth/refreshToken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,21 +51,26 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
       }),
     });
 
-    const data = await response.json();
+    type RefreshResponse = { accessToken?: string; refreshToken?: string; message?: string };
+    const data: RefreshResponse = await response.json();
 
     if (response.ok && data.accessToken && data.refreshToken) {
-      setTokens(userType, data.accessToken as string, data.refreshToken as string, Number(userID));
-      return data.accessToken as string;
+      setTokens(userType, data.accessToken, data.refreshToken, Number(userID));
+      return data.accessToken;
     } else {
-      console.error(`❌ Error al refrescar ${userType} token:`, data.message);
-      localStorage.clear();
-      window.location.href = getLoginRoute(userType);
+      console.error(`❌ Error al refrescar ${userType} token:`, data.message ?? data);
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        window.location.href = getLoginRoute(userType);
+      }
       return null;
     }
   } catch (error) {
     console.error(`❌ Error de conexión al refrescar ${userType} token:`, error);
-    localStorage.clear();
-    window.location.href = getLoginRoute(userType);
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+      window.location.href = getLoginRoute(userType);
+    }
     return null;
   }
 }
