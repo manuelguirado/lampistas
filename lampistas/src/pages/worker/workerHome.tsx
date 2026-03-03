@@ -16,11 +16,12 @@ import {
 import api from "../../api/intercepttors";
 import { useTranslation } from "react-i18next";
 
+
 export default function WorkerHome() {
   const { t } = useTranslation("worker.homePage");
   const [activeIncidents, setActiveIncidents] = useState<IncidentType[]>([]);
   
-  const [setDirections] = useState<string[]>([]);
+
   const [coordinates, setCoordinates] = useState<
     { longitude: number; latitude: number }[]
   >([]);
@@ -161,7 +162,7 @@ export default function WorkerHome() {
       return;
     }
 
-    if (!data.files || data.files.length === 0) {
+    if (!data.files ) {
       toast.error(t("selectAtLeastOneFile"));
       return;
     }
@@ -170,7 +171,7 @@ export default function WorkerHome() {
     formData.append("incidentID", selectedIncident.incidentID.toString());
 
     // Añadir cada archivo al FormData con el campo 'files'
-    Array.from(data.files).forEach((file) => {
+    Array.from(data.files as FileList).forEach((file) => {
       formData.append("files", file);
     });
 

@@ -9,8 +9,10 @@ import {
 } from "../api/helpers";
 import dotenv from "dotenv";
 dotenv.config();
+type ImportMetaEnv = { VITE_API_URL?: string };
+const metaEnv = (typeof import.meta !== 'undefined' && (import.meta.env as ImportMetaEnv)) || {};
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: metaEnv.VITE_API_URL || "http://localhost:3000",
 });
 
 // ✅ Interceptar request
@@ -49,7 +51,7 @@ api.interceptors.response.use(
         }
 
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
+          `${metaEnv.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
           {
             token: refreshToken,
             userType: userType,
@@ -67,8 +69,10 @@ api.interceptors.response.use(
 
         const userType = (localStorage.getItem("userType") ||
           "company") as UserType;
-        localStorage.clear();
-        window.location.href = getLoginRoute(userType);
+        if (typeof window !== 'undefined') {
+          localStorage.clear();
+          window.location.href = getLoginRoute(userType);
+        }
 
         return Promise.reject(refreshError);
       }
