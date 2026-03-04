@@ -9,6 +9,7 @@ import {
   getLoginRoute,
 } from "../api/helpers";
 import dotenv from "dotenv";
+/// <reference types="vite/client" />
 dotenv.config();
 
 let navigateFn: ((path: string) => void) | null = null;

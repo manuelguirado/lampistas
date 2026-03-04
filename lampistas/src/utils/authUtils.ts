@@ -9,7 +9,7 @@ import {
 
 import dotenv from 'dotenv';
 dotenv.config();
-
+/// <reference types="vite/client" />
 let navigateFn: ((path: string) => void) | null = null;
 
 export const setNavigate = (navigate: (path: string) => void) => {
