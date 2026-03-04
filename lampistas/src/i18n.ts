@@ -321,7 +321,7 @@ const resources = {
 } as const;
 
 const savedLanguage =
-  typeof window !== "undefined" ? localStorage.getItem("i18nLang") : null;
+  localStorage.getItem("i18nLang") ;
 
 i18n.use(initReactI18next).init({
   resources,

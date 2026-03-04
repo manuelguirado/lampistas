@@ -1,11 +1,8 @@
-// API configuration
-type ImportMetaEnv = { VITE_API_URL?: string };
-const metaEnv = (typeof import.meta !== 'undefined' && (import.meta.env as ImportMetaEnv)) || {};
-const API_BASE_URL = metaEnv.VITE_API_URL || 'http://localhost:3000';
+
+const API_BASE_URL = process.env.VITE_API_URL || 'http://localhost:3000';
 
 export const API_ENDPOINTS = {
   BASE_URL: API_BASE_URL,
-  // Auth endpoints
   ADMIN_LOGIN: `${API_BASE_URL}/admin/adminLogin`,
   COMPANY_LOGIN: `${API_BASE_URL}/company/companyLogin`,
   COMPANY_VALIDATE_CODE: `${API_BASE_URL}/company/validateCode`,

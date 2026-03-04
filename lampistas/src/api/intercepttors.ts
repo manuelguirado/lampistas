@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import type { UserType } from "../types/userType";
 import {
@@ -9,10 +10,15 @@ import {
 } from "../api/helpers";
 import dotenv from "dotenv";
 dotenv.config();
-type ImportMetaEnv = { VITE_API_URL?: string };
-const metaEnv = (typeof import.meta !== 'undefined' && (import.meta.env as ImportMetaEnv)) || {};
+
+let navigateFn: ((path: string) => void) | null = null;
+
+export const setNavigate = (navigate: (path: string) => void) => {
+  navigateFn = navigate;
+};
+
 const api = axios.create({
-  baseURL: metaEnv.VITE_API_URL || "http://localhost:3000",
+  baseURL: process.env.VITE_API_URL || "http://localhost:3000",
 });
 
 // ✅ Interceptar request
@@ -51,7 +57,7 @@ api.interceptors.response.use(
         }
 
         const { data } = await axios.post(
-          `${metaEnv.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
+          `${process.env.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
           {
             token: refreshToken,
             userType: userType,
@@ -69,10 +75,11 @@ api.interceptors.response.use(
 
         const userType = (localStorage.getItem("userType") ||
           "company") as UserType;
-        if (typeof window !== 'undefined') {
+  
           localStorage.clear();
-          window.location.href = getLoginRoute(userType);
-        }
+          if (navigateFn) {
+            navigateFn(getLoginRoute(userType));
+          }
 
         return Promise.reject(refreshError);
       }
