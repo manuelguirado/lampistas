@@ -2,10 +2,8 @@ import {z } from 'zod';
 
 export const uploadFilesSchema = z.object({
     files: z.custom((value) => {
-        if (typeof window === "undefined" || !value || !(value instanceof window.FileList)) {
-            return false;
-        }
-        return value.length > 0;
+        const files = Array.isArray(value) ? value : [value];
+        return files.length > 0;
     }, {
         message: "Debes subir al menos un archivo",
     }),

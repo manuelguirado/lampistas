@@ -7,6 +7,15 @@ import {
   setTokens,
 } from '../api/helpers';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+let navigateFn: ((path: string) => void) | null = null;
+
+export const setNavigate = (navigate: (path: string) => void) => {
+  navigateFn = navigate;
+};
+
 // Configuración por tipo de usuario
 const USER_CONFIG = {
   admin: {
@@ -35,9 +44,7 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
   }
 
   try {
-    type ImportMetaEnv = { VITE_API_URL?: string };
-    const metaEnv = (typeof import.meta !== 'undefined' && (import.meta.env as ImportMetaEnv)) || {};
-    const apiUrl = metaEnv.VITE_API_URL || 'http://localhost:3000';
+    const apiUrl = process.env.VITE_API_URL || 'http://localhost:3000';
     const response = await fetch(`${apiUrl}/auth/refreshToken`, {
       method: 'POST',
       headers: {
@@ -52,24 +59,25 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
     });
 
     type RefreshResponse = { accessToken?: string; refreshToken?: string; message?: string };
-    const data: RefreshResponse = await response.json();
+    const data = (await response.json()) as RefreshResponse;
 
     if (response.ok && data.accessToken && data.refreshToken) {
       setTokens(userType, data.accessToken, data.refreshToken, Number(userID));
       return data.accessToken;
     } else {
       console.error(`❌ Error al refrescar ${userType} token:`, data.message ?? data);
-      if (typeof window !== 'undefined') {
+    
         localStorage.clear();
-        window.location.href = getLoginRoute(userType);
-      }
+        if (navigateFn) {
+          navigateFn(getLoginRoute(userType));
+        }
+     
       return null;
     }
   } catch (error) {
     console.error(`❌ Error de conexión al refrescar ${userType} token:`, error);
-    if (typeof window !== 'undefined') {
-      localStorage.clear();
-      window.location.href = getLoginRoute(userType);
+    if (navigateFn) {
+      navigateFn(getLoginRoute(userType));
     }
     return null;
   }

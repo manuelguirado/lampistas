@@ -7,11 +7,9 @@ export const registerCompanySchema = z.object({
   phone: z.string().min(7, "El teléfono debe tener al menos 7 caracteres"),
   companyLogo: z
     .custom((value) => {
-      if (typeof window === "undefined" || !value || !(value instanceof window.FileList)) {
-        return false;
-      }
-      const files = value as FileList;
-      return files.length <= 1 && (files.length === 0 || files[0]?.size <= 5 * 1024 * 1024);
+      
+      const files = Array.isArray(value) ? value : [value];
+      return files.length === 1 && files[0].size <= 5 * 1024 * 1024; // Validar que solo haya un archivo y que sea menor a 5MB
     }, {
       message: "Solo se permite un archivo para el logo y debe ser menor a 5MB",
     })

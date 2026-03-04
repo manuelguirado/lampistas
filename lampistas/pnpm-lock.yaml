@@ -50,9 +50,6 @@ importers:
       chart.js:
         specifier: ^4.5.1
         version: 4.5.1
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
       framer-motion:
         specifier: ^12.23.24
         version: 12.34.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -138,6 +135,9 @@ importers:
       baseline-browser-mapping:
         specifier: ^2.9.11
         version: 2.9.19
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
       eslint:
         specifier: ^9.39.1
         version: 9.39.2(jiti@1.21.7)
