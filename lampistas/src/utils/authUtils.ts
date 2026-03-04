@@ -44,7 +44,7 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
   }
 
   try {
-    const apiUrl = process.env.VITE_API_URL || 'http://localhost:3000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
     const response = await fetch(`${apiUrl}/auth/refreshToken`, {
       method: 'POST',
       headers: {
