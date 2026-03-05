@@ -7,15 +7,6 @@ import {
   setTokens,
 } from '../api/helpers';
 
-import dotenv from 'dotenv';
-dotenv.config();
-
-let navigateFn: ((path: string) => void) | null = null;
-
-export const setNavigate = (navigate: (path: string) => void) => {
-  navigateFn = navigate;
-};
-
 // Configuración por tipo de usuario
 const USER_CONFIG = {
   admin: {
@@ -44,8 +35,7 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
   }
 
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    const response = await fetch(`${apiUrl}/auth/refreshToken`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/refreshToken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,27 +48,21 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
       }),
     });
 
-    type RefreshResponse = { accessToken?: string; refreshToken?: string; message?: string };
-    const data = (await response.json()) as RefreshResponse;
+    const data = await response.json();
 
     if (response.ok && data.accessToken && data.refreshToken) {
-      setTokens(userType, data.accessToken, data.refreshToken, Number(userID));
-      return data.accessToken;
+      setTokens(userType, data.accessToken as string, data.refreshToken as string, Number(userID));
+      return data.accessToken as string;
     } else {
-      console.error(`❌ Error al refrescar ${userType} token:`, data.message ?? data);
-    
-        localStorage.clear();
-        if (navigateFn) {
-          navigateFn(getLoginRoute(userType));
-        }
-     
+      console.error(`❌ Error al refrescar ${userType} token:`, data.message);
+      localStorage.clear();
+      window.location.href = getLoginRoute(userType);
       return null;
     }
   } catch (error) {
     console.error(`❌ Error de conexión al refrescar ${userType} token:`, error);
-    if (navigateFn) {
-      navigateFn(getLoginRoute(userType));
-    }
+    localStorage.clear();
+    window.location.href = getLoginRoute(userType);
     return null;
   }
 }

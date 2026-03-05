@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import type { UserType } from "../types/userType";
 import {
@@ -8,14 +7,6 @@ import {
   setTokens,
   getLoginRoute,
 } from "../api/helpers";
-import dotenv from "dotenv";
-dotenv.config();
-
-let navigateFn: ((path: string) => void) | null = null;
-
-export const setNavigate = (navigate: (path: string) => void) => {
-  navigateFn = navigate;
-};
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
@@ -75,11 +66,8 @@ api.interceptors.response.use(
 
         const userType = (localStorage.getItem("userType") ||
           "company") as UserType;
-  
-          localStorage.clear();
-          if (navigateFn) {
-            navigateFn(getLoginRoute(userType));
-          }
+        localStorage.clear();
+        window.location.href = getLoginRoute(userType);
 
         return Promise.reject(refreshError);
       }
