@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 import type { Company } from '../../types/companiesType';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config/baseUrl';
 export default function Searchcompnies() {
     const [companies, setCompanies] = useState<Company[]>([]);
     const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ export default function Searchcompnies() {
     async function hireCompany(companyEmail: string) {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/hireCompany`,
+                `${API_BASE_URL}/user/hireCompany`,
                 {
                     method: 'POST',
                     headers: {
@@ -44,7 +45,7 @@ export default function Searchcompnies() {
                 setError(null);
 
                 const response = await fetch(
-                    `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user/searchCompanies`,
+                    `${API_BASE_URL}/user/searchCompanies`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

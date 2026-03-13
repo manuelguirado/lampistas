@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { UserType } from "../types/userType";
+import { API_BASE_URL } from "../config/baseUrl";
 import {
   getAccessTokenKey,
   getRefreshTokenKey,
@@ -9,7 +10,7 @@ import {
 } from "../api/helpers";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: API_BASE_URL,
 });
 
 // ✅ Interceptar request
@@ -48,7 +49,7 @@ api.interceptors.response.use(
         }
 
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/auth/refreshToken`,
+          `${API_BASE_URL}/auth/refreshToken`,
           {
             token: refreshToken,
             userType: userType,

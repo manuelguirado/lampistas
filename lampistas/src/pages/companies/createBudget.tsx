@@ -13,6 +13,7 @@ import api from "../../api/intercepttors"; // ✅ Importar
 import toast from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from "react-i18next";
+import { API_BASE_URL } from "../../config/baseUrl";
 function CreateBudget() {
   const { t } = useTranslation("companies.createBudgetPage");
   const navigate = useNavigate();
@@ -324,7 +325,7 @@ const [client, setClients] = useState<
 
   useEffect(() => {
     try {
-      fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/listIncidents?search=&limit=20`, {
+      fetch(`${API_BASE_URL}/company/listIncidents?search=&limit=20`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

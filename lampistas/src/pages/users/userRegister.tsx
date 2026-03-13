@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { userRegisterSchema, type UserRegisterData } from "./schemas/userRegisterSchema";
+import { API_BASE_URL } from "../../config/baseUrl";
 export default function UserRegister() {
     const navigate = useNavigate();
     const { t } = useTranslation("users.registerPage");
@@ -28,7 +29,7 @@ export default function UserRegister() {
     
     async function handleSubmit(data : UserRegisterData) {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userRegister`, {
+            const response = await fetch(`${API_BASE_URL}/user/userRegister`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +44,7 @@ export default function UserRegister() {
             }
 
             if (responseData) {
-                const loginResponse = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/user/userLogin`, {
+                const loginResponse = await fetch(`${API_BASE_URL}/user/userLogin`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

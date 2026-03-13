@@ -5,6 +5,7 @@ import Header from "../components/header";
 import { Settings, Calendar, CheckCircle, Wrench } from 'lucide-react';
 import api from "../../../api/intercepttors";
 import { useTranslation } from "react-i18next";
+import { API_BASE_URL } from "../../../config/baseUrl";
 
 export default function EditMachinery() {
     const { t } = useTranslation("companies.updateMaintencePage");
@@ -43,7 +44,7 @@ export default function EditMachinery() {
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/company/updateMaintenceDate/${formData.machineryID}`, {
+        fetch(`${API_BASE_URL}/company/updateMaintenceDate/${formData.machineryID}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

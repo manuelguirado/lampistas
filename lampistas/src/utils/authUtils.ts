@@ -6,6 +6,7 @@ import {
   getRefreshTokenKey,
   setTokens,
 } from '../api/helpers';
+import { API_BASE_URL } from '../config/baseUrl';
 
 // Configuración por tipo de usuario
 const USER_CONFIG = {
@@ -35,7 +36,7 @@ export async function refreshToken(userType: UserType): Promise<string | null> {
   }
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/refreshToken`, {
+    const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
