@@ -24,7 +24,8 @@ function CreateBudget() {
   email: string;
   name?: string; // ✅ Agregar name opcional
 }
-const [budgetNumber, setBudgetNumber] = useState("");
+const [budgetNumber] = useState(`BUD-${Math.floor(1000 + Math.random() * 9000)}`);
+
 const [client, setClients] = useState<
   Array<{
     email: string;
@@ -40,13 +41,7 @@ const [client, setClients] = useState<
   const companyName = jwtDecode<DecodedToken>(token as string).name || "Empresa";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [incidentLoading, setIncidentLoading] = useState(false);
-  function generateBudgetNumber() {
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    return `BUD-${randomNum}`;
-  }
-  useEffect(() => {
-    setBudgetNumber(generateBudgetNumber());
-  }, []);
+
 
   // ✅ FUNCIÓN para descargar el PDF
   const downloadPDF = (pdfBuffer: ArrayBuffer, filename: string) => {
@@ -190,9 +185,10 @@ const [client, setClients] = useState<
     setIsSubmitting(true);
     
     try {
+      console.log("Submitting form with data:", data);
 
       const requestData = {
-        budgetNumber:data.budgetNumber,
+        budgetNumber: `BUD-${Math.floor(1000 + Math.random() * 9000)}`,
         title: data.title,
         userID: data.clientID,
       
@@ -209,6 +205,7 @@ const [client, setClients] = useState<
         clientAddress: selectedClientData.address || '',
       };
       
+      console.log("Request data being sent:", requestData);
      
 
       
