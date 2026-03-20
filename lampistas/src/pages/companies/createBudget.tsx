@@ -185,7 +185,7 @@ const [client, setClients] = useState<
     setIsSubmitting(true);
     
     try {
-      console.log("Submitting form with data:", data);
+ 
 
       const requestData = {
         budgetNumber: `BUD-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -205,7 +205,7 @@ const [client, setClients] = useState<
         clientAddress: selectedClientData.address || '',
       };
       
-      console.log("Request data being sent:", requestData);
+    
      
 
       
@@ -237,7 +237,7 @@ const [client, setClients] = useState<
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || t("createError");
       toast.error(errorMessage);
-      console.error("Error:", error);
+    
     } finally {
       setIsSubmitting(false);
     }
