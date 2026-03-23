@@ -49,8 +49,34 @@ export default function Payments() {
     };
 
     const options = {
-        clientSecret: clientSecret,
-        theme: 'stripe',
+        clientSecret,
+        appearance: {
+            theme: 'stripe' as const,
+            variables: {
+                colorPrimary: '#2563eb',
+                colorText: '#0f172a',
+                colorBackground: '#ffffff',
+                colorDanger: '#dc2626',
+            },
+            rules: {
+                '.Input': {
+                    color: '#0f172a',
+                    backgroundColor: '#ffffff',
+                },
+                '.Label': {
+                    color: '#334155',
+                },
+                '.Tab': {
+                    color: '#334155',
+                },
+                '.Tab:hover': {
+                    color: '#0f172a',
+                },
+                '.Tab--selected': {
+                    color: '#1d4ed8',
+                },
+            },
+        },
     };
     
 
@@ -91,7 +117,7 @@ export default function Payments() {
                             </div>
                             
                             
-                            <button type="submit" style={{ width: '100%', background: '#2563eb', color: '#fff', fontWeight: 600, padding: 12, borderRadius: 8, border: 'none', fontSize: 18, cursor: 'pointer' }}>
+                            <button type="submit" style={{ width: '100%', background: '#1d4ed8', color: '#fff', fontWeight: 600, padding: 12, borderRadius: 8, border: 'none', fontSize: 18, cursor: 'pointer' }}>
                                 Pagar
                             </button>
                         </form>

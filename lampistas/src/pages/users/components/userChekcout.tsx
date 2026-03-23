@@ -100,7 +100,7 @@ const UserCheckoutForm = ({
         <button
           disabled={isProcessing || !stripe || !elements}
           type="submit"
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-2 rounded-lg shadow transition-colors duration-200 disabled:bg-primary-600 disabled:text-white disabled:opacity-80 text-base"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-2 rounded-lg shadow transition-colors duration-200 disabled:bg-blue-500 disabled:text-white disabled:opacity-80 text-base"
         >
           {isProcessing ? (
             <span className="flex items-center justify-center gap-2">

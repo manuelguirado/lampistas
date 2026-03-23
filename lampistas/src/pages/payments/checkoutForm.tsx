@@ -63,7 +63,7 @@ const navigate = useNavigate();
         <button
           disabled={isProcessing || !stripe || !elements}
           type="submit"
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-200 disabled:bg-primary-600 disabled:text-white disabled:opacity-80 text-lg"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-200 disabled:bg-blue-500 disabled:text-white disabled:opacity-80 text-lg"
         >
           {isProcessing ? (
             <span className="flex items-center justify-center gap-2">
